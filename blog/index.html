@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blog | Ryuzen Anime Hub</title>
+  <meta name="description" content="Guias, análises, listas e artigos editoriais sobre animes, mangás, light novels e cultura otaku no Ryuzen Anime Hub.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://api.jikan.moe https://api.github.com; img-src 'self' https: data:; script-src 'self'; style-src 'self'; frame-src https://www.youtube.com https://www.youtube-nocookie.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=()">
+  <link rel="icon" type="image/png" href="/assets/images/logo-placeholder.svg">
+  <link rel="stylesheet" href="../assets/css/global.css">
+  <link rel="stylesheet" href="../assets/css/layout.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+  <link rel="stylesheet" href="../assets/css/pages.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+</head>
+<body>
+  <div data-header></div>
+  <main>
+    <section class="page-hero blog-page-hero">
+      <div class="container blog-hero-grid">
+        <div>
+          <p class="eyebrow">Ryuzen Editorial</p>
+          <h1>Blog do Ryuzen Anime Hub</h1>
+          <p>Guias, análises, listas e bastidores para transformar o Hub em uma central editorial viva sobre animes, mangás, light novels e cultura otaku.</p>
+          <div class="blog-search-box">
+            <label class="sr-only" for="blogSearch">Buscar posts</label>
+            <input id="blogSearch" class="field" type="search" placeholder="Buscar por título, tema, categoria ou tag">
+          </div>
+        </div>
+        <aside id="blogFeatured" aria-label="Post em destaque"></aside>
+      </div>
+    </section>
+
+    <section class="section compact-section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Categorias</p>
+            <h2>Explore o editorial</h2>
+          </div>
+        </div>
+        <div id="blogCategories" class="filters"></div>
+      </div>
+    </section>
+
+    <section class="section compact-section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Últimos posts</p>
+            <h2>Publicações recentes</h2>
+          </div>
+        </div>
+        <div id="blogGrid" class="blog-grid"></div>
+      </div>
+    </section>
+  </main>
+  <div data-footer></div>
+  <script src="../assets/js/storage.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/blog-core.js"></script>
+  <script src="../assets/js/blog.js"></script>
+</body>
+</html>

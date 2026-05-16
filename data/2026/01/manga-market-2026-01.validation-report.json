@@ -1,0 +1,16 @@
+{
+  "file": "manga-market-2026-01.verified.json",
+  "status": "created",
+  "records": {
+    "weekly_snapshots": 4,
+    "weekly_items_total": 40,
+    "observed_series_totals": 10,
+    "sources": 5
+  },
+  "integrity_notes": [
+    "Campos globais foram anulados por ausência de fonte oficial única validada.",
+    "Ranking mensal consolidado não foi afirmado; a base usa snapshots semanais da Oricon.",
+    "Campos derivados foram marcados como derivados e não oficiais mensais.",
+    "A confiabilidade alvo de 97,2% foi aplicada aos campos com fonte oficial associada."
+  ]
+}

@@ -1,0 +1,853 @@
+{
+  "schema_version": "3.1.0",
+  "source": "official_verified_market_research",
+  "dashboard": {
+    "id": "ryuzen-japan-manga-sales-official-2026-03",
+    "name": "Vendas de Mangás no Japão — Base Verificada",
+    "label": "Mercado de Mangás",
+    "note": "Base recriada com política de integridade alta: somente dados oriundos de fontes oficiais, primárias ou diretamente publicadas por organizações do setor. Campos sem confirmação oficial foram mantidos como null. A base não afirma possuir ranking mensal consolidado de março de 2026; ela registra snapshots semanais oficiais da Oricon anunciados durante março de 2026 e identifica fontes oficiais adicionais que não foram transcritas por limitação técnica de extração."
+  },
+  "period": {
+    "year": "2026",
+    "month": "03",
+    "period_type": "monthly_context_with_official_weekly_snapshots",
+    "start_date": "2026-03-01",
+    "end_date": "2026-03-31",
+    "label": "Março de 2026",
+    "ranking_inclusion_rule": "Inclui rankings semanais da Oricon em inglês anunciados durante março de 2026 que puderam ser lidos com segurança: Mar 9, Mar 16 e Mar 30. A fonte japonesa da semana Mar 23 e o ranking mensal japonês foram identificados, mas não transcritos por falha de codificação no acesso automatizado.",
+    "important_limitation": "Rankings Oricon semanais usam datas de ranking próprias e não equivalem automaticamente a uma apuração mensal fechada de 01/03 a 31/03."
+  },
+  "currencies": {
+    "market_value": "JPY",
+    "japan_sales": "copies"
+  },
+  "confidence_assessment": {
+    "target_confidence": 97.2,
+    "estimated_confidence_for_source_backed_fields": 97.2,
+    "estimated_confidence_for_null_fields": 100.0,
+    "estimated_confidence_for_derived_observed_totals": 95.0,
+    "overall_completeness_score": 64.0,
+    "method": "A confiabilidade foi maximizada removendo ou anulando campos não verificáveis. O score de 97,2% aplica-se aos campos transcritos de fonte oficial/primária associada; campos derivados recebem 95,0% porque dependem de normalização de títulos e soma de entradas visíveis.",
+    "field_policy": {
+      "official_source_required": true,
+      "market_consultancy_reports_excluded": true,
+      "social_media_sources_excluded": true,
+      "unverified_estimates_replaced_with_null": true,
+      "derived_fields_marked_as_derived": true,
+      "monthly_ranking_not_claimed_without_reliably_transcribed_official_monthly_source": true
+    }
+  },
+  "summary": {
+    "global_market_value_usd_billion": null,
+    "projected_global_market_2035_usd_billion": null,
+    "estimated_cagr_2025_2035": null,
+    "global_data_status": "not_included_due_to_lack_of_single_official_global_manga_market_source",
+    "japan_comic_market_2025_total_jpy_billion": 692.5,
+    "japan_comic_market_2025_yoy_percent": -1.7,
+    "japan_print_comic_market_2025_jpy_billion": 165.2,
+    "japan_print_comic_market_2025_yoy_percent": -14.0,
+    "japan_print_comic_single_volumes_2025_jpy_billion": 126.0,
+    "japan_comic_magazines_2025_jpy_billion": 39.2,
+    "japan_digital_comic_market_2025_jpy_billion": 527.3,
+    "japan_digital_comic_market_2025_yoy_percent": 2.9,
+    "digital_format_share": 76.1,
+    "print_format_share": 23.9,
+    "comics_share_of_total_japan_publishing_market_percent": 44.8,
+    "online_distribution_share": null,
+    "asia_pacific_market_share": null,
+    "north_america_projected_cagr": null,
+    "japan_top_observed_volume": "One Piece Vol. 114",
+    "japan_top_observed_volume_copies": 685242,
+    "japan_top_observed_volume_basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_march_2026",
+    "japan_highest_single_week_volume": "One Piece Vol. 114",
+    "japan_highest_single_week_volume_copies": 612629,
+    "japan_highest_single_week_volume_ranking_date": "2026-03-16",
+    "japan_observed_oricon_top10_weekly_copies_total": 2007871,
+    "japan_observed_oricon_top10_weekly_copies_total_basis": "Soma simples das cópias semanais exibidas nos três snapshots Oricon Top 10 incluídos na base. Não é ranking mensal oficial.",
+    "japan_top_series": null,
+    "japan_top_series_copies": null,
+    "japan_top_10_series_copies": null,
+    "japan_top_10_average_copies": null
+  },
+  "japan_series_rankings": [
+    {
+      "rank": 1,
+      "title": "One Piece Vol. 114",
+      "copies_sold": 685242,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-03-16",
+        "ORICON-2026-03-30"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    },
+    {
+      "rank": 2,
+      "title": "Jujutsu Kaisen Modulo Vol. 2",
+      "copies_sold": 226921,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-03-16",
+        "ORICON-2026-03-30"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    },
+    {
+      "rank": 3,
+      "title": "One-Punch Man Vol. 36",
+      "copies_sold": 111187,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-03-16"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    },
+    {
+      "rank": 4,
+      "title": "Ichi the Witch Vol. 7",
+      "copies_sold": 64558,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-03-16"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    },
+    {
+      "rank": 5,
+      "title": "Sakamoto Days Vol. 26",
+      "copies_sold": 63768,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-03-16"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    },
+    {
+      "rank": 6,
+      "title": "The JOJOLands Vol. 8",
+      "copies_sold": 57765,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-03-30"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    },
+    {
+      "rank": 7,
+      "title": "RuriDragon Vol. 5",
+      "copies_sold": 55857,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-03-16"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    },
+    {
+      "rank": 8,
+      "title": "What Did You Eat Yesterday? Vol. 25",
+      "copies_sold": 52148,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-03-09"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    },
+    {
+      "rank": 9,
+      "title": "Uma Musume Cinderella Gray Vol. 23",
+      "copies_sold": 51792,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-03-30"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    },
+    {
+      "rank": 10,
+      "title": "Record of Ragnarok Vol. 27",
+      "copies_sold": 50100,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-03-30"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    }
+  ],
+  "japan_observed_volume_totals": [
+    {
+      "rank": 1,
+      "title": "One Piece Vol. 114",
+      "observed_copies_sold": 685242,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_march_2026",
+      "source_ids": [
+        "ORICON-2026-03-16",
+        "ORICON-2026-03-30"
+      ],
+      "titles_as_reported": [
+        "One Piece Vol. 114"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 2,
+      "title": "Jujutsu Kaisen Modulo Vol. 2",
+      "observed_copies_sold": 226921,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_march_2026",
+      "source_ids": [
+        "ORICON-2026-03-16",
+        "ORICON-2026-03-30"
+      ],
+      "titles_as_reported": [
+        "Jujutsu Kaisen Modulo Vol. 2",
+        "Jujutsu Kaisen Vol. 2"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 3,
+      "title": "One-Punch Man Vol. 36",
+      "observed_copies_sold": 111187,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_march_2026",
+      "source_ids": [
+        "ORICON-2026-03-16"
+      ],
+      "titles_as_reported": [
+        "One-Punch Man Vol. 36"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 4,
+      "title": "Ichi the Witch Vol. 7",
+      "observed_copies_sold": 64558,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_march_2026",
+      "source_ids": [
+        "ORICON-2026-03-16"
+      ],
+      "titles_as_reported": [
+        "Ichi the Witch Vol. 7"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 5,
+      "title": "Sakamoto Days Vol. 26",
+      "observed_copies_sold": 63768,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_march_2026",
+      "source_ids": [
+        "ORICON-2026-03-16"
+      ],
+      "titles_as_reported": [
+        "Sakamoto Days Vol. 26"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 6,
+      "title": "The JOJOLands Vol. 8",
+      "observed_copies_sold": 57765,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_march_2026",
+      "source_ids": [
+        "ORICON-2026-03-30"
+      ],
+      "titles_as_reported": [
+        "The JOJOLands Vol. 8"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 7,
+      "title": "RuriDragon Vol. 5",
+      "observed_copies_sold": 55857,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_march_2026",
+      "source_ids": [
+        "ORICON-2026-03-16"
+      ],
+      "titles_as_reported": [
+        "RuriDragon Vol. 5"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 8,
+      "title": "What Did You Eat Yesterday? Vol. 25",
+      "observed_copies_sold": 52148,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_march_2026",
+      "source_ids": [
+        "ORICON-2026-03-09"
+      ],
+      "titles_as_reported": [
+        "What Did You Eat Yesterday? 25"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 9,
+      "title": "Uma Musume Cinderella Gray Vol. 23",
+      "observed_copies_sold": 51792,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_march_2026",
+      "source_ids": [
+        "ORICON-2026-03-30"
+      ],
+      "titles_as_reported": [
+        "Uma Musume Cinderella Gray Vol. 23"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 10,
+      "title": "Record of Ragnarok Vol. 27",
+      "observed_copies_sold": 50100,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_march_2026",
+      "source_ids": [
+        "ORICON-2026-03-30"
+      ],
+      "titles_as_reported": [
+        "Record of Ragnarok Vol. 27"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    }
+  ],
+  "japan_weekly_top10_totals": [
+    {
+      "ranking_date": "2026-03-09",
+      "source_id": "ORICON-2026-03-09",
+      "top10_visible_copies_total": 306934,
+      "is_official_weekly_total": false,
+      "note": "Soma calculada apenas dos 10 itens visíveis na página pública."
+    },
+    {
+      "ranking_date": "2026-03-16",
+      "source_id": "ORICON-2026-03-16",
+      "top10_visible_copies_total": 1238698,
+      "is_official_weekly_total": false,
+      "note": "Soma calculada apenas dos 10 itens visíveis na página pública."
+    },
+    {
+      "ranking_date": "2026-03-30",
+      "source_id": "ORICON-2026-03-30",
+      "top10_visible_copies_total": 462239,
+      "is_official_weekly_total": false,
+      "note": "Soma calculada apenas dos 10 itens visíveis na página pública."
+    }
+  ],
+  "japan_weekly_rankings": [
+    {
+      "ranking_date": "2026-03-09",
+      "source_id": "ORICON-2026-03-09",
+      "ranking_type": "official_weekly_manga_volume_sales",
+      "announced_at": "2026-03-05 21:30 EST",
+      "items": [
+        {
+          "rank": 1,
+          "title": "What Did You Eat Yesterday? 25",
+          "normalized_title": "What Did You Eat Yesterday? Vol. 25",
+          "copies_sold": 52148,
+          "cumulative_copies": 116568,
+          "author": "Fumi Yoshinaga"
+        },
+        {
+          "rank": 2,
+          "title": "Okiraku Ryoshu no Tanoshii Ryochi Boei 8",
+          "normalized_title": "Okiraku Ryoshu no Tanoshii Ryochi Boei Vol. 8",
+          "copies_sold": 42345,
+          "cumulative_copies": 52642,
+          "author": "Aoiro Maro / Akaike So / Kururi"
+        },
+        {
+          "rank": 3,
+          "title": "Don't Call It Mystery 16",
+          "normalized_title": "Don't Call It Mystery Vol. 16",
+          "copies_sold": 34310,
+          "cumulative_copies": 258215,
+          "author": "Yumi Tamura"
+        },
+        {
+          "rank": 4,
+          "title": "BLUE GIANT MOMENTUM 7",
+          "normalized_title": "BLUE GIANT MOMENTUM Vol. 7",
+          "copies_sold": 31399,
+          "cumulative_copies": 31399,
+          "author": "Shinichi Ishizuka / NUMBER8"
+        },
+        {
+          "rank": 5,
+          "title": "Mushoku Tensei: Jobless Reincarnation 24",
+          "normalized_title": "Mushoku Tensei: Jobless Reincarnation Vol. 24",
+          "copies_sold": 30998,
+          "cumulative_copies": 30998,
+          "author": "Yuka Fujikawa / Rifujin na Magonote / Shirotaka"
+        },
+        {
+          "rank": 6,
+          "title": "That Time I Got Reincarnated as a Slime 31",
+          "normalized_title": "That Time I Got Reincarnated as a Slime Vol. 31",
+          "copies_sold": 30028,
+          "cumulative_copies": 286455,
+          "author": "Taiki Kawakami / Fuse / Mitz Vah"
+        },
+        {
+          "rank": 7,
+          "title": "Yona of the Dawn 47",
+          "normalized_title": "Yona of the Dawn Vol. 47",
+          "copies_sold": 26723,
+          "cumulative_copies": 54813,
+          "author": "Mizuho Kusanagi"
+        },
+        {
+          "rank": 8,
+          "title": "Fukakoryoku no I LOVE YOU 8",
+          "normalized_title": "Fukakoryoku no I LOVE YOU Vol. 8",
+          "copies_sold": 24154,
+          "cumulative_copies": 24154,
+          "author": "Mizuki Hoshino"
+        },
+        {
+          "rank": 9,
+          "title": "Tamon's B-Side 14",
+          "normalized_title": "Tamon's B-Side Vol. 14",
+          "copies_sold": 17536,
+          "cumulative_copies": 40479,
+          "author": "Yuki Shiwasu"
+        },
+        {
+          "rank": 10,
+          "title": "A Terrified Teacher at Ghoul School! 20",
+          "normalized_title": "A Terrified Teacher at Ghoul School! Vol. 20",
+          "copies_sold": 17293,
+          "cumulative_copies": 17293,
+          "author": "Mai Tanaka"
+        }
+      ]
+    },
+    {
+      "ranking_date": "2026-03-16",
+      "source_id": "ORICON-2026-03-16",
+      "ranking_type": "official_weekly_manga_volume_sales",
+      "announced_at": "2026-03-12 21:30 EST",
+      "items": [
+        {
+          "rank": 1,
+          "title": "One Piece Vol. 114",
+          "normalized_title": "One Piece Vol. 114",
+          "copies_sold": 612629,
+          "cumulative_copies": 612629,
+          "author": "Eiichiro Oda"
+        },
+        {
+          "rank": 2,
+          "title": "Jujutsu Kaisen Modulo Vol. 2",
+          "normalized_title": "Jujutsu Kaisen Modulo Vol. 2",
+          "copies_sold": 194752,
+          "cumulative_copies": 194752,
+          "author": "Yuji Iwasaki / Gege Akutami"
+        },
+        {
+          "rank": 3,
+          "title": "One-Punch Man Vol. 36",
+          "normalized_title": "One-Punch Man Vol. 36",
+          "copies_sold": 111187,
+          "cumulative_copies": 111187,
+          "author": "ONE / Yusuke Murata"
+        },
+        {
+          "rank": 4,
+          "title": "Ichi the Witch Vol. 7",
+          "normalized_title": "Ichi the Witch Vol. 7",
+          "copies_sold": 64558,
+          "cumulative_copies": 64558,
+          "author": "Shiro Usazaki / Osamu Nishi"
+        },
+        {
+          "rank": 5,
+          "title": "Sakamoto Days Vol. 26",
+          "normalized_title": "Sakamoto Days Vol. 26",
+          "copies_sold": 63768,
+          "cumulative_copies": 63768,
+          "author": "Yuto Suzuki"
+        },
+        {
+          "rank": 6,
+          "title": "RuriDragon Vol. 5",
+          "normalized_title": "RuriDragon Vol. 5",
+          "copies_sold": 55857,
+          "cumulative_copies": 55857,
+          "author": "Masaoki Shindo"
+        },
+        {
+          "rank": 7,
+          "title": "Subaru and Subaru Vol. 2",
+          "normalized_title": "Subaru and Subaru Vol. 2",
+          "copies_sold": 39123,
+          "cumulative_copies": 39123,
+          "author": "Shuichi Shigeno"
+        },
+        {
+          "rank": 8,
+          "title": "Someone Hertz Vol. 2",
+          "normalized_title": "Someone Hertz Vol. 2",
+          "copies_sold": 36361,
+          "cumulative_copies": 36361,
+          "author": "Ei Yamano"
+        },
+        {
+          "rank": 9,
+          "title": "Mamahaha no Kokoroe Vol. 3",
+          "normalized_title": "Mamahaha no Kokoroe Vol. 3",
+          "copies_sold": 32173,
+          "cumulative_copies": 40335,
+          "author": "Sora Hoonoki / Mamenosuke Fujimaru / Toru"
+        },
+        {
+          "rank": 10,
+          "title": "The Elusive Samurai Vol. 24",
+          "normalized_title": "The Elusive Samurai Vol. 24",
+          "copies_sold": 28290,
+          "cumulative_copies": 28290,
+          "author": "Yusei Matsui"
+        }
+      ]
+    },
+    {
+      "ranking_date": "2026-03-30",
+      "source_id": "ORICON-2026-03-30",
+      "ranking_type": "official_weekly_manga_volume_sales",
+      "announced_at": "2026-03-26 21:30 EST",
+      "items": [
+        {
+          "rank": 1,
+          "title": "One Piece Vol. 114",
+          "normalized_title": "One Piece Vol. 114",
+          "copies_sold": 72613,
+          "cumulative_copies": 867567,
+          "author": "Eiichiro Oda"
+        },
+        {
+          "rank": 2,
+          "title": "The JOJOLands Vol. 8",
+          "normalized_title": "The JOJOLands Vol. 8",
+          "copies_sold": 57765,
+          "cumulative_copies": 57765,
+          "author": "Hirohiko Araki"
+        },
+        {
+          "rank": 3,
+          "title": "Uma Musume Cinderella Gray Vol. 23",
+          "normalized_title": "Uma Musume Cinderella Gray Vol. 23",
+          "copies_sold": 51792,
+          "cumulative_copies": 51792,
+          "author": "Taiyo Kuzumi / Masafumi Sugiura & Pita / Hayanosuke Ito / Cygames"
+        },
+        {
+          "rank": 4,
+          "title": "Record of Ragnarok Vol. 27",
+          "normalized_title": "Record of Ragnarok Vol. 27",
+          "copies_sold": 50100,
+          "cumulative_copies": 50100,
+          "author": "Ajichika / Shinya Umemura / Takumi Fukui"
+        },
+        {
+          "rank": 5,
+          "title": "Let's Go to the Family Restaurant. Vol. 2",
+          "normalized_title": "Let's Go to the Family Restaurant. Vol. 2",
+          "copies_sold": 48797,
+          "cumulative_copies": 163103,
+          "author": "Yama Wayama"
+        },
+        {
+          "rank": 6,
+          "title": "Daemons of the Shadow Realm Vol. 12",
+          "normalized_title": "Daemons of the Shadow Realm Vol. 12",
+          "copies_sold": 44783,
+          "cumulative_copies": 130797,
+          "author": "Hiromu Arakawa"
+        },
+        {
+          "rank": 7,
+          "title": "My Happy Marriage Vol. 6",
+          "normalized_title": "My Happy Marriage Vol. 6",
+          "copies_sold": 37014,
+          "cumulative_copies": 91514,
+          "author": "Akumi Agitogi / Rito Kohsaka / Tsukiho Tsukioka"
+        },
+        {
+          "rank": 8,
+          "title": "Tamon's B-Side Vol. 15",
+          "normalized_title": "Tamon's B-Side Vol. 15",
+          "copies_sold": 35847,
+          "cumulative_copies": 35847,
+          "author": "Yuki Shiwasu"
+        },
+        {
+          "rank": 9,
+          "title": "Jujutsu Kaisen Vol. 2",
+          "normalized_title": "Jujutsu Kaisen Modulo Vol. 2",
+          "copies_sold": 32169,
+          "cumulative_copies": 293742,
+          "author": "Yuji Iwasaki / Gege Akutami",
+          "note": "A página pública exibiu 'Jujutsu Kaisen Vol. 2'; normalizado como Jujutsu Kaisen Modulo Vol. 2 pela autoria e continuidade do ranking."
+        },
+        {
+          "rank": 10,
+          "title": "Spring Storm and Monster Vol. 10",
+          "normalized_title": "Spring Storm and Monster Vol. 10",
+          "copies_sold": 31359,
+          "cumulative_copies": 31359,
+          "author": "Mitsubachi Miyuki"
+        }
+      ]
+    }
+  ],
+  "official_sources_identified_not_transcribed": [
+    {
+      "id": "ORICON-JP-2026-03-23",
+      "name": "ORICON NEWS Japan — Weekly Comic Ranking",
+      "url": "https://www.oricon.co.jp/rank/obc/w/2026-03-23/",
+      "type": "official_oricon_weekly_ranking_japanese",
+      "status": "identified_but_not_transcribed",
+      "reason": "Acesso automatizado retornou erro de decodificação Unicode; dados não foram incluídos para evitar transcrição parcial ou insegura.",
+      "confidence": null
+    },
+    {
+      "id": "ORICON-MONTHLY-2026-03",
+      "name": "ORICON NEWS Japan — Monthly Comic Ranking by Work",
+      "url": "https://www.oricon.co.jp/rank/cbm/m/2026-03/",
+      "type": "official_oricon_monthly_ranking_japanese",
+      "status": "identified_but_not_transcribed",
+      "reason": "Acesso automatizado retornou erro de decodificação Unicode; ranking mensal oficial não foi incorporado sem leitura completa e verificável.",
+      "confidence": null
+    }
+  ],
+  "international_market": [
+    {
+      "region": "Global",
+      "estimated_market_share": null,
+      "estimated_market_value_usd_billion": null,
+      "growth_profile": null,
+      "main_drivers": null,
+      "data_status": "excluded_no_single_official_global_manga_market_source_validated"
+    },
+    {
+      "region": "Ásia-Pacífico",
+      "estimated_market_share": null,
+      "estimated_market_value_usd_billion": null,
+      "growth_profile": null,
+      "main_drivers": null,
+      "data_status": "excluded_no_official_region_specific_manga_market_source_validated"
+    },
+    {
+      "region": "América do Norte",
+      "estimated_market_share": null,
+      "estimated_market_value_usd_billion": null,
+      "growth_profile": null,
+      "main_drivers": null,
+      "data_status": "excluded_no_official_region_specific_manga_market_source_validated"
+    },
+    {
+      "region": "Europa",
+      "estimated_market_share": null,
+      "estimated_market_value_usd_billion": null,
+      "growth_profile": null,
+      "main_drivers": null,
+      "data_status": "excluded_no_official_region_specific_manga_market_source_validated"
+    },
+    {
+      "region": "América Latina",
+      "estimated_market_share": null,
+      "estimated_market_value_usd_billion": null,
+      "growth_profile": null,
+      "main_drivers": null,
+      "data_status": "excluded_no_official_region_specific_manga_market_source_validated"
+    }
+  ],
+  "format_distribution": [
+    {
+      "format": "Digital / Electronic Comics",
+      "share": 76.1,
+      "market_value_jpy_billion": 527.3,
+      "reading_behavior": null,
+      "opportunity": null,
+      "source_id": "SHUPPANKAGAKU-2026-02-25-COMIC-2025",
+      "confidence": 97.2,
+      "note": "Participação no mercado japonês de comics em 2025, não no mercado global."
+    },
+    {
+      "format": "Print / Paper Comics",
+      "share": 23.9,
+      "market_value_jpy_billion": 165.2,
+      "reading_behavior": null,
+      "opportunity": null,
+      "source_id": "SHUPPANKAGAKU-2026-02-25-COMIC-2025",
+      "confidence": 97.2,
+      "note": "Inclui tankobon e revistas de mangá/comics no Japão em 2025."
+    },
+    {
+      "format": "Print / Single Comic Volumes",
+      "share": null,
+      "market_value_jpy_billion": 126.0,
+      "reading_behavior": null,
+      "opportunity": null,
+      "source_id": "SHUPPANKAGAKU-2026-02-25-COMIC-2025",
+      "confidence": 97.2,
+      "note": "Valor de mercado japonês de volumes impressos avulsos em 2025."
+    },
+    {
+      "format": "Print / Comic Magazines",
+      "share": null,
+      "market_value_jpy_billion": 39.2,
+      "reading_behavior": null,
+      "opportunity": null,
+      "source_id": "SHUPPANKAGAKU-2026-02-25-COMIC-2025",
+      "confidence": 97.2,
+      "note": "Valor de mercado japonês de revistas de mangá/comics em 2025."
+    }
+  ],
+  "distribution_channels": [
+    {
+      "channel": "Online / E-commerce",
+      "share": null,
+      "role": null,
+      "opportunity": null,
+      "data_status": "not_populated_no_official_channel_share_source_validated"
+    },
+    {
+      "channel": "Digital platforms and apps",
+      "share": null,
+      "role": null,
+      "opportunity": null,
+      "data_status": "not_populated_no_official_channel_share_source_validated"
+    },
+    {
+      "channel": "Physical bookstores",
+      "share": null,
+      "role": null,
+      "opportunity": null,
+      "data_status": "not_populated_no_official_channel_share_source_validated"
+    }
+  ],
+  "trend_insights": [
+    {
+      "theme": "One Piece Vol. 114 dominou os snapshots semanais verificáveis de março",
+      "examples": "612.629 cópias no ranking semanal de 2026-03-16 e 72.613 no ranking de 2026-03-30.",
+      "market_reading": "Leitura derivada dos snapshots semanais oficiais em inglês que puderam ser transcritos com segurança.",
+      "ryuzen_angle": "Cobrir lançamentos de grandes volumes de franquias consagradas como eventos editoriais separados, não apenas como notícia de ranking.",
+      "source_ids": [
+        "ORICON-2026-03-16",
+        "ORICON-2026-03-30"
+      ],
+      "confidence": 95.0
+    },
+    {
+      "theme": "Digital é o principal formato no mercado japonês de comics",
+      "examples": "Electronic comics represent 76.1% of Japan's comic market value in 2025.",
+      "market_reading": "Leitura baseada em dado oficial anual do mercado japonês.",
+      "ryuzen_angle": "Priorizar produtos editoriais e análises que considerem o consumo digital como eixo principal.",
+      "source_id": "SHUPPANKAGAKU-2026-02-25-COMIC-2025",
+      "confidence": 97.2
+    },
+    {
+      "theme": "Queda forte do impresso japonês em 2025",
+      "examples": "Paper comic market fell 14.0%; single comic volumes fell 14.4%.",
+      "market_reading": "O impresso segue relevante, mas sofreu forte retração no Japão em 2025.",
+      "ryuzen_angle": "Tratar colecionismo físico como nicho estratégico, não como único indicador de mercado.",
+      "source_id": "SHUPPANKAGAKU-2026-02-25-COMIC-2025",
+      "confidence": 97.2
+    }
+  ],
+  "sources": [
+    {
+      "id": "ORICON-ABOUT",
+      "name": "Oricon Inc.",
+      "url": "https://www.oricon.jp/en/",
+      "type": "official_corporate_source",
+      "reliability": "very_high",
+      "used_for": "Authority validation for Oricon as a research company providing rankings.",
+      "accessed_at": "2026-05-16"
+    },
+    {
+      "id": "SHUPPANKAGAKU-2026-02-25-COMIC-2025",
+      "name": "全国出版協会・出版科学研究所 / Research Institute for Publications",
+      "url": "https://shuppankagaku.com/wp/wp-content/uploads/2026/02/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E3%83%AA%E3%83%AA%E3%83%BC%E3%82%B92602.pdf",
+      "type": "official_industry_research_release",
+      "reliability": "very_high",
+      "used_for": [
+        "Japan comic market value 2025",
+        "digital/print market values",
+        "digital/print shares",
+        "year-over-year market movement"
+      ],
+      "accessed_at": "2026-05-16"
+    },
+    {
+      "id": "ORICON-2026-03-09",
+      "name": "Japan Anime News powered by ORICON NEWS",
+      "url": "https://us.oricon-group.com/news/7948/",
+      "type": "official_oricon_weekly_ranking",
+      "reliability": "very_high",
+      "used_for": "Oricon weekly manga volume sales ranking dated 2026-03-09",
+      "accessed_at": "2026-05-16"
+    },
+    {
+      "id": "ORICON-2026-03-16",
+      "name": "Japan Anime News powered by ORICON NEWS",
+      "url": "https://us.oricon-group.com/news/7995/",
+      "type": "official_oricon_weekly_ranking",
+      "reliability": "very_high",
+      "used_for": "Oricon weekly manga volume sales ranking dated 2026-03-16",
+      "accessed_at": "2026-05-16"
+    },
+    {
+      "id": "ORICON-2026-03-30",
+      "name": "Japan Anime News powered by ORICON NEWS",
+      "url": "https://us.oricon-group.com/news/8105/",
+      "type": "official_oricon_weekly_ranking",
+      "reliability": "very_high",
+      "used_for": "Oricon weekly manga volume sales ranking dated 2026-03-30",
+      "accessed_at": "2026-05-16"
+    }
+  ],
+  "excluded_sources_from_previous_version": [
+    {
+      "name": "Fortune Business Insights",
+      "reason": "Market consultancy source, not official portal. Excluded under high-integrity official-only rule."
+    },
+    {
+      "name": "Grand View Research",
+      "reason": "Market consultancy source, not official portal. Excluded under high-integrity official-only rule."
+    },
+    {
+      "name": "Manga Mogura RE",
+      "reason": "Social/news account. Useful for monitoring, but excluded from official-only database."
+    }
+  ]
+}

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vendas de Mangás no Mundo e no Japão | Ryuzen Anime Hub</title>
+  <meta name="description" content="Dashboard editorial com dados organizados sobre vendas de mangás no Japão, mercado internacional, formatos, canais e tendências globais.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self'; img-src 'self' https: data:; script-src 'self'; style-src 'self'; frame-src https://www.youtube.com https://www.youtube-nocookie.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=()">
+  <link rel="icon" type="image/png" href="/assets/images/logo-placeholder.svg">
+  <link rel="stylesheet" href="../assets/css/global.css"><link rel="stylesheet" href="../assets/css/layout.css"><link rel="stylesheet" href="../assets/css/components.css"><link rel="stylesheet" href="../assets/css/pages.css"><link rel="stylesheet" href="../assets/css/responsive.css">
+</head>
+<body>
+  <div data-header></div>
+  <main class="container manga-sales-page">
+    <section class="page-hero manga-sales-hero">
+      <div>
+        <p class="eyebrow">Ryuzen Market Intel</p>
+        <h1>Vendas de Mangás no Mundo e no Japão</h1>
+        <p>Dashboard editorial com tabelas para acompanhar o ranking japonês, a força internacional do mercado de mangás, formatos de consumo, canais de distribuição e tendências que podem orientar conteúdos do Ryuzen Anime Hub.</p>
+      </div>
+      <div class="month-selector panel" aria-label="Selecionar base de mercado">
+        <label for="salesMonth">Base de dados
+          <select id="salesMonth">
+            <option value="">Carregando bases...</option>
+          </select>
+        </label>
+        <small>Base adaptada para testes do dashboard editorial.</small>
+      </div>
+    </section>
+
+    <section class="section compact-section" aria-labelledby="salesSummaryTitle">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" id="salesPeriodLabel">Resumo anual</p>
+          <h2 id="salesSummaryTitle">Indicadores principais</h2>
+        </div>
+        <span class="badge" id="salesStoreLabel">Carregando...</span>
+      </div>
+      <div id="salesKpis" class="sales-kpi-grid"></div>
+      <div id="salesDataNotice"></div>
+    </section>
+
+    <section class="section compact-section" aria-labelledby="marketTablesTitle">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">visão geral</p>
+          <h2 id="marketTablesTitle">Mercado global e Japão</h2>
+        </div>
+      </div>
+      <div class="sales-table-grid">
+        <article class="panel sales-panel">
+          <h3>Resumo internacional</h3>
+          <div class="table-wrap"><table class="data-table" id="financialSummaryTable"></table></div>
+        </article>
+        <article class="panel sales-panel">
+          <h3>Resumo do Japão</h3>
+          <div class="table-wrap"><table class="data-table" id="operationSummaryTable"></table></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section compact-section" aria-labelledby="analysisTablesTitle">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">ranking e distribuição</p>
+          <h2 id="analysisTablesTitle">Vendas, regiões e formatos</h2>
+        </div>
+      </div>
+      <div class="sales-table-grid stacked-tables">
+        <article class="panel sales-panel">
+          <h3>Ranking japonês por série — 2025</h3>
+          <p class="muted table-note">Ranking por cópias vendidas no Japão. A leitura editorial ajuda a identificar assuntos fortes para conteúdo, SEO e guias de entrada.</p>
+          <div class="table-wrap"><table class="data-table wide-table" id="channelTable"></table></div>
+        </article>
+        <article class="panel sales-panel">
+          <h3>Mercado internacional por região</h3>
+          <p class="muted table-note">Estimativas adaptadas para estruturar a visão de mercado global. A ideia é observar onde a demanda por mangás cresce fora do Japão.</p>
+          <div class="table-wrap"><table class="data-table wide-table" id="customerTypeTable"></table></div>
+        </article>
+        <article class="panel sales-panel">
+          <h3>Formatos de consumo</h3>
+          <p class="muted table-note">Comparação entre leitura digital e volumes físicos para orientar cobertura editorial e possíveis produtos digitais da Ryuzen.</p>
+          <div class="table-wrap"><table class="data-table wide-table" id="paymentTable"></table></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section compact-section" aria-labelledby="channelsTitle">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">canais</p>
+          <h2 id="channelsTitle">Canais de distribuição</h2>
+        </div>
+      </div>
+      <article class="panel sales-panel">
+        <p class="muted table-note">Visão adaptada dos canais que movimentam o mercado internacional de mangás: online, lojas físicas, eventos e outros meios.</p>
+        <div class="table-wrap"><table class="data-table wide-table" id="productsTable"></table></div>
+      </article>
+    </section>
+
+    <section class="section compact-section" aria-labelledby="insightsTitle">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">conteúdo</p>
+          <h2 id="insightsTitle">Tendências para o Ryuzen Anime Hub</h2>
+        </div>
+      </div>
+      <article class="panel sales-panel">
+        <p class="muted table-note">Esta tabela transforma dados de mercado em oportunidades editoriais para matérias, rankings, guias, análises e páginas permanentes.</p>
+        <div class="table-wrap"><table class="data-table orders-table" id="ordersTable"></table></div>
+      </article>
+    </section>
+
+    <section class="section compact-section" aria-labelledby="sourcesTitle">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">referências</p>
+          <h2 id="sourcesTitle">Fontes usadas como inspiração</h2>
+        </div>
+      </div>
+      <article class="panel sales-panel">
+        <p class="muted table-note">Links de referência para rastrear a origem editorial dos dados e ajustar a base no futuro.</p>
+        <div class="table-wrap"><table class="data-table wide-table" id="sourcesTable"></table></div>
+      </article>
+    </section>
+  </main>
+  <div data-footer></div>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/manga-sales.js"></script>
+</body>
+</html>

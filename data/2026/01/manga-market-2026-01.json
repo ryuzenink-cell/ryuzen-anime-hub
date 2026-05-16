@@ -1,0 +1,820 @@
+{
+  "schema_version": "3.0.0",
+  "source": "official_verified_market_research",
+  "dashboard": {
+    "id": "ryuzen-japan-manga-sales-official",
+    "name": "Vendas de Mangás no Japão — Base Verificada",
+    "label": "Mercado de Mangás",
+    "note": "Base recriada com política de integridade alta: somente dados oriundos de fontes oficiais, primárias ou diretamente publicadas por organizações do setor. Campos sem confirmação oficial foram mantidos como null. A base não afirma possuir ranking mensal consolidado de janeiro de 2026; ela registra snapshots semanais oficiais da Oricon publicados/relacionados ao período."
+  },
+  "period": {
+    "year": "2026",
+    "month": "01",
+    "period_type": "monthly_context_with_official_weekly_snapshots",
+    "start_date": "2026-01-01",
+    "end_date": "2026-01-31",
+    "label": "Janeiro de 2026",
+    "important_limitation": "Rankings Oricon semanais usam datas de ranking próprias e não equivalem automaticamente a uma apuração mensal fechada de 01/01 a 31/01."
+  },
+  "currencies": {
+    "market_value": "JPY",
+    "japan_sales": "copies"
+  },
+  "confidence_assessment": {
+    "target_confidence": 97.2,
+    "estimated_confidence_for_source_backed_fields": 97.2,
+    "estimated_confidence_for_null_fields": 100.0,
+    "overall_completeness_score": 68.0,
+    "method": "A confiabilidade foi maximizada removendo ou anulando campos não verificáveis. O score de 97,2% aplica-se aos campos com fonte oficial/primária associada, não à completude da base.",
+    "field_policy": {
+      "official_source_required": true,
+      "market_consultancy_reports_excluded": true,
+      "social_media_sources_excluded": true,
+      "unverified_estimates_replaced_with_null": true,
+      "derived_fields_marked_as_derived": true
+    }
+  },
+  "summary": {
+    "global_market_value_usd_billion": null,
+    "projected_global_market_2035_usd_billion": null,
+    "estimated_cagr_2025_2035": null,
+    "global_data_status": "not_included_due_to_lack_of_single_official_global_manga_market_source",
+    "japan_comic_market_2025_total_jpy_billion": 692.5,
+    "japan_comic_market_2025_yoy_percent": -1.7,
+    "japan_print_comic_market_2025_jpy_billion": 165.2,
+    "japan_print_comic_market_2025_yoy_percent": -14.0,
+    "japan_print_comic_single_volumes_2025_jpy_billion": 126.0,
+    "japan_comic_magazines_2025_jpy_billion": 39.2,
+    "japan_digital_comic_market_2025_jpy_billion": 527.3,
+    "japan_digital_comic_market_2025_yoy_percent": 2.9,
+    "digital_format_share": 76.1,
+    "print_format_share": 23.9,
+    "comics_share_of_total_japan_publishing_market_percent": 44.8,
+    "online_distribution_share": null,
+    "asia_pacific_market_share": null,
+    "north_america_projected_cagr": null,
+    "japan_top_observed_volume": "Kingdom Vol. 78",
+    "japan_top_observed_volume_copies": 303982,
+    "japan_top_observed_volume_ranking_date": "2026-02-02",
+    "japan_observed_oricon_top10_weekly_copies_total": 2026715,
+    "japan_observed_oricon_top10_weekly_copies_total_basis": "Soma simples das cópias semanais exibidas nos quatro snapshots Oricon Top 10 incluídos na base. Não é ranking mensal oficial.",
+    "japan_top_series": null,
+    "japan_top_series_copies": null,
+    "japan_top_10_series_copies": null,
+    "japan_top_10_average_copies": null
+  },
+  "japan_series_rankings": [
+    {
+      "rank": 1,
+      "title": "Kingdom",
+      "volume": "Vol. 78",
+      "copies_sold": 303982,
+      "ranking_type": "official_weekly_volume_ranking",
+      "ranking_date": "2026-02-02",
+      "source_id": "ORICON-2026-02-02",
+      "confidence": 97.2,
+      "note": "Maior número observado entre os snapshots semanais oficiais incluídos. Não representa ranking mensal consolidado."
+    },
+    {
+      "rank": 2,
+      "title": "Jujutsu Kaisen: Modulo",
+      "volume": "Vol. 1",
+      "copies_sold": 190432,
+      "ranking_type": "official_weekly_volume_ranking",
+      "ranking_date": "2026-01-19",
+      "source_id": "ORICON-2026-01-19",
+      "confidence": 97.2,
+      "note": "Registro semanal oficial."
+    },
+    {
+      "rank": 3,
+      "title": "Kagurabachi",
+      "volume": "Vol. 10",
+      "copies_sold": 114783,
+      "ranking_type": "official_weekly_volume_ranking",
+      "ranking_date": "2026-01-19",
+      "source_id": "ORICON-2026-01-19",
+      "confidence": 97.2,
+      "note": "Registro semanal oficial."
+    },
+    {
+      "rank": 4,
+      "title": "Dandadan",
+      "volume": "Vol. 22",
+      "copies_sold": 102774,
+      "ranking_type": "official_weekly_volume_ranking",
+      "ranking_date": "2026-01-19",
+      "source_id": "ORICON-2026-01-19",
+      "confidence": 97.2,
+      "note": "Registro semanal oficial."
+    },
+    {
+      "rank": 5,
+      "title": "Zatch Bell!! 2",
+      "volume": "Vol. 6",
+      "copies_sold": 69588,
+      "ranking_type": "official_weekly_volume_ranking",
+      "ranking_date": "2026-01-26",
+      "source_id": "ORICON-2026-01-26",
+      "confidence": 97.2,
+      "note": "Registro semanal oficial."
+    },
+    {
+      "rank": 6,
+      "title": "Medalist",
+      "volume": "Vol. 14",
+      "copies_sold": 68308,
+      "ranking_type": "official_weekly_volume_ranking",
+      "ranking_date": "2026-02-02",
+      "source_id": "ORICON-2026-02-02",
+      "confidence": 97.2,
+      "note": "Registro semanal oficial."
+    },
+    {
+      "rank": 7,
+      "title": "Blue Lock",
+      "volume": "Vol. 37",
+      "copies_sold": 62081,
+      "ranking_type": "official_weekly_volume_ranking",
+      "ranking_date": "2026-02-02",
+      "source_id": "ORICON-2026-02-02",
+      "confidence": 97.2,
+      "note": "Registro semanal oficial."
+    },
+    {
+      "rank": 8,
+      "title": "Uruwashi no Yoi no Tsuki",
+      "volume": "Vol. 10",
+      "copies_sold": 59397,
+      "ranking_type": "official_weekly_volume_ranking",
+      "ranking_date": "2026-01-26",
+      "source_id": "ORICON-2026-01-26",
+      "confidence": 97.2,
+      "note": "Registro semanal oficial."
+    },
+    {
+      "rank": 9,
+      "title": "Frieren: Beyond Journey's End",
+      "volume": "Vol. 15",
+      "copies_sold": 57504,
+      "ranking_type": "official_weekly_volume_ranking",
+      "ranking_date": "2026-01-12",
+      "source_id": "ORICON-2026-01-12",
+      "confidence": 97.2,
+      "note": "Registro semanal oficial."
+    },
+    {
+      "rank": 10,
+      "title": "Rurouni Kenshin: Meiji Swordsman Romantic Story Hokkaido Arc",
+      "volume": "Vol. 10",
+      "copies_sold": 75395,
+      "ranking_type": "official_weekly_volume_ranking",
+      "ranking_date": "2026-01-19",
+      "source_id": "ORICON-2026-01-19",
+      "confidence": 97.2,
+      "note": "Registro semanal oficial; aparece fora da ordenação por volume máximo por causa da compatibilidade com visualização Top 10 editorial."
+    }
+  ],
+  "japan_observed_series_totals": [
+    {
+      "rank": 1,
+      "series": "Kingdom",
+      "volume": "Vol. 78",
+      "observed_copies_sold": 303982,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries",
+      "source_ids": [
+        "ORICON-2026-02-02"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 2,
+      "series": "Jujutsu Kaisen: Modulo",
+      "volume": "Vol. 1",
+      "observed_copies_sold": 229932,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries",
+      "source_ids": [
+        "ORICON-2026-01-19",
+        "ORICON-2026-01-26"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 3,
+      "series": "Dandadan",
+      "volume": "Vol. 22",
+      "observed_copies_sold": 127215,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries",
+      "source_ids": [
+        "ORICON-2026-01-19",
+        "ORICON-2026-01-26"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 4,
+      "series": "Blue Lock",
+      "volume": "Vol. 37",
+      "observed_copies_sold": 120574,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries",
+      "source_ids": [
+        "ORICON-2026-01-26",
+        "ORICON-2026-02-02"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 5,
+      "series": "Kagurabachi",
+      "volume": "Vol. 10",
+      "observed_copies_sold": 114783,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries",
+      "source_ids": [
+        "ORICON-2026-01-19"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 6,
+      "series": "Zatch Bell!! 2 / Konjiki no Gash!! 2",
+      "volume": "Vol. 6",
+      "observed_copies_sold": 102981,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries",
+      "source_ids": [
+        "ORICON-2026-01-26",
+        "ORICON-2026-02-02"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 7,
+      "series": "Frieren: Beyond Journey's End",
+      "volume": "Vol. 15",
+      "observed_copies_sold": 83725,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries",
+      "source_ids": [
+        "ORICON-2026-01-12",
+        "ORICON-2026-01-19"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 8,
+      "series": "Uruwashi no Yoi no Tsuki",
+      "volume": "Vol. 10",
+      "observed_copies_sold": 83604,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries",
+      "source_ids": [
+        "ORICON-2026-01-26",
+        "ORICON-2026-02-02"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 9,
+      "series": "Rurouni Kenshin: Meiji Swordsman Romantic Story Hokkaido Arc",
+      "volume": "Vol. 10",
+      "observed_copies_sold": 75395,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries",
+      "source_ids": [
+        "ORICON-2026-01-19"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 10,
+      "series": "Medalist",
+      "volume": "Vol. 14",
+      "observed_copies_sold": 68308,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries",
+      "source_ids": [
+        "ORICON-2026-02-02"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    }
+  ],
+  "japan_weekly_rankings": [
+    {
+      "ranking_date": "2026-01-12",
+      "source_id": "ORICON-2026-01-12",
+      "ranking_type": "weekly_manga_volume_sales",
+      "items": [
+        {
+          "rank": 1,
+          "title": "Frieren: Beyond Journey's End Vol. 15",
+          "copies_sold": 57504,
+          "cumulative_copies": 373627,
+          "author": "Kanehito Yamada / Tsukasa Abe"
+        },
+        {
+          "rank": 2,
+          "title": "The Summer Hikaru Died Vol. 8",
+          "copies_sold": 42659,
+          "cumulative_copies": 75242,
+          "author": "Mokumokuren"
+        },
+        {
+          "rank": 3,
+          "title": "From Old Country Bumpkin to Master Swordsman Vol. 8",
+          "copies_sold": 36673,
+          "cumulative_copies": 124714,
+          "author": "Shigeru Sagazaki / Tetsuhiro Nabeshima / Kazuki Sato"
+        },
+        {
+          "rank": 4,
+          "title": "Honey Lemon Soda Vol. 30",
+          "copies_sold": 24084,
+          "cumulative_copies": 66981,
+          "author": "Mayu Murata"
+        },
+        {
+          "rank": 5,
+          "title": "The Barrier Master's Single Flower Vol. 7",
+          "copies_sold": 20205,
+          "cumulative_copies": 36371,
+          "author": "Odayaka / Kureha / Bodax"
+        },
+        {
+          "rank": 6,
+          "title": "ONE PIECE Vol. 113",
+          "copies_sold": 19694,
+          "cumulative_copies": 1018776,
+          "author": "Eiichiro Oda"
+        },
+        {
+          "rank": 7,
+          "title": "The Demon's Bride Vol. 8",
+          "copies_sold": 19567,
+          "cumulative_copies": 52216,
+          "author": "Jun Togashi / Kureha"
+        },
+        {
+          "rank": 8,
+          "title": "The Apothecary Diaries: Maomao's Palace Mystery-Solving Notebook Vol. 21",
+          "copies_sold": 19238,
+          "cumulative_copies": 128228,
+          "author": "Natsu Hyuga / Minoji Kurata / Touko Shino"
+        },
+        {
+          "rank": 9,
+          "title": "I Got a Cheat Skill in Another World and Became Unrivaled in the Real World, Too Vol. 7",
+          "copies_sold": 17381,
+          "cumulative_copies": 32449,
+          "author": "Kazuomi Minatogawa / Miku / Rein Kuwashima"
+        },
+        {
+          "rank": 10,
+          "title": "The JOJOLands Vol. 7",
+          "copies_sold": 16990,
+          "cumulative_copies": 116313,
+          "author": "Hirohiko Araki"
+        }
+      ]
+    },
+    {
+      "ranking_date": "2026-01-19",
+      "source_id": "ORICON-2026-01-19",
+      "ranking_type": "weekly_manga_volume_sales",
+      "items": [
+        {
+          "rank": 1,
+          "title": "Jujutsu Kaisen: Modulo 1",
+          "copies_sold": 190432,
+          "cumulative_copies": 190989,
+          "author": "Gege Akutami / Yuji Iwasaki"
+        },
+        {
+          "rank": 2,
+          "title": "Kagurabachi Vol. 10",
+          "copies_sold": 114783,
+          "cumulative_copies": 115571,
+          "author": "Takeru Hokazono"
+        },
+        {
+          "rank": 3,
+          "title": "Dandadan Vol. 22",
+          "copies_sold": 102774,
+          "cumulative_copies": 103028,
+          "author": "Yukinobu Tatsu"
+        },
+        {
+          "rank": 4,
+          "title": "Rurouni Kenshin: Meiji Swordsman Romantic Story Hokkaido Arc Vol. 10",
+          "copies_sold": 75395,
+          "cumulative_copies": 75552,
+          "author": "Nobuhiro Watsuki / Kaoru Kurosaki"
+        },
+        {
+          "rank": 5,
+          "title": "Kinnikuman Vol. 91",
+          "copies_sold": 45770,
+          "cumulative_copies": 45770,
+          "author": "Yudetamago"
+        },
+        {
+          "rank": 6,
+          "title": "The Dangers in My Heart Vol. 13",
+          "copies_sold": 37663,
+          "cumulative_copies": 37663,
+          "author": "Norio Sakurai"
+        },
+        {
+          "rank": 7,
+          "title": "Beet the Vandel Buster Vol. 19",
+          "copies_sold": 34795,
+          "cumulative_copies": 34795,
+          "author": "Koji Inada / Riku Sanjo"
+        },
+        {
+          "rank": 8,
+          "title": "Akane-banashi Vol. 20",
+          "copies_sold": 30686,
+          "cumulative_copies": 30686,
+          "author": "Takamasa Moue / Yuki Suenaga"
+        },
+        {
+          "rank": 9,
+          "title": "Dragon Quest: The Adventure of Dai Avan the Hero and the Blaze of Hellfire Vol. 14",
+          "copies_sold": 30330,
+          "cumulative_copies": 30330,
+          "author": "Yusaku Shibata / Riku Sanjo"
+        },
+        {
+          "rank": 10,
+          "title": "Frieren: Beyond Journey's End Vol. 15",
+          "copies_sold": 26221,
+          "cumulative_copies": 399848,
+          "author": "Kanehito Yamada / Tsukasa Abe"
+        }
+      ]
+    },
+    {
+      "ranking_date": "2026-01-26",
+      "source_id": "ORICON-2026-01-26",
+      "ranking_type": "weekly_manga_volume_sales",
+      "items": [
+        {
+          "rank": 1,
+          "title": "Zatch Bell!! 2 Vol. 6",
+          "copies_sold": 69588,
+          "cumulative_copies": 69588,
+          "author": "Sei Raiku"
+        },
+        {
+          "rank": 2,
+          "title": "Uruwashi no Yoi no Tsuki Vol. 10",
+          "copies_sold": 59397,
+          "cumulative_copies": 60170,
+          "author": "Mika Yamamori"
+        },
+        {
+          "rank": 3,
+          "title": "Blue Lock Vol. 37",
+          "copies_sold": 58493,
+          "cumulative_copies": 58493,
+          "author": "Muneyuki Kaneshiro / Yusuke Nomura"
+        },
+        {
+          "rank": 4,
+          "title": "Koiseyo Mayakashi Tenshi-domo Vol. 6",
+          "copies_sold": 46732,
+          "cumulative_copies": 48437,
+          "author": "Koko Uzuki"
+        },
+        {
+          "rank": 5,
+          "title": "Hakumei and Mikochi Vol. 14",
+          "copies_sold": 40543,
+          "cumulative_copies": 40543,
+          "author": "Yuto Kashiki"
+        },
+        {
+          "rank": 6,
+          "title": "Jujutsu Kaisen: Modulo 1",
+          "copies_sold": 39500,
+          "cumulative_copies": 230489,
+          "author": "Gege Akutami / Yuji Iwasaki"
+        },
+        {
+          "rank": 7,
+          "title": "Shangri-La Frontier Vol. 25",
+          "copies_sold": 35914,
+          "cumulative_copies": 35914,
+          "author": "Katarina / Ryosuke Fuji"
+        },
+        {
+          "rank": 8,
+          "title": "Nanatsuya Shinobu's Jewel Box Vol. 26",
+          "copies_sold": 27788,
+          "cumulative_copies": 27788,
+          "author": "Tomoko Ninomiya"
+        },
+        {
+          "rank": 9,
+          "title": "Dandadan Vol. 22",
+          "copies_sold": 24441,
+          "cumulative_copies": 127469,
+          "author": "Yukinobu Tatsu"
+        },
+        {
+          "rank": 10,
+          "title": "Hajime no Ippo Vol. 145",
+          "copies_sold": 24331,
+          "cumulative_copies": 24331,
+          "author": "George Morikawa"
+        }
+      ]
+    },
+    {
+      "ranking_date": "2026-02-02",
+      "source_id": "ORICON-2026-02-02",
+      "ranking_type": "weekly_manga_volume_sales",
+      "items": [
+        {
+          "rank": 1,
+          "title": "Kingdom Vol. 78",
+          "copies_sold": 303982,
+          "cumulative_copies": 304762,
+          "author": "Yasuhisa Hara"
+        },
+        {
+          "rank": 2,
+          "title": "Medalist Vol. 14",
+          "copies_sold": 68308,
+          "cumulative_copies": 68308,
+          "author": "Tsurumaikada"
+        },
+        {
+          "rank": 3,
+          "title": "Blue Lock Vol. 37",
+          "copies_sold": 62081,
+          "cumulative_copies": 120574,
+          "author": "Muneyuki Kaneshiro / Yusuke Nomura"
+        },
+        {
+          "rank": 4,
+          "title": "Harem in the Labyrinth of Another World Vol. 12",
+          "copies_sold": 42227,
+          "cumulative_copies": 42227,
+          "author": "Issei Hyouju / Shachi Sogano / Doki Shikidouji"
+        },
+        {
+          "rank": 5,
+          "title": "Konjiki no Gash!! 2 Vol. 6",
+          "copies_sold": 33393,
+          "cumulative_copies": 102981,
+          "author": "Makoto Raiku"
+        },
+        {
+          "rank": 6,
+          "title": "Shangri-La Frontier Vol. 25",
+          "copies_sold": 33269,
+          "cumulative_copies": 69183,
+          "author": "Katarina / Ryosuke Fuji"
+        },
+        {
+          "rank": 7,
+          "title": "Tamon-kun Which Way Now!? Vol. 13",
+          "copies_sold": 24383,
+          "cumulative_copies": 24383,
+          "author": "Yuki Shiwasu"
+        },
+        {
+          "rank": 8,
+          "title": "Uruwashi no Yoi no Tsuki Vol. 10",
+          "copies_sold": 24207,
+          "cumulative_copies": 84377,
+          "author": "Mika Yamamori"
+        },
+        {
+          "rank": 9,
+          "title": "Galactic Express Milky Subway Vol. 1",
+          "copies_sold": 23079,
+          "cumulative_copies": 23079,
+          "author": "Kawano Donburi / Yohei Kameyama"
+        },
+        {
+          "rank": 10,
+          "title": "Super no Ura de Yani Suu Futari Vol. 8",
+          "copies_sold": 22215,
+          "cumulative_copies": 22215,
+          "author": "Jinushi"
+        }
+      ]
+    }
+  ],
+  "international_market": [
+    {
+      "region": "Global",
+      "estimated_market_share": null,
+      "estimated_market_value_usd_billion": null,
+      "growth_profile": null,
+      "main_drivers": null,
+      "data_status": "excluded_no_single_official_global_manga_market_source_validated"
+    },
+    {
+      "region": "Ásia-Pacífico",
+      "estimated_market_share": null,
+      "estimated_market_value_usd_billion": null,
+      "growth_profile": null,
+      "main_drivers": null,
+      "data_status": "excluded_no_official_region_specific_manga_market_source_validated"
+    },
+    {
+      "region": "América do Norte",
+      "estimated_market_share": null,
+      "estimated_market_value_usd_billion": null,
+      "growth_profile": null,
+      "main_drivers": null,
+      "data_status": "excluded_no_official_region_specific_manga_market_source_validated"
+    },
+    {
+      "region": "Europa",
+      "estimated_market_share": null,
+      "estimated_market_value_usd_billion": null,
+      "growth_profile": null,
+      "main_drivers": null,
+      "data_status": "excluded_no_official_region_specific_manga_market_source_validated"
+    },
+    {
+      "region": "América Latina",
+      "estimated_market_share": null,
+      "estimated_market_value_usd_billion": null,
+      "growth_profile": null,
+      "main_drivers": null,
+      "data_status": "excluded_no_official_region_specific_manga_market_source_validated"
+    }
+  ],
+  "format_distribution": [
+    {
+      "format": "Digital / Electronic Comics",
+      "share": 76.1,
+      "market_value_jpy_billion": 527.3,
+      "reading_behavior": null,
+      "opportunity": null,
+      "source_id": "SHUPPANKAGAKU-2026-02-25-COMIC-2025",
+      "confidence": 97.2,
+      "note": "Participação no mercado japonês de comics em 2025, não no mercado global."
+    },
+    {
+      "format": "Print / Paper Comics",
+      "share": 23.9,
+      "market_value_jpy_billion": 165.2,
+      "reading_behavior": null,
+      "opportunity": null,
+      "source_id": "SHUPPANKAGAKU-2026-02-25-COMIC-2025",
+      "confidence": 97.2,
+      "note": "Inclui tankobon e revistas de mangá/comics no Japão em 2025."
+    },
+    {
+      "format": "Print / Single Comic Volumes",
+      "share": null,
+      "market_value_jpy_billion": 126.0,
+      "reading_behavior": null,
+      "opportunity": null,
+      "source_id": "SHUPPANKAGAKU-2026-02-25-COMIC-2025",
+      "confidence": 97.2,
+      "note": "Valor de mercado japonês de volumes impressos avulsos em 2025."
+    },
+    {
+      "format": "Print / Comic Magazines",
+      "share": null,
+      "market_value_jpy_billion": 39.2,
+      "reading_behavior": null,
+      "opportunity": null,
+      "source_id": "SHUPPANKAGAKU-2026-02-25-COMIC-2025",
+      "confidence": 97.2,
+      "note": "Valor de mercado japonês de revistas de mangá/comics em 2025."
+    }
+  ],
+  "distribution_channels": [
+    {
+      "channel": "Online / E-commerce",
+      "share": null,
+      "role": null,
+      "opportunity": null,
+      "data_status": "not_populated_no_official_channel_share_source_validated"
+    },
+    {
+      "channel": "Digital platforms and apps",
+      "share": null,
+      "role": null,
+      "opportunity": null,
+      "data_status": "not_populated_no_official_channel_share_source_validated"
+    },
+    {
+      "channel": "Physical bookstores",
+      "share": null,
+      "role": null,
+      "opportunity": null,
+      "data_status": "not_populated_no_official_channel_share_source_validated"
+    }
+  ],
+  "trend_insights": [
+    {
+      "theme": "Digital é o principal formato no mercado japonês de comics",
+      "examples": "Electronic comics represent 76.1% of Japan's comic market value in 2025.",
+      "market_reading": "Leitura baseada em dado oficial anual do mercado japonês.",
+      "ryuzen_angle": "Priorizar produtos editoriais e análises que considerem o consumo digital como eixo principal.",
+      "source_id": "SHUPPANKAGAKU-2026-02-25-COMIC-2025",
+      "confidence": 97.2
+    },
+    {
+      "theme": "Queda forte do impresso japonês em 2025",
+      "examples": "Paper comic market fell 14.0%; single comic volumes fell 14.4%.",
+      "market_reading": "O impresso segue relevante, mas sofreu forte retração no Japão em 2025.",
+      "ryuzen_angle": "Tratar colecionismo físico como nicho estratégico, não como único indicador de mercado.",
+      "source_id": "SHUPPANKAGAKU-2026-02-25-COMIC-2025",
+      "confidence": 97.2
+    },
+    {
+      "theme": "Janeiro de 2026 teve liderança semanal alternada",
+      "examples": "Frieren, Jujutsu Kaisen: Modulo, Zatch Bell!! 2 e Kingdom lideraram diferentes snapshots semanais.",
+      "market_reading": "Não há evidência nesta base de uma única obra líder mensal consolidada.",
+      "ryuzen_angle": "Usar rankings semanais para acompanhar oportunidades editoriais de curto prazo.",
+      "source_ids": [
+        "ORICON-2026-01-12",
+        "ORICON-2026-01-19",
+        "ORICON-2026-01-26",
+        "ORICON-2026-02-02"
+      ],
+      "confidence": 97.2
+    }
+  ],
+  "sources": [
+    {
+      "id": "SHUPPANKAGAKU-2026-02-25-COMIC-2025",
+      "name": "全国出版協会・出版科学研究所 / Research Institute for Publications",
+      "url": "https://shuppankagaku.com/wp/wp-content/uploads/2026/02/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E3%83%AA%E3%83%AA%E3%83%BC%E3%82%B92602.pdf",
+      "type": "official_industry_research_release",
+      "reliability": "very_high",
+      "used_for": [
+        "Japan comic market value 2025",
+        "digital/print market values",
+        "digital/print shares",
+        "year-over-year market movement"
+      ],
+      "accessed_at": "2026-05-16"
+    },
+    {
+      "id": "ORICON-2026-01-12",
+      "name": "Japan Anime News powered by ORICON NEWS",
+      "url": "https://us.oricon-group.com/news/7403/",
+      "type": "official_oricon_weekly_ranking",
+      "reliability": "very_high",
+      "used_for": "Oricon weekly manga volume sales ranking dated 2026-01-12",
+      "accessed_at": "2026-05-16"
+    },
+    {
+      "id": "ORICON-2026-01-19",
+      "name": "Japan Anime News powered by ORICON NEWS",
+      "url": "https://us.oricon-group.com/news/7457/",
+      "type": "official_oricon_weekly_ranking",
+      "reliability": "very_high",
+      "used_for": "Oricon weekly manga volume sales ranking dated 2026-01-19",
+      "accessed_at": "2026-05-16"
+    },
+    {
+      "id": "ORICON-2026-01-26",
+      "name": "Japan Anime News powered by ORICON NEWS",
+      "url": "https://us.oricon-group.com/news/7544/",
+      "type": "official_oricon_weekly_ranking",
+      "reliability": "very_high",
+      "used_for": "Oricon weekly manga volume sales ranking dated 2026-01-26",
+      "accessed_at": "2026-05-16"
+    },
+    {
+      "id": "ORICON-2026-02-02",
+      "name": "Japan Anime News powered by ORICON NEWS",
+      "url": "https://us.oricon-group.com/news/7614/",
+      "type": "official_oricon_weekly_ranking",
+      "reliability": "very_high",
+      "used_for": "Oricon weekly manga volume sales ranking dated 2026-02-02",
+      "accessed_at": "2026-05-16"
+    }
+  ],
+  "excluded_sources_from_previous_version": [
+    {
+      "name": "Fortune Business Insights",
+      "reason": "Market consultancy source, not official portal. Excluded under high-integrity official-only rule."
+    },
+    {
+      "name": "Grand View Research",
+      "reason": "Market consultancy source, not official portal. Excluded under high-integrity official-only rule."
+    },
+    {
+      "name": "Manga Mogura RE",
+      "reason": "Social/news account. Useful for monitoring, but excluded from official-only database."
+    }
+  ]
+}

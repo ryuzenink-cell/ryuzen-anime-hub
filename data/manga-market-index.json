@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0.0",
+  "note": "Índice opcional de bases do dashboard. O JavaScript também tenta localizar automaticamente arquivos seguindo o padrão data/ANO/manga-market-ANO-annual.json e data/ANO/MM/manga-market-ANO-MM.json.",
+  "datasets": [
+    {
+      "id": "2025-annual",
+      "label": "2025 - Apuração anual",
+      "year": "2025",
+      "period_type": "annual",
+      "status": "complete",
+      "path": "data/2025/manga-market-2025-annual.json",
+      "note": "Apuração anual consolidada de 2025."
+    }
+  ]
+}

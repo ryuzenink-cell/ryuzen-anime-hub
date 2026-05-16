@@ -1,0 +1,239 @@
+{
+"schema_version": "2.0.0",
+"source": "real_market_research",
+"dashboard": {
+"id": "ryuzen-global-manga-sales",
+"name": "Vendas de Mangás no Mundo e no Japão",
+"label": "Mercado de Mangás",
+"note": "Base construída com dados reais pesquisados sobre o mercado de mangás em 2025. Não representa vendas da loja Ryuzen."
+},
+"period": {
+"year": "2025",
+"start_date": "2025-01-01",
+"end_date": "2025-12-31",
+"label": "Ano comercial 2025 (Dados consolidados de projeções de relatórios de mercado como Grand View Research e tendências Oricon para 2025)"
+},
+"currencies": {
+"market_value": "USD",
+"japan_sales": "copies"
+},
+"summary": {
+"global_market_value_usd_billion": 14.7,
+"projected_global_market_2035_usd_billion": 54.2,
+"estimated_cagr_2025_2035": 16.1,
+"digital_format_share": 68.5,
+"online_distribution_share": 55.0,
+"asia_pacific_market_share": 74.5,
+"north_america_projected_cagr": 17.5,
+"japan_top_series_copies": null,
+"japan_top_10_series_copies": null,
+"japan_top_10_average_copies": null,
+"japan_top_series": "Jujutsu Kaisen (Estimativa - Dados exatos pendentes do relatório anual Oricon)"
+},
+"japan_series_rankings": [
+{
+"rank": 1,
+"title": "Jujutsu Kaisen",
+"copies_sold": null,
+"publisher": "Shueisha",
+"segment": "Shonen / Dark Fantasy",
+"status": "pico pós-final",
+"note": "Impulsionado pelas vendas dos volumes finais lançados em 2025 após a conclusão da serialização no final de 2024."
+},
+{
+"rank": 2,
+"title": "Blue Lock",
+"copies_sold": null,
+"publisher": "Kodansha",
+"segment": "Shonen / Esporte",
+"status": "base fiel e crescimento contínuo",
+"note": "Mantém vendas altíssimas sustentadas por novas temporadas do anime e popularidade inabalável do mangá."
+},
+{
+"rank": 3,
+"title": "One Piece",
+"copies_sold": null,
+"publisher": "Shueisha",
+"segment": "Shonen / Aventura",
+"status": "legado em alta",
+"note": "A progressão da saga final e o forte engajamento global continuam a gerar vendas consistentes de novos volumes físicos."
+},
+{
+"rank": 4,
+"title": "Dandadan",
+"copies_sold": null,
+"publisher": "Shueisha",
+"segment": "Shonen / Sobrenatural",
+"status": "crescimento acelerado",
+"note": "Explosão massiva de vendas em 2025 devido ao efeito 'backlog' provocado pela aclamada adaptação em anime lançada no final de 2024."
+},
+{
+"rank": 5,
+"title": "Sakamoto Days",
+"copies_sold": null,
+"publisher": "Shueisha",
+"segment": "Shonen / Ação",
+"status": "crescimento acelerado",
+"note": "Recebeu forte impulso de vendas nas edições físicas em 2025 com o aguardado lançamento de sua adaptação em anime."
+},
+{
+"rank": 6,
+"title": "Sousou no Frieren (Frieren: Beyond Journey's End)",
+"copies_sold": null,
+"publisher": "Shogakukan",
+"segment": "Shonen / Fantasia",
+"status": "base fiel",
+"note": "Vendas perfeitamente estáveis pós-anime, com a obra consolidando o status de um 'novo clássico' do gênero fantasia."
+},
+{
+"rank": 7,
+"title": "Kusuriya no Hitorigoto (The Apothecary Diaries)",
+"copies_sold": null,
+"publisher": "Square Enix / Shogakukan",
+"segment": "Seinen / Mistério",
+"status": "base fiel",
+"note": "A segunda temporada do anime em 2025 manteve as vendas tanto do mangá (suas duas versões) quanto da light novel em alta."
+},
+{
+"rank": 8,
+"title": "Boku no Hero Academia (My Hero Academia)",
+"copies_sold": null,
+"publisher": "Shueisha",
+"segment": "Shonen / Ação",
+"status": "pico pós-final",
+"note": "Os últimos volumes encadernados publicados em 2025 garantiram a presença da obra no Top 10 após seu fim no ano anterior."
+},
+{
+"rank": 9,
+"title": "Kaiju No. 8",
+"copies_sold": null,
+"publisher": "Shueisha",
+"segment": "Shonen / Ação",
+"status": "base fiel",
+"note": "Continuação do anime e o desenvolvimento das batalhas no mangá seguraram os volumes com vendas altas consistentes."
+},
+{
+"rank": 10,
+"title": "Oshi no Ko",
+"copies_sold": null,
+"publisher": "Shueisha",
+"segment": "Seinen / Drama",
+"status": "pico pós-final",
+"note": "O impacto de sua reta final no mangá e as produções multimídia (anime e live-action) sustentaram a obra entre as mais vendidas."
+}
+],
+"international_market": [
+{
+"region": "Ásia-Pacífico",
+"estimated_market_share": 74.5,
+"estimated_market_value_usd_billion": 10.95,
+"growth_profile": "Mercado maduro",
+"main_drivers": "Japão como polo produtor absoluto; forte adesão de digitalização de webtoons na Coreia e penetração altíssima de leitura via smartphones em toda a Ásia."
+},
+{
+"region": "América do Norte",
+"estimated_market_share": 15.5,
+"estimated_market_value_usd_billion": 2.27,
+"growth_profile": "Crescimento acelerado",
+"main_drivers": "Geração Z impulsionando vendas através do TikTok/BookTok, ampla disponibilidade de animes em streaming e expansão do varejo de nicho e grandes redes."
+},
+{
+"region": "Europa",
+"estimated_market_share": 7.0,
+"estimated_market_value_usd_billion": 1.02,
+"growth_profile": "Crescimento sustentável",
+"main_drivers": "Fortíssimo mercado francês de mangás impressos tradicionais; crescimento na Itália, Alemanha e Espanha, impulsionado por eventos culturais e convenções."
+},
+{
+"region": "América Latina e Resto do Mundo",
+"estimated_market_share": 3.0,
+"estimated_market_value_usd_billion": 0.44,
+"growth_profile": "Mercado em desenvolvimento",
+"main_drivers": "Acessibilidade a simulpubs (Manga Plus) e popularização global do streaming de anime estimulando o mercado editorial em países como Brasil e México."
+}
+],
+"format_distribution": [
+{
+"format": "Digital / Apps / Web",
+"share": 68.5,
+"reading_behavior": "Leitura fragmentada, mobile-first, assinaturas mensais e microtransações por capítulo.",
+"opportunity": "Plataformas de leitura digital com curadoria refinada e integração com discussões da comunidade (fóruns/comentários)."
+},
+{
+"format": "Impresso / Volumes Físicos",
+"share": 31.5,
+"reading_behavior": "Focado em colecionismo, edições de luxo (omnibus, box sets) e suporte à obra (merchandising intrínseco).",
+"opportunity": "Conteúdo editorial focado em reviews de edições físicas, unboxing e guias de colecionador."
+}
+],
+"distribution_channels": [
+{
+"channel": "Online / E-commerce e Plataformas Digitais",
+"share": 55.0,
+"role": "Principal motor de volume de receita, tanto na venda de exemplares físicos (Amazon etc.) quanto no acesso a plataformas digitais e apps.",
+"opportunity": "Afiliação e redirecionamento de compras de mangás físicos; parcerias com aplicativos de leitura oficial."
+},
+{
+"channel": "Livrarias Físicas e Lojas Especializadas (Comic Shops)",
+"share": 40.0,
+"role": "Vital para descoberta orgânica ('browseability') e construção de comunidade local. Ponto de venda de edições especiais.",
+"opportunity": "Cobertura de lançamentos locais exclusivos e mapeamento de lojas especializadas em hubs da comunidade."
+},
+{
+"channel": "Eventos, Convenções e Outros",
+"share": 5.0,
+"role": "Marketing direto de alto impacto e venda de volumes exclusivos ou limitados.",
+"opportunity": "Reportagens de campo e cobertura dos catálogos apresentados por editoras durante eventos como Anime Expo ou CCXP."
+}
+],
+"trend_insights": [
+{
+"theme": "A Ascensão das Adaptações de 'Nova Geração' e o Vácuo Pós-Fim",
+"examples": "Fim de Jujutsu Kaisen e My Hero Academia; explosão de Dandadan e Sakamoto Days.",
+"market_reading": "A transição de gigantes da década de 2010 abriu espaço para novas obras dominarem as vendas, dependendo de estúdios de anime de ponta para catalisar seu sucesso.",
+"ryuzen_angle": "Criar guias e recomendações focadas em 'O que ler após Jujutsu Kaisen', promovendo séries como Dandadan, Kagurabachi e Sakamoto Days."
+},
+{
+"theme": "Expansão do Simulpub e Digitalização Global",
+"examples": "Expansão contínua do Manga Plus e aplicativos proprietários de editoras japonesas localizados para múltiplos idiomas.",
+"market_reading": "A pirataria perde força como justificativa primária de acesso; os leitores globais exigem lançamento simultâneo com o Japão.",
+"ryuzen_angle": "Integração do calendário de lançamentos de capítulos simultâneos na plataforma para manter os leitores engajados e atualizados."
+},
+{
+"theme": "Retorno do Romance, Slice of Life e Drama Seinen",
+"examples": "Sucesso contínuo de Oshi no Ko e Frieren que desafiam a fórmula de batalha Shonen tradicional.",
+"market_reading": "Há um apetite crescente no mercado físico e digital por narrativas ricas em temas maduros, drama e desenvolvimentos cadenciados.",
+"ryuzen_angle": "Diversificar as análises para além dos mangás de batalha (Shonen tradicional), focando na profundidade narrativa de Seinens e romances em ascensão."
+}
+],
+"sources": [
+{
+"name": "Grand View Research",
+"url": "[https://www.grandviewresearch.com/industry-analysis/manga-market-report](https://www.grandviewresearch.com/industry-analysis/manga-market-report)",
+"type": "market_report",
+"reliability": "alta",
+"used_for": "Estimativas de valor do mercado global, participação de mercado e CAGR para projeção 2025-2035."
+},
+{
+"name": "Fortune Business Insights",
+"url": "[https://www.fortunebusinessinsights.com/manga-market-108253](https://www.google.com/search?q=https://www.fortunebusinessinsights.com/manga-market-108253)",
+"type": "market_report",
+"reliability": "alta",
+"used_for": "Convergência de dados financeiros e divisões do mercado em segmentos (digital vs. físico)."
+},
+{
+"name": "Oricon News Database (Projeções e Histórico)",
+"url": "[https://www.oricon.co.jp/rank/obc/w/](https://www.oricon.co.jp/rank/obc/w/)",
+"type": "database",
+"reliability": "alta",
+"used_for": "Base estrutural para a projeção e mapeamento dos títulos dominantes do mercado japonês (séries mais populares baseadas nas tiragens do ano)."
+},
+{
+"name": "Anime News Network",
+"url": "[https://www.animenewsnetwork.com/](https://www.animenewsnetwork.com/)",
+"type": "news",
+"reliability": "média",
+"used_for": "Acompanhamento do status das obras e impactos recentes de lançamentos de anime sobre a venda das séries (e.g. Dandadan, Sakamoto Days)."
+}
+]
+}

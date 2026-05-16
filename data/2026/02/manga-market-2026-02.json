@@ -1,0 +1,934 @@
+{
+  "schema_version": "3.0.0",
+  "source": "official_verified_market_research",
+  "dashboard": {
+    "id": "ryuzen-japan-manga-sales-official-2026-02",
+    "name": "Vendas de Mangás no Japão — Base Verificada",
+    "label": "Mercado de Mangás",
+    "note": "Base recriada com política de integridade alta: somente dados oriundos de fontes oficiais, primárias ou diretamente publicadas por organizações do setor. Campos sem confirmação oficial foram mantidos como null. A base não afirma possuir ranking mensal consolidado de fevereiro de 2026; ela registra snapshots semanais oficiais da Oricon anunciados durante fevereiro de 2026."
+  },
+  "period": {
+    "year": "2026",
+    "month": "02",
+    "period_type": "monthly_context_with_official_weekly_snapshots",
+    "start_date": "2026-02-01",
+    "end_date": "2026-02-28",
+    "label": "Fevereiro de 2026",
+    "ranking_inclusion_rule": "Inclui rankings semanais da Oricon anunciados durante fevereiro de 2026: Feb 9, Feb 16, Feb 23 e Mar 2. O ranking Mar 2 foi anunciado em 2026-02-26.",
+    "important_limitation": "Rankings Oricon semanais usam datas de ranking próprias e não equivalem automaticamente a uma apuração mensal fechada de 01/02 a 28/02."
+  },
+  "currencies": {
+    "market_value": "JPY",
+    "japan_sales": "copies"
+  },
+  "confidence_assessment": {
+    "target_confidence": 97.2,
+    "estimated_confidence_for_source_backed_fields": 97.2,
+    "estimated_confidence_for_null_fields": 100.0,
+    "estimated_confidence_for_derived_observed_totals": 95.0,
+    "overall_completeness_score": 72.0,
+    "method": "A confiabilidade foi maximizada removendo ou anulando campos não verificáveis. O score de 97,2% aplica-se aos campos transcritos de fonte oficial/primária associada; campos derivados recebem 95,0% porque dependem de normalização de títulos e soma de entradas visíveis.",
+    "field_policy": {
+      "official_source_required": true,
+      "market_consultancy_reports_excluded": true,
+      "social_media_sources_excluded": true,
+      "unverified_estimates_replaced_with_null": true,
+      "derived_fields_marked_as_derived": true,
+      "monthly_ranking_not_claimed_without_official_monthly_source": true
+    }
+  },
+  "summary": {
+    "global_market_value_usd_billion": null,
+    "projected_global_market_2035_usd_billion": null,
+    "estimated_cagr_2025_2035": null,
+    "global_data_status": "not_included_due_to_lack_of_single_official_global_manga_market_source",
+    "japan_comic_market_2025_total_jpy_billion": 692.5,
+    "japan_comic_market_2025_yoy_percent": -1.7,
+    "japan_print_comic_market_2025_jpy_billion": 165.2,
+    "japan_print_comic_market_2025_yoy_percent": -14.0,
+    "japan_print_comic_single_volumes_2025_jpy_billion": 126.0,
+    "japan_comic_magazines_2025_jpy_billion": 39.2,
+    "japan_digital_comic_market_2025_jpy_billion": 527.3,
+    "japan_digital_comic_market_2025_yoy_percent": 2.9,
+    "digital_format_share": 76.1,
+    "print_format_share": 23.9,
+    "comics_share_of_total_japan_publishing_market_percent": 44.8,
+    "online_distribution_share": null,
+    "asia_pacific_market_share": null,
+    "north_america_projected_cagr": null,
+    "japan_top_observed_volume": "That Time I Got Reincarnated as a Slime Vol.31",
+    "japan_top_observed_volume_copies": 255514,
+    "japan_top_observed_volume_basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_february_2026",
+    "japan_highest_single_week_volume": "That Time I Got Reincarnated as a Slime Vol.31",
+    "japan_highest_single_week_volume_copies": 207881,
+    "japan_highest_single_week_volume_ranking_date": "2026-02-23",
+    "japan_observed_oricon_top10_weekly_copies_total": 1667123,
+    "japan_observed_oricon_top10_weekly_copies_total_basis": "Soma simples das cópias semanais exibidas nos quatro snapshots Oricon Top 10 incluídos na base. Não é ranking mensal oficial.",
+    "japan_top_series": null,
+    "japan_top_series_copies": null,
+    "japan_top_10_series_copies": null,
+    "japan_top_10_average_copies": null
+  },
+  "japan_series_rankings": [
+    {
+      "rank": 1,
+      "title": "That Time I Got Reincarnated as a Slime Vol.31",
+      "copies_sold": 255514,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-02-23",
+        "ORICON-2026-03-02"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    },
+    {
+      "rank": 2,
+      "title": "Don't Call It Mystery / Do Not Say Mystery Vol.16",
+      "copies_sold": 223905,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-02-23",
+        "ORICON-2026-03-02"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    },
+    {
+      "rank": 3,
+      "title": "Chainsaw Man Vol.23",
+      "copies_sold": 139095,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-02-16",
+        "ORICON-2026-02-23",
+        "ORICON-2026-03-02"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    },
+    {
+      "rank": 4,
+      "title": "Kingdom Vol.78",
+      "copies_sold": 95916,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-02-09",
+        "ORICON-2026-02-16"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    },
+    {
+      "rank": 5,
+      "title": "Blue Box Vol.24",
+      "copies_sold": 91873,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-02-16",
+        "ORICON-2026-02-23"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    },
+    {
+      "rank": 6,
+      "title": "Welcome to Demon School! Iruma-kun Vol.47",
+      "copies_sold": 81691,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-02-16",
+        "ORICON-2026-02-23"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    },
+    {
+      "rank": 7,
+      "title": "What Did You Eat Yesterday? Vol.25",
+      "copies_sold": 64420,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-03-02"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    },
+    {
+      "rank": 8,
+      "title": "BORUTO: Naruto Next Generations TWO BLUE VORTEX Vol.7",
+      "copies_sold": 51730,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-02-16"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    },
+    {
+      "rank": 9,
+      "title": "Welcome to Demon School! Iruma-kun if Episode of Mafia Vol.7",
+      "copies_sold": 50172,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-02-16",
+        "ORICON-2026-02-23"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    },
+    {
+      "rank": 10,
+      "title": "Gokurakugai Vol.6",
+      "copies_sold": 48971,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-02-16"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    }
+  ],
+  "japan_observed_volume_totals": [
+    {
+      "rank": 1,
+      "title": "That Time I Got Reincarnated as a Slime Vol.31",
+      "observed_copies_sold": 255514,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_february_2026",
+      "source_ids": [
+        "ORICON-2026-02-23",
+        "ORICON-2026-03-02"
+      ],
+      "titles_as_reported": [
+        "That Time I Got Reincarnated as a Slime 31",
+        "That Time I Got Reincarnated as a Slime Vol.31"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 2,
+      "title": "Don't Call It Mystery / Do Not Say Mystery Vol.16",
+      "observed_copies_sold": 223905,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_february_2026",
+      "source_ids": [
+        "ORICON-2026-02-23",
+        "ORICON-2026-03-02"
+      ],
+      "titles_as_reported": [
+        "Do Not Say Mystery 16",
+        "Don't Call It Mystery Vol.16"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 3,
+      "title": "Chainsaw Man Vol.23",
+      "observed_copies_sold": 139095,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_february_2026",
+      "source_ids": [
+        "ORICON-2026-02-16",
+        "ORICON-2026-02-23",
+        "ORICON-2026-03-02"
+      ],
+      "titles_as_reported": [
+        "Chainsaw Man 23",
+        "Chainsaw Man Vol.23"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 4,
+      "title": "Kingdom Vol.78",
+      "observed_copies_sold": 95916,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_february_2026",
+      "source_ids": [
+        "ORICON-2026-02-09",
+        "ORICON-2026-02-16"
+      ],
+      "titles_as_reported": [
+        "Kingdom 78",
+        "Kingdom Vol.78"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 5,
+      "title": "Blue Box Vol.24",
+      "observed_copies_sold": 91873,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_february_2026",
+      "source_ids": [
+        "ORICON-2026-02-16",
+        "ORICON-2026-02-23"
+      ],
+      "titles_as_reported": [
+        "Blue Box 24"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 6,
+      "title": "Welcome to Demon School! Iruma-kun Vol.47",
+      "observed_copies_sold": 81691,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_february_2026",
+      "source_ids": [
+        "ORICON-2026-02-16",
+        "ORICON-2026-02-23"
+      ],
+      "titles_as_reported": [
+        "Welcome to Demon School! Iruma-kun 47"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 7,
+      "title": "What Did You Eat Yesterday? Vol.25",
+      "observed_copies_sold": 64420,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_february_2026",
+      "source_ids": [
+        "ORICON-2026-03-02"
+      ],
+      "titles_as_reported": [
+        "What Did You Eat Yesterday? Vol.25"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 8,
+      "title": "BORUTO: Naruto Next Generations TWO BLUE VORTEX Vol.7",
+      "observed_copies_sold": 51730,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_february_2026",
+      "source_ids": [
+        "ORICON-2026-02-16"
+      ],
+      "titles_as_reported": [
+        "BORUTO: Naruto Next Generations 7 ―TWO BLUE VORTEX―"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 9,
+      "title": "Welcome to Demon School! Iruma-kun if Episode of Mafia Vol.7",
+      "observed_copies_sold": 50172,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_february_2026",
+      "source_ids": [
+        "ORICON-2026-02-16",
+        "ORICON-2026-02-23"
+      ],
+      "titles_as_reported": [
+        "Welcome to Demon School! Iruma-kun if Episode of Mafia 7"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 10,
+      "title": "Gokurakugai Vol.6",
+      "observed_copies_sold": 48971,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_february_2026",
+      "source_ids": [
+        "ORICON-2026-02-16"
+      ],
+      "titles_as_reported": [
+        "Gokurakugai 6"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    }
+  ],
+  "japan_weekly_top10_totals": [
+    {
+      "ranking_date": "2026-02-09",
+      "source_id": "ORICON-2026-02-09",
+      "top10_visible_copies_total": 265609,
+      "is_official_weekly_total": false,
+      "note": "Soma calculada apenas dos 10 itens visíveis na página pública."
+    },
+    {
+      "ranking_date": "2026-02-16",
+      "source_id": "ORICON-2026-02-16",
+      "top10_visible_copies_total": 406513,
+      "is_official_weekly_total": false,
+      "note": "Soma calculada apenas dos 10 itens visíveis na página pública."
+    },
+    {
+      "ranking_date": "2026-02-23",
+      "source_id": "ORICON-2026-02-23",
+      "top10_visible_copies_total": 640077,
+      "is_official_weekly_total": false,
+      "note": "Soma calculada apenas dos 10 itens visíveis na página pública."
+    },
+    {
+      "ranking_date": "2026-03-02",
+      "source_id": "ORICON-2026-03-02",
+      "top10_visible_copies_total": 354924,
+      "is_official_weekly_total": false,
+      "note": "Soma calculada apenas dos 10 itens visíveis na página pública."
+    }
+  ],
+  "japan_weekly_rankings": [
+    {
+      "ranking_date": "2026-02-09",
+      "source_id": "ORICON-2026-02-09",
+      "ranking_type": "official_weekly_manga_volume_sales",
+      "announced_at": "2026-02-05 21:30 EST",
+      "items": [
+        {
+          "rank": 1,
+          "title": "Kingdom Vol.78",
+          "copies_sold": 65376,
+          "cumulative_copies": 370138,
+          "author": "Yasuhisa Hara"
+        },
+        {
+          "rank": 2,
+          "title": "Tokyo Aliens Vol.12",
+          "copies_sold": 33966,
+          "cumulative_copies": 33966,
+          "author": "NAOE"
+        },
+        {
+          "rank": 3,
+          "title": "Medalist Vol.14",
+          "copies_sold": 28492,
+          "cumulative_copies": 96800,
+          "author": "Tsurumaikada"
+        },
+        {
+          "rank": 4,
+          "title": "Blue Lock Vol.37",
+          "copies_sold": 26499,
+          "cumulative_copies": 147073,
+          "author": "Muneyuki Kaneshiro / Yusuke Nomura"
+        },
+        {
+          "rank": 5,
+          "title": "Kubo Ibuki GREAT GAME Vol.18",
+          "copies_sold": 23368,
+          "cumulative_copies": 23368,
+          "author": "Kaiji Kawaguchi / Katsuhiro Yagi / Masato Ushio / Osamu Eya"
+        },
+        {
+          "rank": 6,
+          "title": "Super no Ura de Yani Suu Futari Vol.8",
+          "copies_sold": 22293,
+          "cumulative_copies": 44508,
+          "author": "Jinushi"
+        },
+        {
+          "rank": 7,
+          "title": "Jujutsu Kaisen Modulo Vol.1",
+          "copies_sold": 17065,
+          "cumulative_copies": 266474,
+          "author": "Gege Akutami / Yuji Iwasaki"
+        },
+        {
+          "rank": 8,
+          "title": "Kizumono no Hanayome Vol.10",
+          "copies_sold": 16796,
+          "cumulative_copies": 16796,
+          "author": "Midori Yuma / Tounosuke Fujimaru"
+        },
+        {
+          "rank": 9,
+          "title": "Super no Ura de Yani Suu Futari Vol.8 Special Edition",
+          "copies_sold": 16779,
+          "cumulative_copies": 38028,
+          "author": "Jinushi"
+        },
+        {
+          "rank": 10,
+          "title": "Isekai Meikyuu de Harem o Vol.12",
+          "copies_sold": 14975,
+          "cumulative_copies": 57202,
+          "author": "Issei Hyouju / Shachi Soga / Shikidouji"
+        }
+      ]
+    },
+    {
+      "ranking_date": "2026-02-16",
+      "source_id": "ORICON-2026-02-16",
+      "ranking_type": "official_weekly_manga_volume_sales",
+      "announced_at": "2026-02-12 21:30 EST",
+      "items": [
+        {
+          "rank": 1,
+          "title": "Chainsaw Man 23",
+          "normalized_title": "Chainsaw Man Vol.23",
+          "copies_sold": 81020,
+          "cumulative_copies": 81020,
+          "author": "Tatsuki Fujimoto"
+        },
+        {
+          "rank": 2,
+          "title": "Blue Box 24",
+          "normalized_title": "Blue Box Vol.24",
+          "copies_sold": 62201,
+          "cumulative_copies": 62201,
+          "author": "Koji Miura"
+        },
+        {
+          "rank": 3,
+          "title": "BORUTO: Naruto Next Generations 7 ―TWO BLUE VORTEX―",
+          "normalized_title": "BORUTO: Naruto Next Generations TWO BLUE VORTEX Vol.7",
+          "copies_sold": 51730,
+          "cumulative_copies": 51730,
+          "author": "Mikio Ikemoto / Masashi Kishimoto"
+        },
+        {
+          "rank": 4,
+          "title": "Gokurakugai 6",
+          "normalized_title": "Gokurakugai Vol.6",
+          "copies_sold": 48971,
+          "cumulative_copies": 48971,
+          "author": "Yuto Sano"
+        },
+        {
+          "rank": 5,
+          "title": "Welcome to Demon School! Iruma-kun 47",
+          "normalized_title": "Welcome to Demon School! Iruma-kun Vol.47",
+          "copies_sold": 36787,
+          "cumulative_copies": 36787,
+          "author": "Osamu Nishi"
+        },
+        {
+          "rank": 6,
+          "title": "Kingdom 78",
+          "normalized_title": "Kingdom Vol.78",
+          "copies_sold": 30540,
+          "cumulative_copies": 400678,
+          "author": "Yasuhisa Hara"
+        },
+        {
+          "rank": 7,
+          "title": "Phantom Busters 7",
+          "normalized_title": "Phantom Busters Vol.7",
+          "copies_sold": 28262,
+          "cumulative_copies": 28262,
+          "author": "Neo Shoco"
+        },
+        {
+          "rank": 8,
+          "title": "A Returner's Magic School Life with My Former Lover from the Prologue 7 (However, the Affection Level Is Zero)",
+          "normalized_title": "A Returner's Magic School Life with My Former Lover from the Prologue Vol.7",
+          "copies_sold": 24952,
+          "cumulative_copies": 24952,
+          "author": "Arin Shirakawa / Eiko Mutsuhana / Yugiri Akishika"
+        },
+        {
+          "rank": 9,
+          "title": "Welcome to Demon School! Iruma-kun if Episode of Mafia 7",
+          "normalized_title": "Welcome to Demon School! Iruma-kun if Episode of Mafia Vol.7",
+          "copies_sold": 22752,
+          "cumulative_copies": 22752,
+          "author": "hiro / Osamu Nishi"
+        },
+        {
+          "rank": 10,
+          "title": "Togen Anki 28",
+          "normalized_title": "Togen Anki Vol.28",
+          "copies_sold": 19298,
+          "cumulative_copies": 19298,
+          "author": "Yura Urushibara"
+        }
+      ]
+    },
+    {
+      "ranking_date": "2026-02-23",
+      "source_id": "ORICON-2026-02-23",
+      "ranking_type": "official_weekly_manga_volume_sales",
+      "announced_at": "2026-02-19 21:30 EST",
+      "items": [
+        {
+          "rank": 1,
+          "title": "That Time I Got Reincarnated as a Slime 31",
+          "normalized_title": "That Time I Got Reincarnated as a Slime Vol.31",
+          "copies_sold": 207881,
+          "cumulative_copies": 208794,
+          "author": "Taiki Kawakami / Fuse / Mitz Vah"
+        },
+        {
+          "rank": 2,
+          "title": "Do Not Say Mystery 16",
+          "normalized_title": "Don't Call It Mystery / Do Not Say Mystery Vol.16",
+          "copies_sold": 160307,
+          "cumulative_copies": 160307,
+          "author": "Yumi Tamura"
+        },
+        {
+          "rank": 3,
+          "title": "Welcome to Demon School! Iruma-kun 47",
+          "normalized_title": "Welcome to Demon School! Iruma-kun Vol.47",
+          "copies_sold": 44904,
+          "cumulative_copies": 81691,
+          "author": "Osamu Nishi"
+        },
+        {
+          "rank": 4,
+          "title": "Chainsaw Man 23",
+          "normalized_title": "Chainsaw Man Vol.23",
+          "copies_sold": 39076,
+          "cumulative_copies": 120096,
+          "author": "Tatsuki Fujimoto"
+        },
+        {
+          "rank": 5,
+          "title": "My Party Members Tried to Kill Me in the Depths of a Dungeon, but I Used the Gift 'Infinite Gacha' to Get Level 9999 Allies and Get Revenge on My Former Party and the World! 21",
+          "normalized_title": "Infinite Gacha Vol.21",
+          "copies_sold": 34500,
+          "cumulative_copies": 34668,
+          "author": "Takashi Omae / Sisui Meikyo / tef"
+        },
+        {
+          "rank": 6,
+          "title": "Kindaichi Papa's Case Files 3",
+          "normalized_title": "Kindaichi Papa's Case Files Vol.3",
+          "copies_sold": 32911,
+          "cumulative_copies": 32911,
+          "author": "Seimaru Amagi / Fumiya Sato"
+        },
+        {
+          "rank": 7,
+          "title": "I Was Reincarnated as the 7th Prince, So I'll Master Magic at My Own Pace 22",
+          "normalized_title": "I Was Reincarnated as the 7th Prince Vol.22",
+          "copies_sold": 32409,
+          "cumulative_copies": 32409,
+          "author": "Yosuke Ishizawa / Kenkyo na Circle / Meru."
+        },
+        {
+          "rank": 8,
+          "title": "Full Color Manga Edition: That Time I Got Reincarnated as a Slime 31 Special Edition",
+          "normalized_title": "Full Color Manga Edition: That Time I Got Reincarnated as a Slime Vol.31 Special Edition",
+          "copies_sold": 30997,
+          "cumulative_copies": 35808,
+          "author": "Taiki Kawakami / Fuse / Mitz Vah"
+        },
+        {
+          "rank": 9,
+          "title": "Blue Box 24",
+          "normalized_title": "Blue Box Vol.24",
+          "copies_sold": 29672,
+          "cumulative_copies": 91873,
+          "author": "Koji Miura"
+        },
+        {
+          "rank": 10,
+          "title": "Welcome to Demon School! Iruma-kun if Episode of Mafia 7",
+          "normalized_title": "Welcome to Demon School! Iruma-kun if Episode of Mafia Vol.7",
+          "copies_sold": 27420,
+          "cumulative_copies": 50172,
+          "author": "hiro / Osamu Nishi"
+        }
+      ]
+    },
+    {
+      "ranking_date": "2026-03-02",
+      "source_id": "ORICON-2026-03-02",
+      "ranking_type": "official_weekly_manga_volume_sales",
+      "announced_at": "2026-02-26 21:30 EST",
+      "items": [
+        {
+          "rank": 1,
+          "title": "What Did You Eat Yesterday? Vol.25",
+          "copies_sold": 64420,
+          "cumulative_copies": 64420,
+          "author": "Fumi Yoshinaga"
+        },
+        {
+          "rank": 2,
+          "title": "Don't Call It Mystery Vol.16",
+          "normalized_title": "Don't Call It Mystery / Do Not Say Mystery Vol.16",
+          "copies_sold": 63598,
+          "cumulative_copies": 223905,
+          "author": "Yumi Tamura"
+        },
+        {
+          "rank": 3,
+          "title": "That Time I Got Reincarnated as a Slime Vol.31",
+          "copies_sold": 47633,
+          "cumulative_copies": 256427,
+          "author": "Taiki Kawakami / Fuse / Mitz Vah"
+        },
+        {
+          "rank": 4,
+          "title": "The Saint's Magic Power is Omnipotent Vol.11",
+          "copies_sold": 40535,
+          "cumulative_copies": 43529,
+          "author": "Azu Fuji / Yuka Tachibana / Yasuyuki Tamari"
+        },
+        {
+          "rank": 5,
+          "title": "Yona of the Dawn Vol.47",
+          "copies_sold": 28090,
+          "cumulative_copies": 28090,
+          "author": "Mizuho Kusanagi"
+        },
+        {
+          "rank": 6,
+          "title": "Yona of the Dawn YONA MEMORIAL Special Edition with Illustration Collection Vol.47",
+          "normalized_title": "Yona of the Dawn YONA MEMORIAL Special Edition Vol.47",
+          "copies_sold": 24722,
+          "cumulative_copies": 24722,
+          "author": "Mizuho Kusanagi"
+        },
+        {
+          "rank": 7,
+          "title": "Hotaru no Yomeiri Vol.11",
+          "copies_sold": 23312,
+          "cumulative_copies": 23312,
+          "author": "Oreco Tachibana"
+        },
+        {
+          "rank": 8,
+          "title": "Tamon-kun Ima Docchi!? Vol.14",
+          "copies_sold": 22943,
+          "cumulative_copies": 22943,
+          "author": "Yuki Shiwasu"
+        },
+        {
+          "rank": 9,
+          "title": "Silver Mountain Vol.3",
+          "copies_sold": 20672,
+          "cumulative_copies": 20672,
+          "author": "Kazuhiro Fujita"
+        },
+        {
+          "rank": 10,
+          "title": "Chainsaw Man Vol.23",
+          "copies_sold": 18999,
+          "cumulative_copies": 139095,
+          "author": "Tatsuki Fujimoto"
+        }
+      ]
+    }
+  ],
+  "international_market": [
+    {
+      "region": "Global",
+      "estimated_market_share": null,
+      "estimated_market_value_usd_billion": null,
+      "growth_profile": null,
+      "main_drivers": null,
+      "data_status": "excluded_no_single_official_global_manga_market_source_validated"
+    },
+    {
+      "region": "Ásia-Pacífico",
+      "estimated_market_share": null,
+      "estimated_market_value_usd_billion": null,
+      "growth_profile": null,
+      "main_drivers": null,
+      "data_status": "excluded_no_official_region_specific_manga_market_source_validated"
+    },
+    {
+      "region": "América do Norte",
+      "estimated_market_share": null,
+      "estimated_market_value_usd_billion": null,
+      "growth_profile": null,
+      "main_drivers": null,
+      "data_status": "excluded_no_official_region_specific_manga_market_source_validated"
+    },
+    {
+      "region": "Europa",
+      "estimated_market_share": null,
+      "estimated_market_value_usd_billion": null,
+      "growth_profile": null,
+      "main_drivers": null,
+      "data_status": "excluded_no_official_region_specific_manga_market_source_validated"
+    },
+    {
+      "region": "América Latina",
+      "estimated_market_share": null,
+      "estimated_market_value_usd_billion": null,
+      "growth_profile": null,
+      "main_drivers": null,
+      "data_status": "excluded_no_official_region_specific_manga_market_source_validated"
+    }
+  ],
+  "format_distribution": [
+    {
+      "format": "Digital / Electronic Comics",
+      "share": 76.1,
+      "market_value_jpy_billion": 527.3,
+      "reading_behavior": null,
+      "opportunity": null,
+      "source_id": "SHUPPANKAGAKU-2026-02-25-COMIC-2025",
+      "confidence": 97.2,
+      "note": "Participação no mercado japonês de comics em 2025, não no mercado global."
+    },
+    {
+      "format": "Print / Paper Comics",
+      "share": 23.9,
+      "market_value_jpy_billion": 165.2,
+      "reading_behavior": null,
+      "opportunity": null,
+      "source_id": "SHUPPANKAGAKU-2026-02-25-COMIC-2025",
+      "confidence": 97.2,
+      "note": "Inclui tankobon e revistas de mangá/comics no Japão em 2025."
+    },
+    {
+      "format": "Print / Single Comic Volumes",
+      "share": null,
+      "market_value_jpy_billion": 126.0,
+      "reading_behavior": null,
+      "opportunity": null,
+      "source_id": "SHUPPANKAGAKU-2026-02-25-COMIC-2025",
+      "confidence": 97.2,
+      "note": "Valor de mercado japonês de volumes impressos avulsos em 2025."
+    },
+    {
+      "format": "Print / Comic Magazines",
+      "share": null,
+      "market_value_jpy_billion": 39.2,
+      "reading_behavior": null,
+      "opportunity": null,
+      "source_id": "SHUPPANKAGAKU-2026-02-25-COMIC-2025",
+      "confidence": 97.2,
+      "note": "Valor de mercado japonês de revistas de mangá/comics em 2025."
+    }
+  ],
+  "distribution_channels": [
+    {
+      "channel": "Online / E-commerce",
+      "share": null,
+      "role": null,
+      "opportunity": null,
+      "data_status": "not_populated_no_official_channel_share_source_validated"
+    },
+    {
+      "channel": "Digital platforms and apps",
+      "share": null,
+      "role": null,
+      "opportunity": null,
+      "data_status": "not_populated_no_official_channel_share_source_validated"
+    },
+    {
+      "channel": "Physical bookstores",
+      "share": null,
+      "role": null,
+      "opportunity": null,
+      "data_status": "not_populated_no_official_channel_share_source_validated"
+    }
+  ],
+  "trend_insights": [
+    {
+      "theme": "Fevereiro de 2026 teve liderança concentrada em lançamentos fortes de volumes específicos",
+      "examples": "That Time I Got Reincarnated as a Slime Vol.31, Don't Call It Mystery Vol.16, Chainsaw Man Vol.23",
+      "market_reading": "Leitura derivada dos snapshots semanais oficiais anunciados durante fevereiro de 2026.",
+      "ryuzen_angle": "Criar cobertura semanal orientada por lançamentos, em vez de esperar ranking mensal consolidado.",
+      "source_ids": [
+        "ORICON-2026-02-16",
+        "ORICON-2026-02-23",
+        "ORICON-2026-03-02"
+      ],
+      "confidence": 95.0
+    },
+    {
+      "theme": "Digital é o principal formato no mercado japonês de comics",
+      "examples": "Electronic comics represent 76.1% of Japan's comic market value in 2025.",
+      "market_reading": "Leitura baseada em dado oficial anual do mercado japonês.",
+      "ryuzen_angle": "Priorizar produtos editoriais e análises que considerem o consumo digital como eixo principal.",
+      "source_id": "SHUPPANKAGAKU-2026-02-25-COMIC-2025",
+      "confidence": 97.2
+    },
+    {
+      "theme": "Queda forte do impresso japonês em 2025",
+      "examples": "Paper comic market fell 14.0%; single comic volumes fell 14.4%.",
+      "market_reading": "O impresso segue relevante, mas sofreu forte retração no Japão em 2025.",
+      "ryuzen_angle": "Tratar colecionismo físico como nicho estratégico, não como único indicador de mercado.",
+      "source_id": "SHUPPANKAGAKU-2026-02-25-COMIC-2025",
+      "confidence": 97.2
+    }
+  ],
+  "sources": [
+    {
+      "id": "ORICON-ABOUT",
+      "name": "Oricon Inc.",
+      "url": "https://www.oricon.jp/en/",
+      "type": "official_corporate_source",
+      "reliability": "very_high",
+      "used_for": "Authority validation for Oricon as a research company providing rankings.",
+      "accessed_at": "2026-05-16"
+    },
+    {
+      "id": "SHUPPANKAGAKU-2026-02-25-COMIC-2025",
+      "name": "全国出版協会・出版科学研究所 / Research Institute for Publications",
+      "url": "https://shuppankagaku.com/wp/wp-content/uploads/2026/02/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E3%83%AA%E3%83%AA%E3%83%BC%E3%82%B92602.pdf",
+      "type": "official_industry_research_release",
+      "reliability": "very_high",
+      "used_for": [
+        "Japan comic market value 2025",
+        "digital/print market values",
+        "digital/print shares",
+        "year-over-year market movement"
+      ],
+      "accessed_at": "2026-05-16"
+    },
+    {
+      "id": "ORICON-2026-02-09",
+      "name": "Japan Anime News powered by ORICON NEWS",
+      "url": "https://us.oricon-group.com/news/7688/",
+      "type": "official_oricon_weekly_ranking",
+      "reliability": "very_high",
+      "used_for": "Oricon weekly manga volume sales ranking dated 2026-02-09",
+      "accessed_at": "2026-05-16"
+    },
+    {
+      "id": "ORICON-2026-02-16",
+      "name": "Japan Anime News powered by ORICON NEWS",
+      "url": "https://us.oricon-group.com/news/7756/",
+      "type": "official_oricon_weekly_ranking",
+      "reliability": "very_high",
+      "used_for": "Oricon weekly manga volume sales ranking dated 2026-02-16",
+      "accessed_at": "2026-05-16"
+    },
+    {
+      "id": "ORICON-2026-02-23",
+      "name": "Japan Anime News powered by ORICON NEWS",
+      "url": "https://us.oricon-group.com/news/7821/",
+      "type": "official_oricon_weekly_ranking",
+      "reliability": "very_high",
+      "used_for": "Oricon weekly manga volume sales ranking dated 2026-02-23",
+      "accessed_at": "2026-05-16"
+    },
+    {
+      "id": "ORICON-2026-03-02",
+      "name": "Japan Anime News powered by ORICON NEWS",
+      "url": "https://us.oricon-group.com/news/7878/",
+      "type": "official_oricon_weekly_ranking",
+      "reliability": "very_high",
+      "used_for": "Oricon weekly manga volume sales ranking dated 2026-03-02; announced 2026-02-26",
+      "accessed_at": "2026-05-16"
+    }
+  ],
+  "excluded_sources_from_previous_version": [
+    {
+      "name": "Fortune Business Insights",
+      "reason": "Market consultancy source, not official portal. Excluded under high-integrity official-only rule."
+    },
+    {
+      "name": "Grand View Research",
+      "reason": "Market consultancy source, not official portal. Excluded under high-integrity official-only rule."
+    },
+    {
+      "name": "Manga Mogura RE",
+      "reason": "Social/news account. Useful for monitoring, but excluded from official-only database."
+    }
+  ]
+}

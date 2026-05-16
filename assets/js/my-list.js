@@ -26,7 +26,7 @@ function renderMyList() {
   renderCounters(list);
   const filtered = activeFilter === "all" ? list : list.filter((item) => item.status === activeFilter);
   if (!filtered.length) {
-    renderEmpty(listRoot, "Sua lista está vazia por aqui", "Busque animes e salve seus favoritos para acompanhar tudo no navegador.", `<a class="btn primary" href="search.html">Buscar animes</a>`);
+    renderEmpty(listRoot, "Sua lista está vazia por aqui", "Busque animes e salve seus favoritos para acompanhar tudo no navegador.", `<a class="btn primary" href="${RYZEN_ROUTES.search}">Buscar animes</a>`);
     return;
   }
   listRoot.innerHTML = `<div class="ranking-list">${filtered.map(createListItem).join("")}</div>`;
@@ -34,7 +34,7 @@ function renderMyList() {
 }
 
 function createListItem(item) {
-  const image = escapeHtml(safeUrl(item.image, "assets/images/logo-placeholder.svg"));
+  const image = escapeHtml(safeUrl(item.image, assetPath("images/logo-placeholder.svg")));
   const title = escapeHtml(item.title);
   return `
     <article class="list-item" data-id="${item.id}">

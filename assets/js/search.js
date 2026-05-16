@@ -15,7 +15,7 @@ document.getElementById("searchForm").addEventListener("submit", (event) => {
     moreButton.classList.add("hidden");
     return;
   }
-  history.replaceState(null, "", `search.html?q=${encodeURIComponent(currentQuery)}`);
+  history.replaceState(null, "", routeWithQuery(RYZEN_ROUTES.search, { q: currentQuery }));
   runSearch();
 });
 

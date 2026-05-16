@@ -3,10 +3,13 @@ const id = new URLSearchParams(location.search).get("id");
 
 async function loadAnimeDetail() {
   if (!id) {
-    renderEmpty(detailRoot, "Anime não informado", "Abra esta página a partir de uma busca, ranking ou card da home.", `<a class="btn primary" href="search.html">Buscar anime</a>`);
+    renderEmpty(detailRoot, "Anime não informado", 
+      "Abra esta página a partir de uma busca, ranking ou card da home.", 
+      `<a class="btn primary" href="${RYZEN_ROUTES.search}">Buscar anime</a>`
+    );
     return;
   }
-  renderLoading(detailRoot, 2);
+  renderAnimeDetailLoading(detailRoot);
   try {
     const { data } = await fetchAnimeDetails(id);
     document.title = `${data.title || "Detalhes do Anime"} | Ryuzen Anime Hub`;
@@ -27,6 +30,8 @@ async function loadAnimeDetail() {
       console.error("Erro ao traduzir sinopse:", error);
       synopsisNotice = "Sinopse original em inglês. Tradução automática indisponível no momento.";
     }
+
+    document.title = `${data.title || "Detalhes do Anime"} | Ryuzen Anime Hub`;
 
     detailRoot.innerHTML = `
       <section class="detail-layout">
@@ -66,7 +71,7 @@ async function loadAnimeDetail() {
                 <textarea name="notes" placeholder="Observações pessoais">${escapeHtml(saved?.notes || "")}</textarea>
               </label>
               <button class="btn primary" type="submit">${saved ? "Atualizar minha lista" : "Adicionar à minha lista"}</button>
-              <a class="btn" href="my-list.html">Abrir minha lista</a>
+              <a class="btn" href="${RYZEN_ROUTES.myList}">Abrir minha lista</a>
             </form>
           </div>
           ${trailerUrl ? `<h2>Trailer</h2><iframe class="trailer-frame" src="${escapeHtml(trailerUrl)}" title="Trailer de ${escapeHtml(data.title)}" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-presentation" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>` : ""}

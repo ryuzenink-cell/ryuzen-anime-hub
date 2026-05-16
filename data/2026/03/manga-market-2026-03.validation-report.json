@@ -1,0 +1,25 @@
+{
+  "file": "manga-market-2026-03.verified.json",
+  "status": "created",
+  "period": "2026-03",
+  "records": {
+    "weekly_snapshots_included": 3,
+    "weekly_items_total": 30,
+    "observed_volume_totals": 10,
+    "visible_top10_copies_total": 2007871,
+    "sources_used": 5,
+    "official_sources_identified_not_transcribed": 2
+  },
+  "integrity_notes": [
+    "Campos globais foram anulados por ausência de fonte oficial única validada.",
+    "Ranking mensal consolidado não foi afirmado; a base usa snapshots semanais da Oricon anunciados durante março de 2026 e transcritos com segurança.",
+    "A semana de 2026-03-23 e o ranking mensal oficial japonês foram identificados, mas não transcritos por falha de decodificação Unicode no acesso automatizado.",
+    "Campos derivados foram marcados como derivados e não oficiais mensais.",
+    "A confiabilidade alvo de 97,2% foi aplicada aos campos transcritos de fontes oficiais."
+  ],
+  "top_observed_volume": {
+    "title": "One Piece Vol. 114",
+    "observed_copies_sold": 685242,
+    "is_official_monthly_total": false
+  }
+}

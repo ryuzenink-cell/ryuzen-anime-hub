@@ -49,3 +49,50 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 980px) {
+  .manga-sales-page .page-hero,
+  .sales-table-grid,
+  .sales-table-grid.three-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .sales-kpi-grid,
+  .sales-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .sales-kpi-grid,
+  .sales-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .sales-kpi-card {
+    min-height: auto;
+  }
+
+  .data-table {
+    font-size: 0.84rem;
+  }
+}
+
+@media (max-width: 980px) {
+  .blog-hero-grid,
+  .blog-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .blog-card-footer,
+  .blog-card-topline {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .blog-article {
+    padding: 18px;
+  }
+}

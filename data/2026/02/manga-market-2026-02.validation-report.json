@@ -1,0 +1,19 @@
+{
+  "file": "manga-market-2026-02.verified.json",
+  "status": "created",
+  "period": "2026-02",
+  "records": {
+    "weekly_snapshots": 4,
+    "weekly_items_total": 40,
+    "observed_volume_totals": 10,
+    "visible_top10_copies_total": 1667123,
+    "sources": 6
+  },
+  "integrity_notes": [
+    "Campos globais foram anulados por ausência de fonte oficial única validada.",
+    "Ranking mensal consolidado não foi afirmado; a base usa snapshots semanais da Oricon anunciados durante fevereiro de 2026.",
+    "O ranking Oricon de 2026-03-02 foi incluído porque foi anunciado em 2026-02-26.",
+    "Campos derivados foram marcados como derivados e não oficiais mensais.",
+    "A confiabilidade alvo de 97,2% foi aplicada aos campos transcritos de fontes oficiais."
+  ]
+}

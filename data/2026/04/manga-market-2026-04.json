@@ -1,0 +1,913 @@
+{
+  "schema_version": "3.1.0",
+  "source": "official_verified_market_research",
+  "dashboard": {
+    "id": "ryuzen-japan-manga-sales-official-2026-04",
+    "name": "Vendas de Mangás no Japão — Base Verificada",
+    "label": "Mercado de Mangás",
+    "note": "Base recriada com política de integridade alta: somente dados oriundos de fontes oficiais, primárias ou diretamente publicadas por organizações do setor. Campos sem confirmação oficial foram mantidos como null. A base não afirma possuir ranking mensal consolidado de abril de 2026; ela registra snapshots semanais oficiais da Oricon anunciados durante abril de 2026."
+  },
+  "period": {
+    "year": "2026",
+    "month": "04",
+    "period_type": "monthly_context_with_official_weekly_snapshots",
+    "start_date": "2026-04-01",
+    "end_date": "2026-04-30",
+    "label": "Abril de 2026",
+    "ranking_inclusion_rule": "Inclui rankings semanais da Oricon em inglês anunciados durante abril de 2026 que puderam ser lidos com segurança: Apr 6, Apr 13, Apr 20 e Apr 27.",
+    "important_limitation": "Rankings Oricon semanais usam datas de ranking próprias e não equivalem automaticamente a uma apuração mensal fechada de 01/04 a 30/04."
+  },
+  "currencies": {
+    "market_value": "JPY",
+    "japan_sales": "copies"
+  },
+  "confidence_assessment": {
+    "target_confidence": 97.2,
+    "estimated_confidence_for_source_backed_fields": 97.2,
+    "estimated_confidence_for_null_fields": 100.0,
+    "estimated_confidence_for_derived_observed_totals": 95.0,
+    "overall_completeness_score": 72.0,
+    "method": "A confiabilidade foi maximizada removendo ou anulando campos não verificáveis. O score de 97,2% aplica-se aos campos transcritos de fonte oficial/primária associada; campos derivados recebem 95,0% porque dependem de normalização de títulos e soma de entradas visíveis.",
+    "field_policy": {
+      "official_source_required": true,
+      "market_consultancy_reports_excluded": true,
+      "social_media_sources_excluded": true,
+      "unverified_estimates_replaced_with_null": true,
+      "derived_fields_marked_as_derived": true,
+      "monthly_ranking_not_claimed_without_reliably_transcribed_official_monthly_source": true
+    }
+  },
+  "summary": {
+    "global_market_value_usd_billion": null,
+    "projected_global_market_2035_usd_billion": null,
+    "estimated_cagr_2025_2035": null,
+    "global_data_status": "not_included_due_to_lack_of_single_official_global_manga_market_source",
+    "japan_comic_market_2025_total_jpy_billion": 692.5,
+    "japan_comic_market_2025_yoy_percent": -1.7,
+    "japan_print_comic_market_2025_jpy_billion": 165.2,
+    "japan_print_comic_market_2025_yoy_percent": -14.0,
+    "japan_print_comic_single_volumes_2025_jpy_billion": 126.0,
+    "japan_comic_magazines_2025_jpy_billion": 39.2,
+    "japan_digital_comic_market_2025_jpy_billion": 527.3,
+    "japan_digital_comic_market_2025_yoy_percent": 2.9,
+    "digital_format_share": 76.1,
+    "print_format_share": 23.9,
+    "comics_share_of_total_japan_publishing_market_percent": 44.8,
+    "online_distribution_share": null,
+    "asia_pacific_market_share": null,
+    "north_america_projected_cagr": null,
+    "japan_top_observed_volume": "SPY x FAMILY Vol. 17",
+    "japan_top_observed_volume_copies": 453206,
+    "japan_top_observed_volume_basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_april_2026",
+    "japan_highest_single_week_volume": "SPY x FAMILY Vol. 17",
+    "japan_highest_single_week_volume_copies": 224695,
+    "japan_highest_single_week_volume_ranking_date": "2026-04-13",
+    "japan_observed_oricon_top10_weekly_copies_total": 1980343,
+    "japan_observed_oricon_top10_weekly_copies_total_basis": "Soma simples das cópias semanais exibidas nos quatro snapshots Oricon Top 10 incluídos na base. Não é ranking mensal oficial.",
+    "japan_top_series": null,
+    "japan_top_series_copies": null,
+    "japan_top_10_series_copies": null,
+    "japan_top_10_average_copies": null
+  },
+  "japan_series_rankings": [
+    {
+      "rank": 1,
+      "title": "SPY x FAMILY Vol. 17",
+      "copies_sold": 453206,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-04-13",
+        "ORICON-2026-04-20",
+        "ORICON-2026-04-27"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    },
+    {
+      "rank": 2,
+      "title": "Case Closed Vol. 108",
+      "copies_sold": 243620,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-04-20",
+        "ORICON-2026-04-27"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    },
+    {
+      "rank": 3,
+      "title": "Dandadan Vol. 23",
+      "copies_sold": 100444,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-04-13",
+        "ORICON-2026-04-20"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    },
+    {
+      "rank": 4,
+      "title": "Natsume's Book of Friends Vol. 33",
+      "copies_sold": 88202,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-04-13",
+        "ORICON-2026-04-20"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    },
+    {
+      "rank": 5,
+      "title": "Welcome to Demon School! Iruma-kun Vol. 48",
+      "copies_sold": 84589,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-04-20",
+        "ORICON-2026-04-27"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    },
+    {
+      "rank": 6,
+      "title": "Blue Lock Vol. 38",
+      "copies_sold": 76360,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-04-27"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    },
+    {
+      "rank": 7,
+      "title": "Oni no Hanayome Vol. 9",
+      "copies_sold": 70153,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-04-06",
+        "ORICON-2026-04-13"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    },
+    {
+      "rank": 8,
+      "title": "One Piece Vol. 114",
+      "copies_sold": 64151,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-04-06",
+        "ORICON-2026-04-13"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    },
+    {
+      "rank": 9,
+      "title": "Hon Nara Uru Hodo Vol. 3",
+      "copies_sold": 63980,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-04-27"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    },
+    {
+      "rank": 10,
+      "title": "The Fable: The Third Secret Vol. 4",
+      "copies_sold": 54464,
+      "ranking_type": "derived_observed_volume_total_from_official_weekly_rankings",
+      "source_ids": [
+        "ORICON-2026-04-20"
+      ],
+      "confidence": 95.0,
+      "is_official_monthly_total": false,
+      "note": "Soma apenas das entradas visíveis no Top 10 semanal da Oricon incluídas nesta base. Não representa ranking mensal oficial consolidado."
+    }
+  ],
+  "japan_observed_volume_totals": [
+    {
+      "rank": 1,
+      "title": "SPY x FAMILY Vol. 17",
+      "observed_copies_sold": 453206,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_april_2026",
+      "source_ids": [
+        "ORICON-2026-04-13",
+        "ORICON-2026-04-20",
+        "ORICON-2026-04-27"
+      ],
+      "titles_as_reported": [
+        "SPY x FAMILY Vol. 17"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 2,
+      "title": "Case Closed Vol. 108",
+      "observed_copies_sold": 243620,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_april_2026",
+      "source_ids": [
+        "ORICON-2026-04-20",
+        "ORICON-2026-04-27"
+      ],
+      "titles_as_reported": [
+        "Case Closed Vol. 108"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 3,
+      "title": "Dandadan Vol. 23",
+      "observed_copies_sold": 100444,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_april_2026",
+      "source_ids": [
+        "ORICON-2026-04-13",
+        "ORICON-2026-04-20"
+      ],
+      "titles_as_reported": [
+        "Dandadan Vol. 23"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 4,
+      "title": "Natsume's Book of Friends Vol. 33",
+      "observed_copies_sold": 88202,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_april_2026",
+      "source_ids": [
+        "ORICON-2026-04-13",
+        "ORICON-2026-04-20"
+      ],
+      "titles_as_reported": [
+        "Natsume's Book of Friends Vol. 33"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 5,
+      "title": "Welcome to Demon School! Iruma-kun Vol. 48",
+      "observed_copies_sold": 84589,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_april_2026",
+      "source_ids": [
+        "ORICON-2026-04-20",
+        "ORICON-2026-04-27"
+      ],
+      "titles_as_reported": [
+        "Welcome to Demon School! Iruma-kun Vol. 48"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 6,
+      "title": "Blue Lock Vol. 38",
+      "observed_copies_sold": 76360,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_april_2026",
+      "source_ids": [
+        "ORICON-2026-04-27"
+      ],
+      "titles_as_reported": [
+        "Blue Lock Vol. 38"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 7,
+      "title": "Oni no Hanayome Vol. 9",
+      "observed_copies_sold": 70153,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_april_2026",
+      "source_ids": [
+        "ORICON-2026-04-06",
+        "ORICON-2026-04-13"
+      ],
+      "titles_as_reported": [
+        "Oni no Hanayome Vol. 9",
+        "The Ogre's Bride Vol. 9"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 8,
+      "title": "One Piece Vol. 114",
+      "observed_copies_sold": 64151,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_april_2026",
+      "source_ids": [
+        "ORICON-2026-04-06",
+        "ORICON-2026-04-13"
+      ],
+      "titles_as_reported": [
+        "One Piece Vol. 114"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 9,
+      "title": "Hon Nara Uru Hodo Vol. 3",
+      "observed_copies_sold": 63980,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_april_2026",
+      "source_ids": [
+        "ORICON-2026-04-27"
+      ],
+      "titles_as_reported": [
+        "Hon Nara Uru Hodo Vol. 3"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    },
+    {
+      "rank": 10,
+      "title": "The Fable: The Third Secret Vol. 4",
+      "observed_copies_sold": 54464,
+      "basis": "sum_of_visible_oricon_weekly_top10_entries_announced_during_april_2026",
+      "source_ids": [
+        "ORICON-2026-04-20"
+      ],
+      "titles_as_reported": [
+        "The Fable: The Third Secret Vol. 4"
+      ],
+      "is_official_monthly_total": false,
+      "confidence": 95.0
+    }
+  ],
+  "japan_weekly_top10_totals": [
+    {
+      "ranking_date": "2026-04-06",
+      "source_id": "ORICON-2026-04-06",
+      "top10_visible_copies_total": 344987,
+      "is_official_weekly_total": false,
+      "note": "Soma calculada apenas dos 10 itens visíveis na página pública."
+    },
+    {
+      "ranking_date": "2026-04-13",
+      "source_id": "ORICON-2026-04-13",
+      "top10_visible_copies_total": 478426,
+      "is_official_weekly_total": false,
+      "note": "Soma calculada apenas dos 10 itens visíveis na página pública."
+    },
+    {
+      "ranking_date": "2026-04-20",
+      "source_id": "ORICON-2026-04-20",
+      "top10_visible_copies_total": 706538,
+      "is_official_weekly_total": false,
+      "note": "Soma calculada apenas dos 10 itens visíveis na página pública."
+    },
+    {
+      "ranking_date": "2026-04-27",
+      "source_id": "ORICON-2026-04-27",
+      "top10_visible_copies_total": 450392,
+      "is_official_weekly_total": false,
+      "note": "Soma calculada apenas dos 10 itens visíveis na página pública."
+    }
+  ],
+  "japan_weekly_rankings": [
+    {
+      "ranking_date": "2026-04-06",
+      "source_id": "ORICON-2026-04-06",
+      "ranking_type": "official_weekly_manga_volume_sales",
+      "announced_at": "2026-04-02 21:30 EST",
+      "items": [
+        {
+          "rank": 1,
+          "title": "Solo Leveling Vol. 24",
+          "copies_sold": 50967,
+          "cumulative_copies": 53684,
+          "author": "DUBU (REDICE STUDIO) / Chugong / h-goon"
+        },
+        {
+          "rank": 2,
+          "title": "The Ogre's Bride Vol. 9",
+          "normalized_title": "Oni no Hanayome Vol. 9",
+          "copies_sold": 43809,
+          "cumulative_copies": 43809,
+          "author": "Jun Togashi / Kureha"
+        },
+        {
+          "rank": 3,
+          "title": "GIANT KILLING Vol. 69",
+          "copies_sold": 39650,
+          "cumulative_copies": 39650,
+          "author": "Tsujitomo / Masaya Tsunamoto"
+        },
+        {
+          "rank": 4,
+          "title": "Bungo Stray Dogs Vol. 28",
+          "copies_sold": 38192,
+          "cumulative_copies": 38192,
+          "author": "Kafka Asagiri / Sango Harukawa"
+        },
+        {
+          "rank": 5,
+          "title": "One Piece Vol. 114",
+          "copies_sold": 38012,
+          "cumulative_copies": 905579,
+          "author": "Eiichiro Oda"
+        },
+        {
+          "rank": 6,
+          "title": "The JOJOLands Vol. 8",
+          "copies_sold": 33958,
+          "cumulative_copies": 91723,
+          "author": "Hirohiko Araki"
+        },
+        {
+          "rank": 7,
+          "title": "Record of Ragnarok Vol. 27",
+          "copies_sold": 31532,
+          "cumulative_copies": 81632,
+          "author": "Ajichika / Shinya Umemura / Takumi Fukui"
+        },
+        {
+          "rank": 8,
+          "title": "Today's Menu for the Emiya Family Vol. 12",
+          "copies_sold": 24131,
+          "cumulative_copies": 24131,
+          "author": "TAa / Makoto Tadano / TYPE-MOON"
+        },
+        {
+          "rank": 9,
+          "title": "Days with You in Rose Colors Vol. 3",
+          "copies_sold": 22913,
+          "cumulative_copies": 22913,
+          "author": "Chihiro Hiro"
+        },
+        {
+          "rank": 10,
+          "title": "The Saga of Tanya the Evil Vol. 34",
+          "copies_sold": 21823,
+          "cumulative_copies": 21823,
+          "author": "Chika Tojo / Carlo Zen / Shinobu Shinotsuki"
+        }
+      ]
+    },
+    {
+      "ranking_date": "2026-04-13",
+      "source_id": "ORICON-2026-04-13",
+      "ranking_type": "official_weekly_manga_volume_sales",
+      "announced_at": "2026-04-09 21:30 EST",
+      "items": [
+        {
+          "rank": 1,
+          "title": "SPY x FAMILY Vol. 17",
+          "copies_sold": 224695,
+          "cumulative_copies": 224695,
+          "author": "Tatsuya Endo"
+        },
+        {
+          "rank": 2,
+          "title": "Dandadan Vol. 23",
+          "copies_sold": 48896,
+          "cumulative_copies": 48896,
+          "author": "Yukinobu Tatsu"
+        },
+        {
+          "rank": 3,
+          "title": "Natsume's Book of Friends Vol. 33",
+          "copies_sold": 41906,
+          "cumulative_copies": 41906,
+          "author": "Yuki Midorikawa"
+        },
+        {
+          "rank": 4,
+          "title": "Bibliophile Princess Vol. 11",
+          "copies_sold": 26642,
+          "cumulative_copies": 26642,
+          "author": "Yui Kikuta / Yui / Satsuki Sheena"
+        },
+        {
+          "rank": 5,
+          "title": "Oni no Hanayome Vol. 9",
+          "copies_sold": 26344,
+          "cumulative_copies": 70153,
+          "author": "Jun Togashi / Kureha"
+        },
+        {
+          "rank": 6,
+          "title": "One Piece Vol. 114",
+          "copies_sold": 26139,
+          "cumulative_copies": 931718,
+          "author": "Eiichiro Oda"
+        },
+        {
+          "rank": 7,
+          "title": "Kinnikuman Vol. 92",
+          "copies_sold": 23617,
+          "cumulative_copies": 23617,
+          "author": "Yudetamago"
+        },
+        {
+          "rank": 8,
+          "title": "Though I Am an Inept Villainess: Tale of the Butterfly-Rat Body Swap in the Maiden Court Vol. 10",
+          "copies_sold": 20135,
+          "cumulative_copies": 20135,
+          "author": "Ei Ohitsuji / Satsuki Nakamura / Kana Yuki"
+        },
+        {
+          "rank": 9,
+          "title": "Mieruko-chan Vol. 14",
+          "copies_sold": 20134,
+          "cumulative_copies": 20300,
+          "author": "Tomoki Izumi"
+        },
+        {
+          "rank": 10,
+          "title": "DRAGON BALL Complete 42-Volume Set Double Cover Box",
+          "copies_sold": 19918,
+          "cumulative_copies": 19918,
+          "author": "Akira Toriyama"
+        }
+      ]
+    },
+    {
+      "ranking_date": "2026-04-20",
+      "source_id": "ORICON-2026-04-20",
+      "ranking_type": "official_weekly_manga_volume_sales",
+      "announced_at": "2026-04-16 21:30 EST",
+      "items": [
+        {
+          "rank": 1,
+          "title": "Case Closed Vol. 108",
+          "copies_sold": 181644,
+          "cumulative_copies": 181644,
+          "author": "Gosho Aoyama"
+        },
+        {
+          "rank": 2,
+          "title": "SPY x FAMILY Vol. 17",
+          "copies_sold": 161753,
+          "cumulative_copies": 386448,
+          "author": "Tatsuya Endo"
+        },
+        {
+          "rank": 3,
+          "title": "Welcome to Demon School! Iruma-kun Vol. 48",
+          "copies_sold": 59986,
+          "cumulative_copies": 59986,
+          "author": "Osamu Nishi"
+        },
+        {
+          "rank": 4,
+          "title": "The Fable: The Third Secret Vol. 4",
+          "copies_sold": 54464,
+          "cumulative_copies": 54625,
+          "author": "Katsuhisa Minami"
+        },
+        {
+          "rank": 5,
+          "title": "Dandadan Vol. 23",
+          "copies_sold": 51548,
+          "cumulative_copies": 100444,
+          "author": "Yukinobu Tatsu"
+        },
+        {
+          "rank": 6,
+          "title": "Natsume's Book of Friends Vol. 33",
+          "copies_sold": 46296,
+          "cumulative_copies": 88202,
+          "author": "Yuki Midorikawa"
+        },
+        {
+          "rank": 7,
+          "title": "Case Closed Vol. 108 Special Edition (Theatrical Teaser Acrylic Stand)",
+          "copies_sold": 45638,
+          "cumulative_copies": 45638,
+          "author": "Gosho Aoyama"
+        },
+        {
+          "rank": 8,
+          "title": "Grand Blue Dreaming Vol. 26",
+          "copies_sold": 44338,
+          "cumulative_copies": 44338,
+          "author": "Kenji Inoue / Kimitake Yoshioka"
+        },
+        {
+          "rank": 9,
+          "title": "Tougen Anki: Legend of the Cursed Blood Vol. 29",
+          "copies_sold": 30542,
+          "cumulative_copies": 30542,
+          "author": "Yura Urushibara"
+        },
+        {
+          "rank": 10,
+          "title": "The Ancient Magus' Bride Vol. 24",
+          "copies_sold": 30329,
+          "cumulative_copies": 30329,
+          "author": "Kore Yamazaki"
+        }
+      ]
+    },
+    {
+      "ranking_date": "2026-04-27",
+      "source_id": "ORICON-2026-04-27",
+      "ranking_type": "official_weekly_manga_volume_sales",
+      "announced_at": "2026-04-23 21:30 EST",
+      "items": [
+        {
+          "rank": 1,
+          "title": "Blue Lock Vol. 38",
+          "copies_sold": 76360,
+          "cumulative_copies": 76360,
+          "author": "Muneyuki Kaneshiro / Yusuke Nomura"
+        },
+        {
+          "rank": 2,
+          "title": "SPY x FAMILY Vol. 17",
+          "copies_sold": 66758,
+          "cumulative_copies": 453206,
+          "author": "Tatsuya Endo"
+        },
+        {
+          "rank": 3,
+          "title": "Hon Nara Uru Hodo Vol. 3",
+          "copies_sold": 63980,
+          "cumulative_copies": 63980,
+          "author": "Ao Kojima"
+        },
+        {
+          "rank": 4,
+          "title": "Case Closed Vol. 108",
+          "copies_sold": 61976,
+          "cumulative_copies": 243620,
+          "author": "Gosho Aoyama"
+        },
+        {
+          "rank": 5,
+          "title": "Shangri-La Frontier Vol. 26",
+          "copies_sold": 47545,
+          "cumulative_copies": 47545,
+          "author": "Katarina / Ryosuke Fuji"
+        },
+        {
+          "rank": 6,
+          "title": "Real Vol. 17",
+          "copies_sold": 41597,
+          "cumulative_copies": 41597,
+          "author": "Takehiko Inoue"
+        },
+        {
+          "rank": 7,
+          "title": "Welcome to Demon School! Iruma-kun Vol. 48",
+          "copies_sold": 24603,
+          "cumulative_copies": 84589,
+          "author": "Osamu Nishi"
+        },
+        {
+          "rank": 8,
+          "title": "The Band Vol. 4",
+          "copies_sold": 23686,
+          "cumulative_copies": 23686,
+          "author": "Harold Sakuishi"
+        },
+        {
+          "rank": 9,
+          "title": "Ascendance of a Bookworm (Manga): Part 4 Vol. 12",
+          "copies_sold": 22294,
+          "cumulative_copies": 25366,
+          "author": "Hikaru Katsuki / Miya Kazuki / You Shiina"
+        },
+        {
+          "rank": 10,
+          "title": "The Seven Deadly Sins: Four Knights of the Apocalypse Vol. 26",
+          "copies_sold": 21593,
+          "cumulative_copies": 21593,
+          "author": "Nakaba Suzuki"
+        }
+      ]
+    }
+  ],
+  "international_market": [
+    {
+      "region": "Global",
+      "estimated_market_share": null,
+      "estimated_market_value_usd_billion": null,
+      "growth_profile": null,
+      "main_drivers": null,
+      "data_status": "excluded_no_single_official_global_manga_market_source_validated"
+    },
+    {
+      "region": "Ásia-Pacífico",
+      "estimated_market_share": null,
+      "estimated_market_value_usd_billion": null,
+      "growth_profile": null,
+      "main_drivers": null,
+      "data_status": "excluded_no_official_region_specific_manga_market_source_validated"
+    },
+    {
+      "region": "América do Norte",
+      "estimated_market_share": null,
+      "estimated_market_value_usd_billion": null,
+      "growth_profile": null,
+      "main_drivers": null,
+      "data_status": "excluded_no_official_region_specific_manga_market_source_validated"
+    },
+    {
+      "region": "Europa",
+      "estimated_market_share": null,
+      "estimated_market_value_usd_billion": null,
+      "growth_profile": null,
+      "main_drivers": null,
+      "data_status": "excluded_no_official_region_specific_manga_market_source_validated"
+    },
+    {
+      "region": "América Latina",
+      "estimated_market_share": null,
+      "estimated_market_value_usd_billion": null,
+      "growth_profile": null,
+      "main_drivers": null,
+      "data_status": "excluded_no_official_region_specific_manga_market_source_validated"
+    }
+  ],
+  "format_distribution": [
+    {
+      "format": "Digital / Electronic Comics",
+      "share": 76.1,
+      "market_value_jpy_billion": 527.3,
+      "reading_behavior": null,
+      "opportunity": null,
+      "source_id": "SHUPPANKAGAKU-2026-02-25-COMIC-2025",
+      "confidence": 97.2,
+      "note": "Participação no mercado japonês de comics em 2025, não no mercado global."
+    },
+    {
+      "format": "Print / Paper Comics",
+      "share": 23.9,
+      "market_value_jpy_billion": 165.2,
+      "reading_behavior": null,
+      "opportunity": null,
+      "source_id": "SHUPPANKAGAKU-2026-02-25-COMIC-2025",
+      "confidence": 97.2,
+      "note": "Inclui tankobon e revistas de mangá/comics no Japão em 2025."
+    },
+    {
+      "format": "Print / Single Comic Volumes",
+      "share": null,
+      "market_value_jpy_billion": 126.0,
+      "reading_behavior": null,
+      "opportunity": null,
+      "source_id": "SHUPPANKAGAKU-2026-02-25-COMIC-2025",
+      "confidence": 97.2,
+      "note": "Valor de mercado japonês de volumes impressos avulsos em 2025."
+    },
+    {
+      "format": "Print / Comic Magazines",
+      "share": null,
+      "market_value_jpy_billion": 39.2,
+      "reading_behavior": null,
+      "opportunity": null,
+      "source_id": "SHUPPANKAGAKU-2026-02-25-COMIC-2025",
+      "confidence": 97.2,
+      "note": "Valor de mercado japonês de revistas de mangá/comics em 2025."
+    }
+  ],
+  "distribution_channels": [
+    {
+      "channel": "Online / E-commerce",
+      "share": null,
+      "role": null,
+      "opportunity": null,
+      "data_status": "not_populated_no_official_channel_share_source_validated"
+    },
+    {
+      "channel": "Digital platforms and apps",
+      "share": null,
+      "role": null,
+      "opportunity": null,
+      "data_status": "not_populated_no_official_channel_share_source_validated"
+    },
+    {
+      "channel": "Physical bookstores",
+      "share": null,
+      "role": null,
+      "opportunity": null,
+      "data_status": "not_populated_no_official_channel_share_source_validated"
+    }
+  ],
+  "trend_insights": [
+    {
+      "theme": "SPY x FAMILY Vol. 17 foi o maior volume observado nos snapshots verificáveis de abril",
+      "examples": "224.695 cópias no ranking de 2026-04-13, 161.753 no de 2026-04-20 e 66.758 no de 2026-04-27.",
+      "market_reading": "Leitura derivada dos snapshots semanais oficiais em inglês que puderam ser transcritos com segurança.",
+      "ryuzen_angle": "Criar cobertura de lançamentos fortes por janela semanal e acompanhar persistência por 2–3 semanas.",
+      "source_ids": [
+        "ORICON-2026-04-13",
+        "ORICON-2026-04-20",
+        "ORICON-2026-04-27"
+      ],
+      "confidence": 95.0
+    },
+    {
+      "theme": "Case Closed Vol. 108 teve forte presença na segunda metade de abril",
+      "examples": "181.644 cópias no ranking de 2026-04-20 e 61.976 no de 2026-04-27.",
+      "market_reading": "Leitura derivada dos snapshots semanais oficiais em inglês que puderam ser transcritos com segurança.",
+      "ryuzen_angle": "Relacionar desempenho editorial com calendário de filme/anime quando houver fonte específica para esse vínculo.",
+      "source_ids": [
+        "ORICON-2026-04-20",
+        "ORICON-2026-04-27"
+      ],
+      "confidence": 95.0
+    },
+    {
+      "theme": "Digital é o principal formato no mercado japonês de comics",
+      "examples": "Electronic comics represent 76.1% of Japan's comic market value in 2025.",
+      "market_reading": "Leitura baseada em dado oficial anual do mercado japonês.",
+      "ryuzen_angle": "Priorizar produtos editoriais e análises que considerem o consumo digital como eixo principal.",
+      "source_id": "SHUPPANKAGAKU-2026-02-25-COMIC-2025",
+      "confidence": 97.2
+    }
+  ],
+  "sources": [
+    {
+      "id": "ORICON-ABOUT",
+      "name": "Oricon Inc.",
+      "url": "https://www.oricon.jp/en/",
+      "type": "official_corporate_source",
+      "reliability": "very_high",
+      "used_for": "Authority validation for Oricon as a research company providing rankings.",
+      "accessed_at": "2026-05-16"
+    },
+    {
+      "id": "SHUPPANKAGAKU-2026-02-25-COMIC-2025",
+      "name": "全国出版協会・出版科学研究所 / Research Institute for Publications",
+      "url": "https://shuppankagaku.com/wp/wp-content/uploads/2026/02/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E3%83%AA%E3%83%AA%E3%83%BC%E3%82%B92602.pdf",
+      "type": "official_industry_research_release",
+      "reliability": "very_high",
+      "used_for": [
+        "Japan comic market value 2025",
+        "digital/print market values",
+        "digital/print shares",
+        "year-over-year market movement"
+      ],
+      "accessed_at": "2026-05-16"
+    },
+    {
+      "id": "ORICON-2026-04-06",
+      "name": "Japan Anime News powered by ORICON NEWS",
+      "url": "https://us.oricon-group.com/news/8210/",
+      "type": "official_oricon_weekly_ranking",
+      "reliability": "very_high",
+      "used_for": "Oricon weekly manga volume sales ranking dated 2026-04-06",
+      "accessed_at": "2026-05-16"
+    },
+    {
+      "id": "ORICON-2026-04-13",
+      "name": "Japan Anime News powered by ORICON NEWS",
+      "url": "https://us.oricon-group.com/news/8276/",
+      "type": "official_oricon_weekly_ranking",
+      "reliability": "very_high",
+      "used_for": "Oricon weekly manga volume sales ranking dated 2026-04-13",
+      "accessed_at": "2026-05-16"
+    },
+    {
+      "id": "ORICON-2026-04-20",
+      "name": "Japan Anime News powered by ORICON NEWS",
+      "url": "https://us.oricon-group.com/news/8344/",
+      "type": "official_oricon_weekly_ranking",
+      "reliability": "very_high",
+      "used_for": "Oricon weekly manga volume sales ranking dated 2026-04-20",
+      "accessed_at": "2026-05-16"
+    },
+    {
+      "id": "ORICON-2026-04-27",
+      "name": "Japan Anime News powered by ORICON NEWS",
+      "url": "https://us.oricon-group.com/news/8415/",
+      "type": "official_oricon_weekly_ranking",
+      "reliability": "very_high",
+      "used_for": "Oricon weekly manga volume sales ranking dated 2026-04-27",
+      "accessed_at": "2026-05-16"
+    }
+  ],
+  "excluded_sources_from_previous_version": [
+    {
+      "name": "Fortune Business Insights",
+      "reason": "Market consultancy source, not official portal. Excluded under high-integrity official-only rule."
+    },
+    {
+      "name": "Grand View Research",
+      "reason": "Market consultancy source, not official portal. Excluded under high-integrity official-only rule."
+    },
+    {
+      "name": "Manga Mogura RE",
+      "reason": "Social/news account. Useful for monitoring, but excluded from official-only database."
+    }
+  ]
+}

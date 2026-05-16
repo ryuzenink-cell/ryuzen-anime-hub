@@ -8,6 +8,7 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://api.jikan.moe; img-src 'self' https: data:; script-src 'self'; style-src 'self'; frame-src https://www.youtube.com https://www.youtube-nocookie.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=()">
+  <link rel="icon" type="image/png" href="/assets/images/logo-placeholder.svg">
   <link rel="stylesheet" href="assets/css/global.css">
   <link rel="stylesheet" href="assets/css/layout.css">
   <link rel="stylesheet" href="assets/css/components.css">
@@ -25,9 +26,10 @@
           <p>O Ryuzen Anime Hub é uma central brasileira para explorar temporadas, rankings, detalhes de obras e montar sua própria lista de animes.</p>
           <div id="homeSearch"></div>
           <div class="hero-actions">
-            <a class="btn primary" href="season.html">Explorar temporada</a>
-            <a class="btn" href="search.html">Buscar anime</a>
-            <a class="btn accent" href="my-list.html">Minha lista</a>
+            <a class="btn primary" href="season/">Explorar temporada</a>
+            <a class="btn" href="search/">Buscar anime</a>
+            <a class="btn accent" href="my-list/">Minha lista</a>
+            <a class="btn" href="blog/">Ler blog</a>
           </div>
         </div>
         <aside class="hero-panel" aria-label="Destaques do ranking">
@@ -39,13 +41,13 @@
     </section>
     <section class="section">
       <div class="container">
-        <div class="section-head"><div><p class="eyebrow">temporada</p><h2>Animes da Temporada</h2></div><a class="btn" href="season.html">Ver temporada</a></div>
+        <div class="section-head"><div><p class="eyebrow">temporada</p><h2>Animes da Temporada</h2></div><a class="btn" href="season/">Ver temporada</a></div>
         <div id="seasonNow"></div>
       </div>
     </section>
     <section class="section">
       <div class="container">
-        <div class="section-head"><div><p class="eyebrow">ranking</p><h2>Top Animes</h2></div><a class="btn" href="ranking.html">Ver ranking</a></div>
+        <div class="section-head"><div><p class="eyebrow">ranking</p><h2>Top Animes</h2></div><a class="btn" href="ranking/">Ver ranking</a></div>
         <div id="topAnime"></div>
       </div>
     </section>
@@ -57,7 +59,7 @@
     </section>
     <section class="section">
       <div class="container">
-        <div class="section-head"><div><p class="eyebrow">editorial</p><h2>Guias Ryuzen</h2></div><a class="btn" href="guides.html">Abrir guias</a></div>
+        <div class="section-head"><div><p class="eyebrow">editorial</p><h2>Guias e Blog Ryuzen</h2></div><a class="btn" href="blog/">Abrir blog</a></div>
         <div class="guide-grid">
           <article class="guide-card"><h3>Por onde começar nos isekais?</h3><p>Uma curadoria inicial para entrar no gênero sem se perder.</p></article>
           <article class="guide-card"><h3>Animes curtos para um fim de semana</h3><p>Boas histórias para maratonar em poucos episódios.</p></article>
