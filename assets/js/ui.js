@@ -303,7 +303,58 @@ function renderAnimeDetailLoading(root) {
   `;
 }
 
+function renderPromoSidebars() {
+  const allowedRoutes = [
+    "home",
+    "search",
+    "season",
+    "ranking",
+    "mangaSales",
+    "blog",
+    "blogPost",
+    "myList",
+    "guides"
+  ];
+
+  const currentRoute = getCurrentRouteKey();
+
+  if (!allowedRoutes.includes(currentRoute)) return;
+
+  const existing = document.querySelector(".promo-sidebars");
+  if (existing) existing.remove();
+
+  const wrapper = document.createElement("aside");
+  wrapper.className = "promo-sidebars";
+  wrapper.setAttribute("aria-label", "Banners promocionais Ryuzen");
+
+  /*wrapper.innerHTML = `
+    <a class="promo-rail promo-rail-left" href="${RYZEN_ROUTES.blog}" aria-label="Ler o blog do Ryuzen Anime Hub">
+      <span class="promo-kicker">Ryuzen Blog</span>
+      <strong>Guias, listas e análises de anime</strong>
+      <span>Leia agora</span>
+    </a>
+
+    <a class="promo-rail promo-rail-right" href="${RYZEN_ROUTES.guides}" aria-label="Abrir guias do Ryuzen Anime Hub">
+      <span class="promo-kicker">Guias Ryuzen</span>
+      <strong>Descubra novas obras para assistir</strong>
+      <span>Explorar</span>
+    </a>
+  `;*/
+
+  wrapper.innerHTML = `
+  <a class="promo-rail promo-rail-image promo-rail-left" href="${RYZEN_ROUTES.blog}">
+    <img src="${assetPath("images/banners/banner-left.png")}" alt="Leia o blog do Ryuzen Anime Hub">
+  </a>
+
+  <a class="promo-rail promo-rail-image promo-rail-right" href="${RYZEN_ROUTES.guides}">
+    <img src="${assetPath("images/banners/banner-right.png")}" alt="Guias do Ryuzen Anime Hub">
+  </a>
+`;
+
+  document.body.appendChild(wrapper);
+}
 
 renderHeader();
 renderFooter();
+renderPromoSidebars();
 bindSearchForms();
