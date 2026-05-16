@@ -1,3 +1,9 @@
+const homeSearch = document.getElementById("homeSearch");
+if (homeSearch) {
+  homeSearch.innerHTML = createSearchBar();
+  bindSearchForms();
+}
+
 async function loadHomeSection(targetId, loader, limit = 5) {
   const target = document.getElementById(targetId);
   renderLoading(target, limit);
@@ -16,8 +22,8 @@ async function loadSpotlight() {
     target.innerHTML = `
       <div class="spotlight-list">
         ${data.slice(0, 4).map((anime, index) => `
-          <a class="spotlight-item" href="anime.html?id=${anime.mal_id}">
-            <img src="${imageOf(anime)}" alt="Capa de ${escapeHtml(anime.title)}" loading="lazy">
+          <a class="spotlight-item" href="anime.html?id=${Number(anime.mal_id)}">
+            <img src="${escapeHtml(imageOf(anime))}" alt="Capa de ${escapeHtml(anime.title)}" loading="lazy">
             <div>
               <strong>#${index + 1} ${escapeHtml(anime.title)}</strong>
               <div class="meta-line"><span class="badge score">Nota ${formatScore(anime.score)}</span><span>${escapeHtml(anime.type || "Anime")}</span></div>

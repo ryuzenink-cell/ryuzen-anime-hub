@@ -11,6 +11,9 @@
 - Não insira chaves de API no frontend.
 - Trate erros da Jikan API com mensagens amigáveis.
 - Considere rate limit da API e evite chamadas desnecessárias.
+- Leia `SECURITY.md` e `docs/SECURITY_CHECKLIST.md` antes de orientar qualquer push.
+- Faça varredura de segredos antes de recomendar commit ou publicação.
+- Preserve a Content Security Policy das páginas ao adicionar scripts, imagens ou iframes.
 - Mantenha CSS organizado por responsabilidade:
   - `global.css`: variáveis e base;
   - `layout.css`: estrutura geral;

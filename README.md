@@ -64,6 +64,14 @@ Endpoints principais:
 - `/anime?q=...`
 - `/anime/{id}/full`
 
+## Segurança
+
+- O MVP não usa chaves privadas nem variáveis de ambiente no frontend.
+- A publicação deve seguir o checklist em `docs/SECURITY_CHECKLIST.md`.
+- A política básica de segurança está documentada em `SECURITY.md`.
+- As páginas usam CSP, política de referrer e restrição de permissões por meta tags.
+- URLs externas vindas da API são validadas antes de renderizar imagens ou trailers.
+
 ## Roadmap
 
 ### Fase 1 — MVP estático

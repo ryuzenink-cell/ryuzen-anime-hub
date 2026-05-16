@@ -34,11 +34,13 @@ function renderMyList() {
 }
 
 function createListItem(item) {
+  const image = escapeHtml(safeUrl(item.image, "assets/images/logo-placeholder.svg"));
+  const title = escapeHtml(item.title);
   return `
     <article class="list-item" data-id="${item.id}">
-      <img src="${item.image}" alt="Capa de ${escapeHtml(item.title)}">
+      <img src="${image}" alt="Capa de ${title}">
       <div>
-        <h3>${escapeHtml(item.title)}</h3>
+        <h3>${title}</h3>
         <div class="meta-line">
           <span class="badge ${item.status === "favorite" ? "fav" : ""}">${STATUS_LABELS[item.status] || "Quero assistir"}</span>
           <span>Nota pessoal: ${item.personalScore || "-"}</span>

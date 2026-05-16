@@ -1,5 +1,6 @@
 function imageOf(anime) {
-  return anime?.images?.webp?.large_image_url || anime?.images?.jpg?.large_image_url || anime?.image || "assets/images/logo-placeholder.svg";
+  const imageUrl = anime?.images?.webp?.large_image_url || anime?.images?.jpg?.large_image_url || anime?.image;
+  return safeUrl(imageUrl, "assets/images/logo-placeholder.svg");
 }
 
 function yearOf(anime) {
@@ -58,9 +59,9 @@ function renderFooter() {
 
 function createSearchBar({ value = "", placeholder = "Busque por título, franquia ou temporada", action = "search.html" } = {}) {
   return `
-    <form class="search-box" data-search-form action="${action}">
+    <form class="search-box" data-search-form action="${escapeHtml(action)}">
       <label class="sr-only" for="global-search">Buscar anime</label>
-      <input id="global-search" name="q" type="search" value="${escapeHtml(value)}" placeholder="${placeholder}" autocomplete="off">
+      <input id="global-search" name="q" type="search" value="${escapeHtml(value)}" placeholder="${escapeHtml(placeholder)}" autocomplete="off">
       <button class="btn primary" type="submit">Buscar</button>
     </form>`;
 }
@@ -81,43 +82,47 @@ function createGenreTags(genres = []) {
 }
 
 function createAnimeCard(anime) {
+  const animeId = Number(anime.mal_id);
+  const title = escapeHtml(anime.title);
   return `
     <article class="anime-card">
-      <a href="anime.html?id=${anime.mal_id}" aria-label="Ver detalhes de ${escapeHtml(anime.title)}">
-        <img class="poster" src="${imageOf(anime)}" alt="Capa de ${escapeHtml(anime.title)}" loading="lazy">
+      <a href="anime.html?id=${animeId}" aria-label="Ver detalhes de ${title}">
+        <img class="poster" src="${escapeHtml(imageOf(anime))}" alt="Capa de ${title}" loading="lazy">
       </a>
       <div class="anime-card-body">
-        <h3 class="anime-title">${escapeHtml(anime.title)}</h3>
+        <h3 class="anime-title">${title}</h3>
         <div class="meta-line">
           <span class="badge score">Nota ${formatScore(anime.score)}</span>
           <span>${escapeHtml(anime.type || "Anime")}</span>
-          <span>${yearOf(anime)}</span>
+          <span>${escapeHtml(yearOf(anime))}</span>
         </div>
         <div class="meta-line">
-          <span>${anime.episodes || "?"} eps</span>
+          <span>${escapeHtml(anime.episodes || "?")} eps</span>
           <span>${escapeHtml(anime.status || "Status indef.")}</span>
         </div>
         ${createGenreTags(anime.genres)}
-        <a class="btn ghost" href="anime.html?id=${anime.mal_id}">Ver detalhes</a>
+        <a class="btn ghost" href="anime.html?id=${animeId}">Ver detalhes</a>
       </div>
     </article>`;
 }
 
 function createRankingRow(anime, position) {
+  const animeId = Number(anime.mal_id);
+  const title = escapeHtml(anime.title);
   return `
     <article class="ranking-row">
-      <div class="ranking-pos">#${position}</div>
-      <img class="ranking-thumb" src="${imageOf(anime)}" alt="Capa de ${escapeHtml(anime.title)}" loading="lazy">
+      <div class="ranking-pos">#${escapeHtml(position)}</div>
+      <img class="ranking-thumb" src="${escapeHtml(imageOf(anime))}" alt="Capa de ${title}" loading="lazy">
       <div>
-        <h3>${escapeHtml(anime.title)}</h3>
+        <h3>${title}</h3>
         <div class="meta-line">
           <span class="badge score">Nota ${formatScore(anime.score)}</span>
           <span>${escapeHtml(anime.type || "Anime")}</span>
-          <span>${anime.episodes || "?"} eps</span>
-          <span>${yearOf(anime)}</span>
+          <span>${escapeHtml(anime.episodes || "?")} eps</span>
+          <span>${escapeHtml(yearOf(anime))}</span>
         </div>
       </div>
-      <a class="btn" href="anime.html?id=${anime.mal_id}">Ver detalhes</a>
+      <a class="btn" href="anime.html?id=${animeId}">Ver detalhes</a>
     </article>`;
 }
 
@@ -137,6 +142,33 @@ function escapeHtml(value = "") {
   return String(value).replace(/[&<>"']/g, (char) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
   }[char]));
+}
+
+function safeUrl(value, fallback = "#") {
+  if (!value) return fallback;
+  try {
+    const url = new URL(String(value), window.location.href);
+    const isAllowedProtocol = ["http:", "https:"].includes(url.protocol);
+    const isLocalAsset = url.origin === window.location.origin || String(value).startsWith("assets/");
+    if (isAllowedProtocol || isLocalAsset) return url.href;
+  } catch {
+    if (String(value).startsWith("assets/")) return value;
+  }
+  return fallback;
+}
+
+function safeYouTubeEmbedUrl(value) {
+  if (!value) return "";
+  try {
+    const url = new URL(String(value));
+    const allowedHosts = ["www.youtube.com", "www.youtube-nocookie.com"];
+    if (url.protocol === "https:" && allowedHosts.includes(url.hostname) && url.pathname.startsWith("/embed/")) {
+      return url.href;
+    }
+  } catch {
+    return "";
+  }
+  return "";
 }
 
 renderHeader();

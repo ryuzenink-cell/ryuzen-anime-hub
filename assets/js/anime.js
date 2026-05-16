@@ -9,12 +9,13 @@ async function loadAnimeDetail() {
   renderLoading(detailRoot, 2);
   try {
     const { data } = await fetchAnimeDetails(id);
-    document.title = `${data.title} | Ryuzen Anime Hub`;
+    document.title = `${data.title || "Detalhes do Anime"} | Ryuzen Anime Hub`;
     const saved = getAnimeById(data.mal_id);
+    const trailerUrl = safeYouTubeEmbedUrl(data.trailer?.embed_url);
     detailRoot.innerHTML = `
       <section class="detail-layout">
         <aside>
-          <img class="detail-cover" src="${imageOf(data)}" alt="Capa de ${escapeHtml(data.title)}">
+          <img class="detail-cover" src="${escapeHtml(imageOf(data))}" alt="Capa de ${escapeHtml(data.title)}">
         </aside>
         <article>
           <p class="eyebrow">Detalhes do anime</p>
@@ -52,7 +53,7 @@ async function loadAnimeDetail() {
               <a class="btn" href="my-list.html">Abrir minha lista</a>
             </form>
           </div>
-          ${data.trailer?.embed_url ? `<h2>Trailer</h2><iframe class="trailer-frame" src="${data.trailer.embed_url}" title="Trailer de ${escapeHtml(data.title)}" allowfullscreen></iframe>` : ""}
+          ${trailerUrl ? `<h2>Trailer</h2><iframe class="trailer-frame" src="${escapeHtml(trailerUrl)}" title="Trailer de ${escapeHtml(data.title)}" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" sandbox="allow-scripts allow-same-origin allow-presentation" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>` : ""}
           <section class="section">
             <h2>Recomendações Ryuzen</h2>
             <div class="state"><p>Em breve, esta área vai sugerir animes parecidos com base em gênero, temporada e perfil da sua lista.</p></div>
