@@ -1,0 +1,251 @@
+{
+  "schema_version": "1.0.0",
+  "source": "manual_seed",
+  "store": {
+    "id": "ryuzen-mangas",
+    "name": "Ryuzen Ink"
+  },
+  "period": {
+    "month": "04-2026",
+    "start_date": "2026-04-01",
+    "end_date": "2026-04-30"
+  },
+  "currency": "BRL",
+  "summary": {
+    "orders_total": 15,
+    "orders_paid": 14,
+    "orders_refunded": 1,
+    "items_sold": 24,
+    "gross_revenue": 683.6,
+    "products_revenue": 638.6,
+    "shipping_revenue": 68.0,
+    "discounts": 23.0,
+    "products_cost": 313.0,
+    "shipping_cost": 100.7,
+    "platform_fees": 27.1,
+    "net_profit": 242.8,
+    "average_ticket": 48.83
+  },
+  "sales": [
+    {
+      "sale_id": "RYZ-MG-202604-0001",
+      "date": "2026-04-01",
+      "channel": "instagram",
+      "customer_type": "novo",
+      "payment_method": "pix",
+      "status": "paid",
+      "items": [
+        {
+          "sku": "MNG-OPM-001-US",
+          "title": "One Punch Man",
+          "volume": 1,
+          "type": "manga",
+          "condition": "usado_bom",
+          "quantity": 1,
+          "unit_price": 24.9,
+          "cost_price": 12.0
+        },
+        {
+          "sku": "MNG-NAR-003-US",
+          "title": "Naruto Gold",
+          "volume": 3,
+          "type": "manga",
+          "condition": "usado_bom",
+          "quantity": 1,
+          "unit_price": 19.9,
+          "cost_price": 8.0
+        }
+      ],
+      "discount": 0.0,
+      "shipping_charged": 8.0,
+      "shipping_cost": 7.5,
+      "platform_fee": 0.0,
+      "items_gross": 44.8,
+      "items_cost": 20.0,
+      "total_gross": 52.8,
+      "total_cost": 27.5,
+      "total_fees": 0.0,
+      "net_profit": 25.3
+    },
+    {
+      "sale_id": "RYZ-MG-202604-0002",
+      "date": "2026-04-03",
+      "channel": "mercado_livre",
+      "customer_type": "novo",
+      "payment_method": "cartao_credito",
+      "status": "paid",
+      "items": [
+        {
+          "sku": "MNG-DBS-002-NV",
+          "title": "Dragon Ball Super",
+          "volume": 2,
+          "type": "manga",
+          "condition": "novo",
+          "quantity": 1,
+          "unit_price": 34.9,
+          "cost_price": 20.0
+        }
+      ],
+      "discount": 0.0,
+      "shipping_charged": 0.0,
+      "shipping_cost": 9.9,
+      "platform_fee": 5.2,
+      "items_gross": 34.9,
+      "items_cost": 20.0,
+      "total_gross": 34.9,
+      "total_cost": 29.9,
+      "total_fees": 5.2,
+      "net_profit": -0.2
+    },
+    {
+      "sale_id": "RYZ-MG-202604-0003",
+      "date": "2026-04-04",
+      "channel": "whatsapp",
+      "customer_type": "recorrente",
+      "payment_method": "pix",
+      "status": "paid",
+      "items": [
+        {
+          "sku": "MNG-JJK-001-NV",
+          "title": "Jujutsu Kaisen",
+          "volume": 1,
+          "type": "manga",
+          "condition": "novo",
+          "quantity": 2,
+          "unit_price": 32.9,
+          "cost_price": 19.0
+        }
+      ],
+      "discount": 5.0,
+      "shipping_charged": 10.0,
+      "shipping_cost": 9.0,
+      "platform_fee": 0.0,
+      "items_gross": 65.8,
+      "items_cost": 38.0,
+      "total_gross": 70.8,
+      "total_cost": 47.0,
+      "total_fees": 0.0,
+      "net_profit": 23.8
+    },
+    {
+      "sale_id": "RYZ-MG-202604-0004",
+      "date": "2026-04-06",
+      "channel": "shopee",
+      "customer_type": "novo",
+      "payment_method": "cartao_credito",
+      "status": "paid",
+      "items": [
+        {
+          "sku": "MNG-BNHA-004-US",
+          "title": "My Hero Academia",
+          "volume": 4,
+          "type": "manga",
+          "condition": "usado_otimo",
+          "quantity": 1,
+          "unit_price": 22.9,
+          "cost_price": 10.0
+        },
+        {
+          "sku": "MNG-BNHA-005-US",
+          "title": "My Hero Academia",
+          "volume": 5,
+          "type": "manga",
+          "condition": "usado_otimo",
+          "quantity": 1,
+          "unit_price": 22.9,
+          "cost_price": 10.0
+        }
+      ],
+      "discount": 3.0,
+      "shipping_charged": 0.0,
+      "shipping_cost": 8.5,
+      "platform_fee": 6.4,
+      "items_gross": 45.8,
+      "items_cost": 20.0,
+      "total_gross": 42.8,
+      "total_cost": 28.5,
+      "total_fees": 6.4,
+      "net_profit": 7.9
+    },
+    {
+      "sale_id": "RYZ-MG-202604-0005",
+      "date": "2026-04-08",
+      "channel": "presencial",
+      "customer_type": "novo",
+      "payment_method": "dinheiro",
+      "status": "paid",
+      "items": [
+        {
+          "sku": "MNG-DS-007-US",
+          "title": "Demon Slayer",
+          "volume": 7,
+          "type": "manga",
+          "condition": "usado_bom",
+          "quantity": 1,
+          "unit_price": 21.9,
+          "cost_price": 9.0
+        }
+      ],
+      "discount": 0.0,
+      "shipping_charged": 0.0,
+      "shipping_cost": 0.0,
+      "platform_fee": 0.0,
+      "items_gross": 21.9,
+      "items_cost": 9.0,
+      "total_gross": 21.9,
+      "total_cost": 9.0,
+      "total_fees": 0.0,
+      "net_profit": 12.9
+    },
+    {
+      "sale_id": "RYZ-MG-202604-0006",
+      "date": "2026-04-10",
+      "channel": "instagram",
+      "customer_type": "recorrente",
+      "payment_method": "pix",
+      "status": "paid",
+      "items": [
+        {
+          "sku": "MNG-AOT-001-US",
+          "title": "Attack on Titan",
+          "volume": 1,
+          "type": "manga",
+          "condition": "usado_bom",
+          "quantity": 1,
+          "unit_price": 23.9,
+          "cost_price": 11.0
+        },
+        {
+          "sku": "MNG-AOT-002-US",
+          "title": "Attack on Titan",
+          "volume": 2,
+          "type": "manga",
+          "condition": "usado_bom",
+          "quantity": 1,
+          "unit_price": 23.9,
+          "cost_price": 11.0
+        },
+        {
+          "sku": "MNG-AOT-003-US",
+          "title": "Attack on Titan",
+          "volume": 3,
+          "type": "manga",
+          "condition": "usado_bom",
+          "quantity": 1,
+          "unit_price": 23.9,
+          "cost_price": 11.0
+        }
+      ],
+      "discount": 6.0,
+      "shipping_charged": 12.0,
+      "shipping_cost": 10.5,
+      "platform_fee": 0.0,
+      "items_gross": 71.7,
+      "items_cost": 33.0,
+      "total_gross": 77.7,
+      "total_cost": 43.5,
+      "total_fees": 0.0,
+      "net_profit": 34.2
+    }
+  ]
+}
