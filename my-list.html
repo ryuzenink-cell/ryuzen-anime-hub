@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Minha Lista | Ryuzen Anime Hub</title>
+  <meta name="description" content="Gerencie sua lista pessoal de animes salva localmente no navegador.">
+  <link rel="stylesheet" href="assets/css/global.css"><link rel="stylesheet" href="assets/css/layout.css"><link rel="stylesheet" href="assets/css/components.css"><link rel="stylesheet" href="assets/css/pages.css"><link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+  <div data-header></div>
+  <main class="container">
+    <section class="page-hero"><p class="eyebrow">Minha lista</p><h1>Seu acompanhamento local.</h1><p>Salve status, nota pessoal e episódios assistidos. Os dados ficam apenas neste navegador.</p></section>
+    <section id="listCounters" class="counter-grid"></section>
+    <section class="filters" aria-label="Filtros de status">
+      <button class="chip active" data-status-filter="all" type="button">Todos</button>
+      <button class="chip" data-status-filter="plan" type="button">Quero assistir</button>
+      <button class="chip" data-status-filter="watching" type="button">Assistindo</button>
+      <button class="chip" data-status-filter="completed" type="button">Concluído</button>
+      <button class="chip" data-status-filter="paused" type="button">Pausado</button>
+      <button class="chip" data-status-filter="dropped" type="button">Dropado</button>
+      <button class="chip" data-status-filter="favorite" type="button">Favorito</button>
+    </section>
+    <section class="section"><div id="myList"></div></section>
+  </main>
+  <div data-footer></div>
+  <script src="assets/js/api.js"></script><script src="assets/js/storage.js"></script><script src="assets/js/ui.js"></script><script src="assets/js/my-list.js"></script>
+</body>
+</html>

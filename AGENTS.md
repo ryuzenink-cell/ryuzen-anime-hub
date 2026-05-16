@@ -1,0 +1,25 @@
+# Instruções para Agentes — Ryuzen Anime Hub
+
+- Idioma do projeto: português brasileiro.
+- Mantenha o MVP simples, com HTML, CSS e JavaScript puro.
+- Preserve compatibilidade com GitHub Pages.
+- Não adicione frameworks, backend ou build step sem decisão explícita.
+- Evite copiar layout, textos, marca, cores exatas ou identidade visual do MyAnimeList.
+- Use o MyAnimeList apenas como referência funcional de categoria: database, busca, rankings e listas.
+- Mantenha identidade própria da Ryuzen.
+- Priorize UX mobile e boa navegação por teclado.
+- Não insira chaves de API no frontend.
+- Trate erros da Jikan API com mensagens amigáveis.
+- Considere rate limit da API e evite chamadas desnecessárias.
+- Mantenha CSS organizado por responsabilidade:
+  - `global.css`: variáveis e base;
+  - `layout.css`: estrutura geral;
+  - `components.css`: componentes reutilizáveis;
+  - `pages.css`: estilos específicos;
+  - `responsive.css`: ajustes responsivos.
+- Mantenha JavaScript separado por responsabilidade:
+  - `api.js`: acesso à Jikan API;
+  - `storage.js`: LocalStorage;
+  - `ui.js`: componentes e utilitários;
+  - arquivos por página para lógica específica.
+- Documente mudanças importantes no README quando alterarem uso, estrutura ou roadmap.

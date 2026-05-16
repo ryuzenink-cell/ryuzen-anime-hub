@@ -1,0 +1,28 @@
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# Dependency/build folders kept out of this static MVP
+node_modules/
+dist/
+build/
+.cache/
+
+# Editor and OS metadata
+.vscode/
+.idea/
+*.swp

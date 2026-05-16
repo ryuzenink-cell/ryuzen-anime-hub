@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ryuzen Anime Hub | Animes, rankings e lista pessoal</title>
+  <meta name="description" content="Descubra animes da temporada, rankings, detalhes de obras e organize sua lista pessoal no Ryuzen Anime Hub.">
+  <link rel="stylesheet" href="assets/css/global.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/pages.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+  <div data-header></div>
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <p class="eyebrow">anime.ryuzen.ink</p>
+          <h1>Descubra, acompanhe e organize seus animes favoritos em português.</h1>
+          <p>O Ryuzen Anime Hub é uma central brasileira para explorar temporadas, rankings, detalhes de obras e montar sua própria lista de animes.</p>
+          <div id="homeSearch"></div>
+          <div class="hero-actions">
+            <a class="btn primary" href="season.html">Explorar temporada</a>
+            <a class="btn" href="search.html">Buscar anime</a>
+            <a class="btn accent" href="my-list.html">Minha lista</a>
+          </div>
+        </div>
+        <aside class="hero-panel" aria-label="Destaques do ranking">
+          <p class="eyebrow">Top agora</p>
+          <h2>Obras em destaque</h2>
+          <div id="heroSpotlight"></div>
+        </aside>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container">
+        <div class="section-head"><div><p class="eyebrow">temporada</p><h2>Animes da Temporada</h2></div><a class="btn" href="season.html">Ver temporada</a></div>
+        <div id="seasonNow"></div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container">
+        <div class="section-head"><div><p class="eyebrow">ranking</p><h2>Top Animes</h2></div><a class="btn" href="ranking.html">Ver ranking</a></div>
+        <div id="topAnime"></div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container">
+        <div class="section-head"><div><p class="eyebrow">popularidade</p><h2>Mais Populares</h2></div></div>
+        <div id="popularAnime"></div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container">
+        <div class="section-head"><div><p class="eyebrow">editorial</p><h2>Guias Ryuzen</h2></div><a class="btn" href="guides.html">Abrir guias</a></div>
+        <div class="guide-grid">
+          <article class="guide-card"><h3>Por onde começar nos isekais?</h3><p>Uma curadoria inicial para entrar no gênero sem se perder.</p></article>
+          <article class="guide-card"><h3>Animes curtos para um fim de semana</h3><p>Boas histórias para maratonar em poucos episódios.</p></article>
+          <article class="guide-card"><h3>Ordem para assistir franquias</h3><p>Guias futuros para sagas longas, filmes e especiais.</p></article>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div data-footer></div>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/storage.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script>document.getElementById("homeSearch").innerHTML = createSearchBar(); bindSearchForms();</script>
+  <script src="assets/js/home.js"></script>
+</body>
+</html>

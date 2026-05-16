@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Temporada Atual | Ryuzen Anime Hub</title>
+  <meta name="description" content="Acompanhe os animes da temporada atual com filtros por tipo e ordenação.">
+  <link rel="stylesheet" href="assets/css/global.css"><link rel="stylesheet" href="assets/css/layout.css"><link rel="stylesheet" href="assets/css/components.css"><link rel="stylesheet" href="assets/css/pages.css"><link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+  <div data-header></div>
+  <main class="container">
+    <section class="page-hero"><p class="eyebrow">Temporada atual</p><h1>Animes em exibição agora.</h1><p>Explore lançamentos da temporada com filtros simples para chegar mais rápido ao que combina com sua lista.</p></section>
+    <section class="list-toolbar">
+      <label>Tipo<select id="typeFilter"><option value="all">Todos</option><option value="TV">TV</option><option value="Movie">Filme</option><option value="OVA">OVA</option><option value="Special">Especial</option></select></label>
+      <label>Ordenar por<select id="sortFilter"><option value="score">Nota</option><option value="popularity">Popularidade</option><option value="title">Título</option></select></label>
+    </section>
+    <section class="section"><div id="seasonGrid"></div></section>
+  </main>
+  <div data-footer></div>
+  <script src="assets/js/api.js"></script><script src="assets/js/storage.js"></script><script src="assets/js/ui.js"></script><script src="assets/js/season.js"></script>
+</body>
+</html>
