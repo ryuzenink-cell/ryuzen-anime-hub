@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rankings | Ryuzen Anime Hub</title>
+  <meta name="description" content="Rankings de top animes, populares, filmes e obras em exibição.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://api.jikan.moe; img-src 'self' https: data:; script-src 'self'; style-src 'self'; frame-src https://www.youtube.com https://www.youtube-nocookie.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=()">
+  <link rel="icon" type="image/png" href="/assets/images/logo-placeholder.svg">
+  <link rel="stylesheet" href="../assets/css/global.css"><link rel="stylesheet" href="../assets/css/layout.css"><link rel="stylesheet" href="../assets/css/components.css"><link rel="stylesheet" href="../assets/css/pages.css"><link rel="stylesheet" href="../assets/css/responsive.css">
+</head>
+<body>
+  <div data-header></div>
+  <main class="container">
+    <section class="page-hero"><p class="eyebrow">Rankings</p><h1>Listas para descobrir obras fortes.</h1><p>Compare nota, popularidade e formato em uma visualização de database.</p></section>
+    <div class="tabs" role="tablist" aria-label="Tipos de ranking">
+      <button class="tab active" data-ranking="top" type="button">Top Animes</button>
+      <button class="tab" data-ranking="popular" type="button">Mais Populares</button>
+      <button class="tab" data-ranking="movies" type="button">Filmes</button>
+      <button class="tab" data-ranking="airing" type="button">Em Exibição</button>
+    </div>
+    <section class="section"><div id="rankingList"></div></section>
+  </main>
+  <div data-footer></div>
+  <script src="../assets/js/api.js"></script><script src="../assets/js/storage.js"></script><script src="../assets/js/ui.js"></script><script src="../assets/js/ranking.js"></script>
+</body>
+</html>
