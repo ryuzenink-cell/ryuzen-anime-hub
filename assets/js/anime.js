@@ -12,6 +12,22 @@ async function loadAnimeDetail() {
     document.title = `${data.title || "Detalhes do Anime"} | Ryuzen Anime Hub`;
     const saved = getAnimeById(data.mal_id);
     const trailerUrl = safeYouTubeEmbedUrl(data.trailer?.embed_url);
+
+    let synopsis = data.synopsis || "Sinopse indisponível no momento.";
+    let synopsisNotice = "";
+
+    try{
+      const translatedSynopsis = await translateTextToPortuguese(data.synopsis);
+
+      if(translatedSynopsis){
+        synopsis = translatedSynopsis;
+        synopsisNotice = "Sinopse traduzida automaticamente.";
+      }
+    } catch (error) {
+      console.error("Erro ao traduzir sinopse:", error);
+      synopsisNotice = "Sinopse original em inglês. Tradução automática indisponível no momento.";
+    }
+
     detailRoot.innerHTML = `
       <section class="detail-layout">
         <aside>
@@ -27,7 +43,7 @@ async function loadAnimeDetail() {
             <div class="stat"><strong>#${data.popularity || "-"}</strong><span>Popularidade</span></div>
             <div class="stat"><strong>${data.episodes || "?"}</strong><span>Episódios</span></div>
           </div>
-          <p>${escapeHtml(data.synopsis || "Sinopse indisponível no momento.")}</p>
+          <div class="synopsis-box"> <p>${escapeHtml(synopsis)}</p> ${synopsisNotice ? `<small>${escapeHtml(synopsisNotice)}</small>` : ""} </div>
           <div class="tags">${[data.type, data.status, data.season, data.year].filter(Boolean).map((item) => `<span class="badge">${escapeHtml(item)}</span>`).join("")}</div>
           <h2>Gêneros e estúdios</h2>
           ${createGenreTags(data.genres)}
