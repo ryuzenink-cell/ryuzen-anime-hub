@@ -120,11 +120,23 @@ async function loadBlogPosts() {
 }
 
 async function loadBlogPaths() {
-  const githubPaths = await loadBlogPathsFromGitHub().catch(() => []);
-  if (githubPaths.length) return githubPaths;
-
   const manifest = await fetchJson(BLOG_MANIFEST).catch(() => []);
-  return Array.isArray(manifest) ? manifest : manifest.posts || [];
+  const manifestPaths = Array.isArray(manifest) ? manifest : manifest.posts || [];
+
+  const githubPaths = !isLocalBlogEnvironment()
+    ? await loadBlogPathsFromGitHub().catch(() => [])
+    : [];
+
+  const paths = [...manifestPaths, ...githubPaths]
+    .map((item) => normalizeBlogPath(item.path || item))
+    .filter((path) => path.startsWith("blog/"))
+    .filter((path) => path.endsWith(".md"));
+
+  return [...new Set(paths)].map((path) => ({ path }));
+}
+
+function isLocalBlogEnvironment() {
+  return ["localhost", "127.0.0.1"].includes(location.hostname);
 }
 
 async function loadBlogPathsFromGitHub() {
