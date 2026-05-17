@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v1.0.1";
+const CACHE_VERSION = "v1.0.3";
 const STATIC_CACHE = `ryuzen-static-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `ryuzen-runtime-${CACHE_VERSION}`;
 
@@ -21,7 +21,8 @@ const STATIC_ASSETS = [
   "/assets/js/analytics.js",
   "/assets/images/logo-placeholder.svg",
   "/assets/icons/icon-192.png",
-  "/assets/icons/icon-512.png"
+  "/assets/icons/icon-512.png",
+  "/data/upcoming-featured-queries.json"
 ];
 
 self.addEventListener("install", (event) => {
@@ -61,8 +62,8 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (isStaticAsset(request)) {
-    event.respondWith(staleWhileRevalidate(request));
+  if (url.pathname.endsWith("/data/upcoming-featured-queries.json")) {
+    event.respondWith(fetch(request));
     return;
   }
 
