@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v1.0.0";
+const CACHE_VERSION = "v1.0.2";
 const STATIC_CACHE = `ryuzen-static-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `ryuzen-runtime-${CACHE_VERSION}`;
 
@@ -54,8 +54,13 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (request.mode === "navigate") {
+    if (request.mode === "navigate") {
     event.respondWith(networkFirstNavigation(request));
+    return;
+  }
+
+  if (url.pathname.endsWith("/data/site-status.json")) {
+    event.respondWith(fetch(request));
     return;
   }
 
