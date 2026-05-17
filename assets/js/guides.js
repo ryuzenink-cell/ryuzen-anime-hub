@@ -7,11 +7,24 @@ const guides = [
   ["Ordem para assistir grandes franquias", "Como navegar especiais, filmes e temporadas sem se perder na cronologia."]
 ];
 
-document.getElementById("guidesGrid").innerHTML = guides.map(([title, text]) => `
-  <article class="guide-card">
-    <p class="eyebrow">Guia Ryuzen</p>
-    <h3>${title}</h3>
-    <p>${text}</p>
-    <span class="badge warn">Em breve</span>
-  </article>
-`).join("");
+const guidesGrid = document.getElementById("guidesGrid");
+const upcomingGuideUrl = sitePath("guides/proximos-animes/");
+
+guidesGrid.innerHTML = `
+  <a class="guide-card guide-card-featured" href="${upcomingGuideUrl}">
+    <div>
+      <p class="eyebrow">Guia fixo • Atualização automática</p>
+      <h3>Próximos animes confirmados</h3>
+      <p>Lista viva com animes já cadastrados como futuros lançamentos, datas previstas, tipos, status e links para detalhes.</p>
+    </div>
+    <span class="badge score">Ver agenda</span>
+  </a>
+  ${guides.map(([title, text]) => `
+    <article class="guide-card">
+      <p class="eyebrow">Guia Ryuzen</p>
+      <h3>${title}</h3>
+      <p>${text}</p>
+      <span class="badge warn">Em breve</span>
+    </article>
+  `).join("")}
+`;
