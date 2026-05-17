@@ -1,7 +1,7 @@
 const API_BASE_URL = "https://api.jikan.moe/v4";
 const API_CACHE_TTL_MS = 5 * 60 * 1000;
-const API_REQUEST_DELAY_MS = 450;
-const API_MAX_RETRIES = 2;
+const API_REQUEST_DELAY_MS = 1200;
+const API_MAX_RETRIES = 4;
 
 const apiCache = new Map();
 let apiQueue = Promise.resolve();
@@ -74,7 +74,7 @@ function getRetryDelay(response, attempt) {
   const retryAfter = response?.headers?.get("Retry-After");
   const retryAfterMs = Number(retryAfter) * 1000;
   if (Number.isFinite(retryAfterMs) && retryAfterMs > 0) return retryAfterMs;
-  return 900 * (attempt + 1);
+  return 1500 * (attempt + 1);
 }
 
 function getApiErrorMessage(status) {
@@ -100,7 +100,14 @@ async function fetchSeasonNow(page = 1) {
 }
 
 async function searchAnime(query, page = 1) {
-  return requestJikan("/anime", { q: query, page, limit: 12, sfw: true });
+  return requestJikan("/anime", {
+    q: query,
+    page,
+    limit: 8,
+    sfw: true,
+    order_by: "popularity",
+    sort: "asc"
+  });
 }
 
 async function fetchAnimeDetails(id) {
