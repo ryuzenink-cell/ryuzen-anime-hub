@@ -1,0 +1,65 @@
+{
+  "name": "Ryuzen Anime Hub",
+  "short_name": "Ryuzen",
+  "description": "Central brasileira para descobrir, acompanhar e organizar animes.",
+  "id": "/",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "background_color": "#0f1220",
+  "theme_color": "#0f1220",
+  "categories": ["entertainment", "news", "lifestyle"],
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/icons/maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/assets/icons/maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Temporada",
+      "short_name": "Temporada",
+      "description": "Abrir animes da temporada atual",
+      "url": "/season/",
+      "icons": [{ "src": "/assets/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Buscar anime",
+      "short_name": "Busca",
+      "description": "Pesquisar animes no Ryuzen Anime Hub",
+      "url": "/search/",
+      "icons": [{ "src": "/assets/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Minha lista",
+      "short_name": "Lista",
+      "description": "Abrir minha lista pessoal de animes",
+      "url": "/my-list/",
+      "icons": [{ "src": "/assets/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

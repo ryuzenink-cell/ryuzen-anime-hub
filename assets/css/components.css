@@ -316,3 +316,14 @@ label { display: grid; gap: 6px; color: var(--muted); font-weight: 700; font-siz
     transform: translateY(0);
   }
 }
+
+.install-app-btn {
+  white-space: nowrap;
+  background: linear-gradient(135deg, var(--success), #4be0b4);
+  border-color: rgba(51, 214, 159, 0.38);
+  color: #06140f;
+}
+
+.install-app-btn:hover {
+  border-color: rgba(184, 255, 233, 0.55);
+}

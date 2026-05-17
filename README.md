@@ -14,16 +14,23 @@ Criar uma experiência navegável para fãs brasileiros pesquisarem animes, vere
 - LocalStorage
 - Jikan API v4
 - Sem frameworks, backend ou build step
+- PWA instalável no Android/Chrome
 - Compatível com GitHub Pages
 
 ## Como rodar localmente
 
-Abra o arquivo `index.html` no navegador.
+Para testar apenas as páginas, você ainda pode abrir `index.html` no navegador.
 
-Opcionalmente, sirva a pasta com um servidor estático simples:
+Para testar corretamente os recursos de app/PWA, use um servidor local:
 
-```txt
-ryuzen-anime-hub/index.html
+```bash
+npx serve .
+```
+
+ou:
+
+```bash
+python -m http.server 8080
 ```
 
 ## Publicação no GitHub Pages
@@ -38,6 +45,9 @@ ryuzen-anime-hub/index.html
 ```txt
 ryuzen-anime-hub/
 ├── index.html
+├── manifest.webmanifest
+├── service-worker.js
+├── offline.html
 ├── search/
 │   └── index.html
 ├── anime/
@@ -55,11 +65,25 @@ ryuzen-anime-hub/
 ├── assets/
 │   ├── css/
 │   ├── js/
+│   ├── icons/
 │   └── images/
 ├── README.md
 ├── AGENTS.md
 └── PROJECT_CONTEXT.md
 ```
+
+
+## PWA / App Android
+
+O projeto já possui a primeira camada de aplicativo como PWA:
+
+- `manifest.webmanifest`: define nome, ícones, tema, atalhos e abertura em modo `standalone`;
+- `service-worker.js`: registra cache básico, navegação offline parcial e fallback para `offline.html`;
+- `assets/icons/`: ícones 192x192, 512x512, maskable e Apple touch icon;
+- `assets/js/ui.js`: registra o Service Worker e exibe o botão **Instalar app** quando o navegador permitir;
+- `docs/ANDROID_APP_PWA.md`: guia de teste e próxima etapa para empacotar como Android/TWA.
+
+Próxima fase recomendada: validar o PWA em produção e gerar o app Android com TWA usando PWABuilder ou Bubblewrap.
 
 ## API usada
 

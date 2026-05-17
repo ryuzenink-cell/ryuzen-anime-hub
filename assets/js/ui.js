@@ -354,7 +354,54 @@ function renderPromoSidebars() {
   document.body.appendChild(wrapper);
 }
 
+function isStandaloneApp() {
+  return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+}
+
+function registerRyuzenServiceWorker() {
+  if (!("serviceWorker" in navigator) || window.location.protocol === "file:") return;
+
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register(sitePath("service-worker.js"), { scope: sitePath("") })
+      .catch((error) => console.warn("Service Worker não registrado:", error));
+  });
+}
+
+function setupInstallAppButton() {
+  const header = document.querySelector(".nav-wrap");
+  if (!header || isStandaloneApp()) return;
+
+  let deferredInstallPrompt = null;
+  const button = document.createElement("button");
+  button.className = "btn install-app-btn hidden";
+  button.type = "button";
+  button.textContent = "Instalar app";
+  button.setAttribute("aria-label", "Instalar Ryuzen Anime Hub como aplicativo");
+  header.appendChild(button);
+
+  window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+    button.classList.remove("hidden");
+  });
+
+  button.addEventListener("click", async () => {
+    if (!deferredInstallPrompt) return;
+    button.classList.add("hidden");
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice.catch(() => null);
+    deferredInstallPrompt = null;
+  });
+
+  window.addEventListener("appinstalled", () => {
+    button.classList.add("hidden");
+    deferredInstallPrompt = null;
+  });
+}
+
+registerRyuzenServiceWorker();
 renderHeader();
+setupInstallAppButton();
 renderFooter();
 renderPromoSidebars();
 bindSearchForms();

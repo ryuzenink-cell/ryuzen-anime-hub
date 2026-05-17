@@ -4,10 +4,18 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Rankings | Ryuzen Anime Hub</title>
   <meta name="description" content="Rankings de top animes, populares, filmes e obras em exibição.">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://api.jikan.moe; img-src 'self' https: data:; script-src 'self'; style-src 'self'; frame-src https://www.youtube.com https://www.youtube-nocookie.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://api.jikan.moe https://www.google-analytics.com https://region1.google-analytics.com https://analytics.google.com; img-src 'self' https: data:; script-src 'self' https://www.googletagmanager.com; style-src 'self'; frame-src https://www.youtube.com https://www.youtube-nocookie.com; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=()">
-  <link rel="icon" type="image/png" href="/assets/images/logo-placeholder.svg">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#0f1220">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Ryuzen">
+  <meta name="application-name" content="Ryuzen Anime Hub">
+  <link rel="icon" type="image/svg+xml" href="/assets/images/logo-placeholder.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
   <link rel="stylesheet" href="../assets/css/global.css"><link rel="stylesheet" href="../assets/css/layout.css"><link rel="stylesheet" href="../assets/css/components.css"><link rel="stylesheet" href="../assets/css/pages.css"><link rel="stylesheet" href="../assets/css/responsive.css">
 </head>
 <body>
@@ -23,6 +31,8 @@
     <section class="section"><div id="rankingList"></div></section>
   </main>
   <div data-footer></div>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-CW8SW35Y3N"></script>
+  <script src="/assets/js/analytics.js"></script>
   <script src="../assets/js/api.js"></script><script src="../assets/js/storage.js"></script><script src="../assets/js/ui.js"></script><script src="../assets/js/ranking.js"></script>
 </body>
 </html>
