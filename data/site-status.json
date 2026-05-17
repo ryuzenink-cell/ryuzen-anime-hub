@@ -1,12 +1,8 @@
 {
-  "enabled": true,
-  "level": "warning",
-  "title": "Instabilidade na busca de animes",
-  "message": "A API externa usada para buscar dados de animes está instável no momento. Algumas buscas podem demorar ou falhar temporariamente.",
-  "updatedAt": "2026-05-17T15:30:00-03:00",
-  "items": [
-    "A busca pode apresentar lentidão.",
-    "Páginas de ranking e temporada podem demorar para carregar.",
-    "Estamos monitorando e estudando uma solução com cache próprio."
-  ]
+  "enabled": false,
+  "level": "success",
+  "title": "Tudo funcionando normalmente",
+  "message": "A busca de animes voltou a funcionar normalmente.",
+  "updatedAt": "2026-05-17T16:00:00-03:00",
+  "items": []
 }
