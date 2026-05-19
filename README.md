@@ -207,7 +207,7 @@ date: 2026-05-16
 category: Guias
 author: Ryuzen Anime Hub
 tags: isekai, fantasia, rezero
-cover: assets/images/logo-placeholder.svg
+cover: assets/images/logo-placeholder.png
 ---
 
 # Animes parecidos com Re:Zero

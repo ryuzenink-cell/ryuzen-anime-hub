@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v1.0.3";
+const CACHE_VERSION = "v1.0.5";
 const STATIC_CACHE = `ryuzen-static-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `ryuzen-runtime-${CACHE_VERSION}`;
 
@@ -19,7 +19,12 @@ const STATIC_ASSETS = [
   "/assets/js/guides.js",
   "/assets/js/upcoming-guide.js",
   "/assets/js/analytics.js",
-  "/assets/images/logo-placeholder.svg",
+  "/assets/images/logo-placeholder.png",
+  "/favicon.ico",
+  "/assets/icons/icon-16.png",
+  "/assets/icons/icon-32.png",
+  "/assets/icons/icon-48.png",
+  "/assets/icons/apple-touch-icon.png",
   "/assets/icons/icon-192.png",
   "/assets/icons/icon-512.png",
   "/data/upcoming-featured-queries.json"
