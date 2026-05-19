@@ -111,11 +111,6 @@
 }
 
 @media (max-width: 720px) {
-  .guide-card-featured {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
   .upcoming-grid {
     grid-template-columns: 1fr;
   }

@@ -8,17 +8,8 @@ const guides = [
 ];
 
 const guidesGrid = document.getElementById("guidesGrid");
-const upcomingGuideUrl = sitePath("guides/proximos-animes/");
 
 guidesGrid.innerHTML = `
-  <a class="guide-card guide-card-featured" href="${upcomingGuideUrl}">
-    <div>
-      <p class="eyebrow">Guia fixo • Atualização automática</p>
-      <h3>Próximos animes confirmados</h3>
-      <p>Lista viva com animes já cadastrados como futuros lançamentos, datas previstas, tipos, status e links para detalhes.</p>
-    </div>
-    <span class="badge score">Ver agenda</span>
-  </a>
   ${guides.map(([title, text]) => `
     <article class="guide-card">
       <p class="eyebrow">Guia Ryuzen</p>

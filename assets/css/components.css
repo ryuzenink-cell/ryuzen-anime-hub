@@ -328,22 +328,6 @@ label { display: grid; gap: 6px; color: var(--muted); font-weight: 700; font-siz
   border-color: rgba(184, 255, 233, 0.55);
 }
 
-.guide-card-featured {
-  grid-column: 1 / -1;
-  display: flex;
-  justify-content: space-between;
-  gap: 18px;
-  align-items: center;
-  color: var(--text);
-  background: linear-gradient(135deg, rgba(91, 124, 250, 0.24), rgba(255, 77, 141, 0.12));
-  box-shadow: var(--shadow);
-}
-
-.guide-card-featured:hover {
-  border-color: rgba(142, 162, 255, 0.42);
-  transform: translateY(-2px);
-}
-
 .upcoming-guide-hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(260px, 380px);
