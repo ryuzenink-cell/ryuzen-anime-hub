@@ -60,7 +60,7 @@ function dataPath(path = "") {
 
 function imageOf(anime) {
   const imageUrl = anime?.images?.webp?.large_image_url || anime?.images?.jpg?.large_image_url || anime?.image;
-  return safeUrl(imageUrl, assetPath("images/logo-placeholder.svg"));
+  return safeUrl(imageUrl, assetPath("images/logo-placeholder.png"));
 }
 
 function yearOf(anime) {
@@ -101,7 +101,7 @@ function renderHeader() {
     <header class="site-header">
       <div class="container nav-wrap">
         <a class="brand" href="${RYZEN_ROUTES.home}" aria-label="Ryuzen Anime Hub">
-          <img src="${assetPath("images/logo-placeholder.svg")}" alt="" width="38" height="38">
+          <img src="${assetPath("images/logo-placeholder.png")}" alt="" width="38" height="38">
           <strong>Ryuzen <span>Anime Hub</span></strong>
         </a>
         <nav class="main-nav" aria-label="Navegação principal">

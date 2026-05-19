@@ -34,7 +34,7 @@ function renderMyList() {
 }
 
 function createListItem(item) {
-  const image = escapeHtml(safeUrl(item.image, assetPath("images/logo-placeholder.svg")));
+  const image = escapeHtml(safeUrl(item.image, assetPath("images/logo-placeholder.png")));
   const title = escapeHtml(item.title);
   return `
     <article class="list-item" data-id="${item.id}">
