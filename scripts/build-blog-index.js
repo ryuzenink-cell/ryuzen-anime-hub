@@ -38,7 +38,7 @@ function cleanFrontMatterValue(value = "") {
   return String(value).trim().replace(/^["']|["']$/g, "");
 }
 
-const posts = walk(blogRoot)
+const postEntries = walk(blogRoot)
   .map((filePath) => {
     const relativePath = path.relative(projectRoot, filePath).replace(/\\/g, "/");
     const markdown = fs.readFileSync(filePath, "utf8");
@@ -49,10 +49,25 @@ const posts = walk(blogRoot)
       title: meta.title || path.basename(filePath, ".md"),
     };
   })
-  .sort((a, b) => String(b.date).localeCompare(String(a.date)) || String(a.title).localeCompare(String(b.title)))
-  .map(({ path }) => ({ path }));
+  .sort((a, b) => String(b.date).localeCompare(String(a.date)) || String(a.title).localeCompare(String(b.title)));
+
+const posts = postEntries.map(({ path }) => ({ path }));
 
 fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 fs.writeFileSync(outputPath, `${JSON.stringify(posts, null, 2)}\n`, "utf8");
+writeCleanPostPages(postEntries);
 
 console.log(`Índice do blog atualizado com ${posts.length} post(s): ${path.relative(projectRoot, outputPath)}`);
+
+function writeCleanPostPages(entries) {
+  const readerPath = path.join(blogRoot, "post", "index.html");
+  if (!fs.existsSync(readerPath)) return;
+
+  const readerHtml = fs.readFileSync(readerPath, "utf8");
+  for (const entry of entries) {
+    const cleanDirectory = path.join(projectRoot, entry.path.replace(/\.md$/i, ""));
+    const cleanIndexPath = path.join(cleanDirectory, "index.html");
+    fs.mkdirSync(cleanDirectory, { recursive: true });
+    fs.writeFileSync(cleanIndexPath, readerHtml, "utf8");
+  }
+}

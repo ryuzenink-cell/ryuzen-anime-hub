@@ -56,7 +56,7 @@ function renderBlogFeatured() {
           <span>${post.readingTime} min de leitura</span>
         </div>
       </div>
-      <a class="btn primary" href="${routeWithQuery(RYZEN_ROUTES.blogPost, { post: post.path })}">Ler post</a>
+      <a class="btn primary" href="${escapeHtml(blogPostCleanUrl(post.path))}">Ler post</a>
     </article>`;
 }
 
@@ -120,7 +120,7 @@ function renderBlogPosts() {
       </div>
       <div class="blog-card-footer">
         <span>${post.readingTime} min de leitura</span>
-        <a class="btn ghost" href="${routeWithQuery(RYZEN_ROUTES.blogPost, { post: post.path })}">Abrir</a>
+        <a class="btn ghost" href="${escapeHtml(blogPostCleanUrl(post.path))}">Abrir</a>
       </div>
     </article>
   `).join("");

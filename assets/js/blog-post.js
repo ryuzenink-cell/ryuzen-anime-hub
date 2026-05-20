@@ -6,10 +6,8 @@ initBlogPostPage();
 async function initBlogPostPage() {
   renderPostLoading();
 
-  const params = new URLSearchParams(location.search);
-  const postPath = normalizeBlogPath(params.get("post") || "");
-
-  if (!postPath || !postPath.startsWith("blog/") || !postPath.endsWith(".md")) {
+  const postPath = getCurrentBlogPostPath();
+  if (!postPath) {
     renderEmpty(blogPostRoot, "Post não encontrado", "Abra um post pela página do blog.", `<a class="btn primary" href="${RYZEN_ROUTES.blog}">Voltar ao blog</a>`);
     return;
   }
@@ -17,15 +15,84 @@ async function initBlogPostPage() {
   try {
     const markdown = await fetchText(postPath);
     const post = parseBlogFrontMatter(markdown, postPath);
+    const cleanUrl = blogPostCleanUrl(post.path);
     document.title = `${post.title} | Ryuzen Anime Hub`;
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) metaDescription.setAttribute("content", post.description || post.excerpt);
+    updatePostSeoTags(post, cleanUrl);
     renderPost(post);
     renderRelatedPosts(post);
   } catch (error) {
     console.error(error);
     renderError(blogPostRoot, "Não foi possível carregar este post. Verifique se o arquivo Markdown existe no caminho informado.");
   }
+}
+
+function getCurrentBlogPostPath() {
+  const params = new URLSearchParams(location.search);
+  const queryPostPath = normalizeBlogPath(params.get("post") || "");
+
+  if (isValidBlogPostPath(queryPostPath)) {
+    const cleanUrl = blogPostCleanUrl(queryPostPath);
+    if (cleanUrl && `${location.pathname}${location.search}` !== cleanUrl) {
+      window.location.replace(cleanUrl);
+      return "";
+    }
+    return queryPostPath;
+  }
+
+  const cleanPostPath = blogPostPathFromCleanUrl(location.pathname);
+  return isValidBlogPostPath(cleanPostPath) ? cleanPostPath : "";
+}
+
+function isValidBlogPostPath(path = "") {
+  const normalized = normalizeBlogPath(path);
+  return normalized.startsWith("blog/") && normalized.endsWith(".md");
+}
+
+function updatePostSeoTags(post, cleanUrl) {
+  const canonicalUrl = absoluteBlogPostUrl(cleanUrl || blogPostCleanUrl(post.path));
+  const description = post.description || post.excerpt || "Artigo editorial do Ryuzen Anime Hub.";
+
+  const metaDescription = document.querySelector('meta[name="description"]');
+  if (metaDescription) metaDescription.setAttribute("content", description);
+
+  upsertCanonical(canonicalUrl);
+  upsertMeta("property", "og:url", canonicalUrl);
+  upsertMeta("name", "twitter:url", canonicalUrl);
+  upsertMeta("property", "og:title", post.title);
+  upsertMeta("name", "twitter:title", post.title);
+  upsertMeta("property", "og:description", description);
+  upsertMeta("name", "twitter:description", description);
+  if (post.cover) upsertMeta("property", "og:image", safeUrl(post.cover, ""));
+}
+
+function absoluteBlogPostUrl(cleanUrl = "") {
+  try {
+    return new URL(cleanUrl, window.location.origin).href;
+  } catch {
+    return cleanUrl;
+  }
+}
+
+function upsertCanonical(href) {
+  if (!href) return;
+  let canonical = document.querySelector('link[rel="canonical"]');
+  if (!canonical) {
+    canonical = document.createElement("link");
+    canonical.setAttribute("rel", "canonical");
+    document.head.appendChild(canonical);
+  }
+  canonical.setAttribute("href", href);
+}
+
+function upsertMeta(attributeName, attributeValue, content) {
+  if (!content) return;
+  let meta = document.querySelector(`meta[${attributeName}="${attributeValue}"]`);
+  if (!meta) {
+    meta = document.createElement("meta");
+    meta.setAttribute(attributeName, attributeValue);
+    document.head.appendChild(meta);
+  }
+  meta.setAttribute("content", content);
 }
 
 function renderPostLoading() {
@@ -98,7 +165,7 @@ async function renderRelatedPosts(currentPost) {
               </div>
               <div class="blog-card-footer">
                 <span>${post.readingTime} min</span>
-                <a class="btn ghost" href="${routeWithQuery(RYZEN_ROUTES.blogPost, { post: post.path })}">Abrir</a>
+                <a class="btn ghost" href="${escapeHtml(blogPostCleanUrl(post.path))}">Abrir</a>
               </div>
             </article>
           `).join("")}

@@ -97,8 +97,10 @@ function absoluteUrl(route = "") {
 }
 
 function blogPostUrl(relativePath) {
-  const encodedPostPath = encodeURIComponent(relativePath).replace(/%2F/g, "%2F");
-  return `${siteUrl}/blog/post/?post=${encodedPostPath}`;
+  const cleanPath = String(relativePath)
+    .replace(/^\/+/, "")
+    .replace(/\.md$/i, "/");
+  return `${siteUrl}/${cleanPath}`;
 }
 
 function escapeXml(value = "") {

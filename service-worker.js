@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v1.0.6-cloudflare";
+const CACHE_VERSION = "v1.0.7-clean-blog-urls";
 const STATIC_CACHE = `ryuzen-static-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `ryuzen-runtime-${CACHE_VERSION}`;
 
@@ -159,7 +159,10 @@ async function networkFirstNavigation(request) {
 async function navigationFallback(request) {
   const url = new URL(request.url);
   const normalizedPath = url.pathname.endsWith("/") ? url.pathname : `${url.pathname}/`;
-  const match = NAVIGATION_FALLBACKS.find((route) => normalizedPath.startsWith(route.prefix));
+  const cleanBlogPostAsset = getCleanBlogPostFallback(normalizedPath);
+  const match = cleanBlogPostAsset
+    ? { asset: cleanBlogPostAsset }
+    : NAVIGATION_FALLBACKS.find((route) => normalizedPath.startsWith(route.prefix));
   if (!match) return caches.match("/404.html");
 
   const cache = await caches.open(STATIC_CACHE);
@@ -177,6 +180,13 @@ async function navigationFallback(request) {
   }
 
   return null;
+}
+
+function getCleanBlogPostFallback(pathname = "") {
+  if (/^\/blog\/\d{4}\/\d{2}\/[^/.][^/]*\/$/.test(pathname)) {
+    return "/blog/post/index.html";
+  }
+  return "";
 }
 
 async function staleWhileRevalidate(request) {

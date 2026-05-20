@@ -15,6 +15,72 @@ function getBlogSlug(path = "") {
     .pop();
 }
 
+function blogPostCleanPath(postPath = "") {
+  const normalized = normalizeBlogPath(postPath);
+  if (!normalized.startsWith("blog/") || !normalized.endsWith(".md")) return "";
+  return normalized.replace(/\.md$/i, "/").replace(/\/{2,}/g, "/");
+}
+
+function blogPostCleanUrl(postPath = "") {
+  const cleanPath = blogPostCleanPath(postPath);
+  if (!cleanPath) return "";
+  return typeof sitePath === "function" ? sitePath(cleanPath) : `/${cleanPath}`;
+}
+
+function blogPostPathFromCleanUrl(pathname = "") {
+  let cleanPath = String(pathname).split(/[?#]/)[0];
+  try {
+    cleanPath = decodeURIComponent(cleanPath);
+  } catch {
+    // Mantém o caminho original se houver caractere escapado inválido.
+  }
+
+  cleanPath = normalizeBlogPath(cleanPath)
+    .replace(/\/index\.html$/i, "")
+    .replace(/\/+$/g, "");
+
+  const basePath = typeof RYZEN_BASE_PATH !== "undefined"
+    ? normalizeBlogPath(RYZEN_BASE_PATH).replace(/\/+$/g, "")
+    : "";
+
+  if (basePath && cleanPath.startsWith(`${basePath}/`)) {
+    cleanPath = cleanPath.slice(basePath.length + 1);
+  }
+
+  if (/\.md$/i.test(cleanPath)) return "";
+  if (!/^blog\/\d{4}\/\d{2}\/[^/]+$/i.test(cleanPath)) return "";
+  return `${cleanPath}.md`;
+}
+
+function legacyBlogPostPathFromUrl(value = "") {
+  try {
+    const url = new URL(String(value), window.location.href);
+    const cleanPathname = normalizeBlogPath(url.pathname).replace(/\/+$/g, "");
+    if (!cleanPathname.endsWith("blog/post")) return "";
+    const postPath = normalizeBlogPath(url.searchParams.get("post") || "");
+    if (!postPath.startsWith("blog/") || !postPath.endsWith(".md")) return "";
+    return postPath;
+  } catch {
+    return "";
+  }
+}
+
+function blogHrefToCleanUrl(value = "") {
+  const raw = String(value).trim();
+  if (!raw) return "";
+
+  const legacyPostPath = legacyBlogPostPathFromUrl(raw);
+  if (legacyPostPath) return blogPostCleanUrl(legacyPostPath);
+
+  const normalized = normalizeBlogPath(raw);
+  if (normalized.startsWith("blog/") && normalized.endsWith(".md")) {
+    return blogPostCleanUrl(normalized);
+  }
+
+  return "";
+}
+
+
 function formatBlogDate(value = "") {
   if (!value) return "Data indefinida";
   const date = new Date(`${value}T12:00:00`);
@@ -325,6 +391,10 @@ function renderInline(value = "") {
 function safeBlogHref(value = "") {
   const raw = String(value).trim();
   if (!raw || raw.startsWith("javascript:") || raw.startsWith("data:")) return "";
+
+  const cleanBlogUrl = blogHrefToCleanUrl(raw);
+  if (cleanBlogUrl) return cleanBlogUrl;
+
   try {
     if (/^https?:\/\//i.test(raw)) return new URL(raw).href;
     return typeof sitePath === "function" ? sitePath(raw) : raw;
