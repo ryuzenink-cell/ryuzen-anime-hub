@@ -1,6 +1,7 @@
 {
   "scripts": {
     "blog:index": "node scripts/build-blog-index.js",
-    "precommit": "node scripts/build-blog-index.js"
+    "precommit": "node scripts/build-blog-index.js",
+    "build": "node scripts/build-blog-index.js"
   }
 }

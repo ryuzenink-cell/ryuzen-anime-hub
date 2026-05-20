@@ -227,3 +227,17 @@ Em produção, o blog também tenta descobrir automaticamente arquivos `.md` den
 ## URLs limpas
 
 As páginas foram organizadas em pastas com `index.html`, permitindo acessar rotas como `/search/`, `/anime/`, `/ranking/`, `/blog/` e `/blog/post/` sem exibir `.html` na URL.
+
+## Deploy em produção com Cloudflare Pages
+
+Este projeto agora está preparado para Cloudflare Pages. Use o GitHub apenas como repositório e deixe o Cloudflare Pages publicar a branch `main`.
+
+Configuração recomendada:
+
+- **Build command:** `npm run build`
+- **Build output directory:** `/`
+- **Deploy command:** `echo ok` se a interface exigir um comando
+- **Non-production branch deploy command:** `echo ok` se a interface exigir um comando
+
+Depois que `anime.ryuzen.ink` estiver ativo no Cloudflare Pages, mantenha o GitHub Pages desativado para evitar conflitos. Mais detalhes estão em `docs/CLOUDFLARE_PAGES_DEPLOY.md`.
+

@@ -1,0 +1,23 @@
+# Cloudflare Pages redirects for clean URLs.
+# Keeps old GitHub Pages .html links working without breaking static files such as blog Markdown.
+/index.html / 301
+/search.html /search/ 301
+/anime.html /anime/ 301
+/season.html /season/ 301
+/ranking.html /ranking/ 301
+/my-list.html /my-list/ 301
+/guides.html /guides/ 301
+/blog.html /blog/ 301
+/blog-post.html /blog/post/ 301
+/vendas-mangas.html /vendas-mangas/ 301
+
+/search /search/ 301
+/anime /anime/ 301
+/season /season/ 301
+/ranking /ranking/ 301
+/my-list /my-list/ 301
+/guides /guides/ 301
+/guides/proximos-animes /guides/proximos-animes/ 301
+/blog /blog/ 301
+/blog/post /blog/post/ 301
+/vendas-mangas /vendas-mangas/ 301

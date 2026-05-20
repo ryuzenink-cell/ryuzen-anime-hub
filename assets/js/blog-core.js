@@ -42,14 +42,7 @@ function parseBlogFrontMatter(markdown = "", path = "") {
     if (end !== -1) {
       const frontMatter = source.slice(3, end).trim();
       body = source.slice(end + 4).trim();
-
-      frontMatter.split(/\r?\n/).forEach((line) => {
-        const match = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
-        if (!match) return;
-        const key = match[1].trim();
-        const rawValue = match[2].trim().replace(/^['\"]|['\"]$/g, "");
-        meta[key] = rawValue;
-      });
+      Object.assign(meta, parseSimpleFrontMatter(frontMatter));
     }
   }
 
@@ -71,6 +64,45 @@ function parseBlogFrontMatter(markdown = "", path = "") {
     readingTime: estimateReadingTime(body),
     content: body,
   };
+}
+
+function parseSimpleFrontMatter(frontMatter = "") {
+  const meta = {};
+  const lines = String(frontMatter).split(/\r?\n/);
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+    const match = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
+    if (!match) continue;
+
+    const key = match[1].trim();
+    const rawValue = match[2].trim();
+
+    if (rawValue) {
+      meta[key] = cleanFrontMatterValue(rawValue);
+      continue;
+    }
+
+    const list = [];
+    let cursor = index + 1;
+    while (cursor < lines.length) {
+      const itemMatch = lines[cursor].match(/^\s*-\s+(.+)$/);
+      if (!itemMatch) break;
+      list.push(cleanFrontMatterValue(itemMatch[1].trim()));
+      cursor += 1;
+    }
+
+    meta[key] = list.length ? list : "";
+    index = cursor - 1;
+  }
+
+  return meta;
+}
+
+function cleanFrontMatterValue(value = "") {
+  return String(value)
+    .trim()
+    .replace(/^['\"]|['\"]$/g, "");
 }
 
 function getDateFromPath(path = "") {

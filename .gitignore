@@ -29,3 +29,6 @@ coverage/
 .idea/
 .codex/
 *.swp
+
+.wrangler/
+.dev.vars

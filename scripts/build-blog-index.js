@@ -17,11 +17,40 @@ function walk(directory) {
   });
 }
 
+function parseFrontMatter(markdown = "") {
+  const source = String(markdown).replace(/^\uFEFF/, "");
+  if (!source.startsWith("---")) return {};
+
+  const end = source.indexOf("\n---", 3);
+  if (end === -1) return {};
+
+  const meta = {};
+  const lines = source.slice(3, end).trim().split(/\r?\n/);
+  for (const line of lines) {
+    const match = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
+    if (!match) continue;
+    meta[match[1].trim()] = cleanFrontMatterValue(match[2]);
+  }
+  return meta;
+}
+
+function cleanFrontMatterValue(value = "") {
+  return String(value).trim().replace(/^["']|["']$/g, "");
+}
+
 const posts = walk(blogRoot)
-  .map((filePath) => ({
-    path: path.relative(projectRoot, filePath).replace(/\\/g, "/"),
-  }))
-  .sort((a, b) => b.path.localeCompare(a.path));
+  .map((filePath) => {
+    const relativePath = path.relative(projectRoot, filePath).replace(/\\/g, "/");
+    const markdown = fs.readFileSync(filePath, "utf8");
+    const meta = parseFrontMatter(markdown);
+    return {
+      path: relativePath,
+      date: meta.date || "",
+      title: meta.title || path.basename(filePath, ".md"),
+    };
+  })
+  .sort((a, b) => String(b.date).localeCompare(String(a.date)) || String(a.title).localeCompare(String(b.title)))
+  .map(({ path }) => ({ path }));
 
 fs.mkdirSync(path.dirname(outputPath), { recursive: true });
 fs.writeFileSync(outputPath, `${JSON.stringify(posts, null, 2)}\n`, "utf8");
