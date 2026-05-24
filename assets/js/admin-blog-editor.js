@@ -6,7 +6,7 @@ const slug = document.getElementById("postSlug");
 const canonical = document.getElementById("canonicalUrl");
 const feedback = document.getElementById("editorFeedback");
 requireAdminSession(initEditor);
-document.getElementById("adminLogout")?.addEventListener("click", () => { clearAdminToken(); location.href = "/admin/blog/"; });
+document.getElementById("adminLogout")?.addEventListener("click", logoutAdmin);
 function initEditor() { loadCategories(); bindEditor(); if (editorState.id) loadPost(editorState.id); }
 function bindEditor() {
   form.addEventListener("input", () => { editorState.dirty = true; syncSeoPreview(); });

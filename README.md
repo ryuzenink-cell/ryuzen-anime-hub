@@ -249,14 +249,15 @@ Depois que `anime.ryuzen.ink` estiver ativo no Cloudflare Pages, mantenha o GitH
 
 ## Painel Editorial dinâmico — Cloudflare D1
 
-O blog agora possui uma camada CMS progressiva para novos artigos, preservando os posts Markdown existentes:
+O blog possui um CMS progressivo para novos artigos, preservando os posts Markdown existentes:
 
-- `/admin/blog/`: painel editorial protegido por `BLOG_ADMIN_TOKEN`;
+- `/admin/login/`: acesso exclusivo do administrador;
+- `/admin/blog/`: painel editorial protegido por sessão segura;
 - editor visual HTML para escrever artigos sem Markdown;
 - imagens por URL com texto alternativo, crédito e fonte;
-- Pages Functions em `/functions` para API pública e administrativa;
+- Pages Functions em `/functions` para API pública, autenticação e administração;
 - D1 acessado pelo binding `BLOG_DB`;
 - páginas dinâmicas publicadas com HTML server-side em `/blog/p/SLUG/`;
-- artigos antigos em Markdown permanecem pré-renderizados e continuam funcionando.
+- posts legados em Markdown continuam pré-renderizados e operacionais.
 
-Antes do deploy, configure no Cloudflare Pages o secret `BLOG_ADMIN_TOKEN` e execute a migration de `migrations/0001_blog_editor_cms.sql` no D1, somente para colunas ainda ausentes. A documentação operacional completa está em `docs/BLOG_EDITORIAL_CMS.md`.
+Antes do deploy, aplique `migrations/0001_blog_editor_cms.sql` quando necessário e `migrations/0002_admin_auth_security.sql`, configure os Secrets administrativos e, preferencialmente, o Cloudflare Turnstile. Consulte `docs/BLOG_EDITORIAL_CMS.md` e `docs/ADMIN_AUTH_SECURITY.md`.

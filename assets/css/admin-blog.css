@@ -56,3 +56,5 @@ main.admin-panel { padding: 34px 0 70px; }
 .seo-preview p { font-size:.84rem; margin:0; }
 @media (max-width:1020px) { .admin-editor-layout { grid-template-columns:1fr; } .admin-settings-card { position:static; } .admin-post-row { grid-template-columns:1fr 1fr; } .admin-post-row.header { display:none; } .row-actions { grid-column:1/-1; } }
 @media (max-width:620px) { .admin-topbar, .admin-toolbar { flex-direction:column; align-items:stretch; } .admin-post-row { grid-template-columns:1fr; } .rich-editor { min-height:400px; padding:16px; } }
+
+.admin-identity { display:inline-flex; align-items:center; padding:0 12px; color:var(--muted); font-size:.9rem; font-weight:700; }

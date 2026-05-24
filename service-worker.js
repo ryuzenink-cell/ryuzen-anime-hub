@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v1.1.0-editorial-cms";
+const CACHE_VERSION = "v1.2.0-admin-auth";
 const STATIC_CACHE = `ryuzen-static-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `ryuzen-runtime-${CACHE_VERSION}`;
 
@@ -63,7 +63,9 @@ const STATIC_ASSETS = [
   "/assets/js/blog.js",
   "/assets/js/blog-post.js",
   "/assets/css/admin-blog.css",
+  "/assets/css/admin-login.css",
   "/assets/js/admin-auth.js",
+  "/assets/js/admin-login.js",
   "/assets/js/admin-blog-list.js",
   "/assets/js/admin-blog-editor.js",
   "/assets/js/analytics.js",

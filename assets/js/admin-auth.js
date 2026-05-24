@@ -1,29 +1,31 @@
-const ADMIN_TOKEN_KEY = "ryuzen_blog_admin_session";
-function getAdminToken() { return sessionStorage.getItem(ADMIN_TOKEN_KEY) || ""; }
-function saveAdminToken(token) { sessionStorage.setItem(ADMIN_TOKEN_KEY, String(token || "").trim()); }
-function clearAdminToken() { sessionStorage.removeItem(ADMIN_TOKEN_KEY); }
+const adminSessionState = { csrfToken: "", authenticated: false };
+
+async function sessionRequest() {
+  const response = await fetch("/api/auth/session", { credentials: "same-origin", headers: { Accept: "application/json" } });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok || !data.authenticated) throw new Error("Sessão expirada.");
+  adminSessionState.csrfToken = data.csrfToken || "";
+  adminSessionState.authenticated = true;
+  document.querySelectorAll("[data-admin-name]").forEach((element) => { element.textContent = data.displayName || "Administrador"; });
+  return data;
+}
 async function adminFetch(url, options = {}) {
-  const token = getAdminToken();
-  const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
-  if (token) headers.Authorization = `Bearer ${token}`;
-  const response = await fetch(url, { ...options, headers });
-  if (response.status === 401) throw new Error("Acesso não autorizado. Informe novamente a chave administrativa.");
+  const method = String(options.method || "GET").toUpperCase();
+  const headers = { Accept: "application/json", ...(options.body ? { "Content-Type": "application/json" } : {}), ...(options.headers || {}) };
+  if (["POST", "PUT", "PATCH", "DELETE"].includes(method)) headers["X-CSRF-Token"] = adminSessionState.csrfToken;
+  const response = await fetch(url, { ...options, method, headers, credentials: "same-origin" });
   const body = await response.json().catch(() => ({}));
+  if (response.status === 401) {
+    window.location.assign(`/admin/login/?next=${encodeURIComponent(location.pathname + location.search)}`);
+    throw new Error("Sua sessão expirou. Faça login novamente.");
+  }
   if (!response.ok) throw new Error(body.error || "Falha na operação.");
   return body;
 }
-function requireAdminSession(onReady) {
-  const gate = document.getElementById("adminAccessGate");
-  const form = document.getElementById("adminAccessForm");
-  const tokenInput = document.getElementById("adminToken");
-  const error = document.getElementById("adminAccessError");
-  const unlock = async (token) => {
-    saveAdminToken(token);
-    try {
-      await adminFetch("/api/admin/posts?limit=1");
-      gate?.classList.add("hidden"); onReady();
-    } catch (cause) { clearAdminToken(); if (error) { error.textContent = cause.message; error.classList.remove("hidden"); } gate?.classList.remove("hidden"); }
-  };
-  form?.addEventListener("submit", (event) => { event.preventDefault(); unlock(tokenInput.value); });
-  if (getAdminToken()) unlock(getAdminToken()); else gate?.classList.remove("hidden");
+async function logoutAdmin() {
+  try { await adminFetch("/api/auth/logout", { method: "POST" }); } finally { window.location.assign("/admin/login/"); }
+}
+async function requireAdminSession(onReady) {
+  try { await sessionRequest(); if (typeof onReady === "function") onReady(); }
+  catch { window.location.replace(`/admin/login/?next=${encodeURIComponent(location.pathname + location.search)}`); }
 }

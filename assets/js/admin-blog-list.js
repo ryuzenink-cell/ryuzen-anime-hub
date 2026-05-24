@@ -3,7 +3,7 @@ const postsTable = document.getElementById("adminPostsTable");
 const statusButtons = document.querySelectorAll("[data-status-filter]");
 const searchInput = document.getElementById("adminPostSearch");
 requireAdminSession(loadAdminPosts);
-document.getElementById("adminLogout")?.addEventListener("click", () => { clearAdminToken(); window.location.reload(); });
+document.getElementById("adminLogout")?.addEventListener("click", logoutAdmin);
 statusButtons.forEach((button) => button.addEventListener("click", () => { adminListState.status = button.dataset.statusFilter; statusButtons.forEach((b) => b.classList.toggle("active", b === button)); loadAdminPosts(); }));
 searchInput?.addEventListener("input", () => { adminListState.query = searchInput.value.trim(); loadAdminPosts(); });
 async function loadAdminPosts() {
