@@ -1,7 +1,7 @@
 const blogPostRoot = document.getElementById("blogPostRoot");
 const relatedPostsRoot = document.getElementById("relatedPosts");
 
-initBlogPostPage();
+if (document.body.dataset.blogPrerendered !== "true") initBlogPostPage();
 
 async function initBlogPostPage() {
   renderPostLoading();
@@ -126,7 +126,8 @@ function renderPost(post) {
         <h1>${escapeHtml(post.title)}</h1>
         <p>${escapeHtml(post.description)}</p>
         <div class="meta-line blog-card-meta">
-          <span>${escapeHtml(formatBlogDate(post.date))}</span>
+          <span>Publicado em ${escapeHtml(formatBlogDate(post.date))}</span>
+          ${post.updated && post.updated !== post.date ? `<span>Atualizado em ${escapeHtml(formatBlogDate(post.updated))}</span>` : ""}
           <span>${escapeHtml(post.author)}</span>
           <span>${post.readingTime} min de leitura</span>
         </div>
@@ -180,5 +181,5 @@ function renderArticleCover(post) {
   if (!post.cover) return "";
   const cover = safeUrl(post.cover, "");
   if (!cover) return "";
-  return `<img class="blog-article-cover" src="${escapeHtml(cover)}" alt="Imagem de capa do post ${escapeHtml(post.title)}" loading="lazy">`;
+  return `<img class="blog-article-cover" src="${escapeHtml(cover)}" alt="${escapeHtml(post.coverAlt || `Imagem de capa do post ${post.title}`)}" loading="eager" fetchpriority="high" decoding="async">`;
 }

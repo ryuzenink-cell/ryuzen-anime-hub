@@ -126,3 +126,18 @@
     height: 122px;
   }
 }
+
+@media (max-width: 720px) {
+  .blog-toc {
+    padding: 16px;
+  }
+
+  .blog-toc .toc-level-3 {
+    margin-left: 6px;
+  }
+
+  .blog-cta-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

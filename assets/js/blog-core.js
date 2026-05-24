@@ -1,6 +1,3 @@
-const BLOG_REPOSITORY = "ryuzenink-cell/ryuzen-anime-hub";
-const BLOG_BRANCH = "main";
-const BLOG_ROOT = "blog";
 const BLOG_MANIFEST = typeof dataPath === "function" ? dataPath("blog-posts.json") : "data/blog-posts.json";
 
 function normalizeBlogPath(path = "") {
@@ -123,12 +120,14 @@ function parseBlogFrontMatter(markdown = "", path = "") {
     description,
     excerpt: meta.excerpt || description,
     date: meta.date || getDateFromPath(path),
+    updated: meta.updated || meta.lastmod || meta.date || getDateFromPath(path),
     category: meta.category || "Editorial",
     author: meta.author || "Ryuzen Anime Hub",
     cover: meta.cover || "",
+    coverAlt: meta.coverAlt || `Imagem de capa do post ${meta.title || titleFromBody || "Ryuzen Anime Hub"}`,
     tags,
     readingTime: estimateReadingTime(body),
-    content: body,
+    content: body.replace(/^#\s+[^\n]+\n+/, "").trim(),
   };
 }
 
@@ -203,9 +202,14 @@ function sortBlogPosts(posts = []) {
 }
 
 async function loadBlogPosts() {
-  const paths = await loadBlogPaths();
-  const uniquePaths = [...new Set(paths.map((item) => normalizeBlogPath(item.path || item)).filter((path) => path.endsWith(".md")))];
-  const posts = await Promise.all(uniquePaths.map(async (path) => {
+  const manifest = await fetchJson(BLOG_MANIFEST).catch(() => []);
+  const entries = Array.isArray(manifest) ? manifest : manifest.posts || [];
+  const posts = await Promise.all(entries.map(async (entry) => {
+    const metadataPost = normalizeBlogManifestPost(entry);
+    if (metadataPost) return metadataPost;
+
+    const path = normalizeBlogPath(entry?.path || entry);
+    if (!path.startsWith("blog/") || !path.endsWith(".md")) return null;
     try {
       const markdown = await fetchText(path);
       return parseBlogFrontMatter(markdown, path);
@@ -217,46 +221,26 @@ async function loadBlogPosts() {
   return sortBlogPosts(posts.filter(Boolean));
 }
 
-async function loadBlogPaths() {
-  const manifest = await fetchJson(BLOG_MANIFEST).catch(() => []);
-  const manifestPaths = Array.isArray(manifest) ? manifest : manifest.posts || [];
-
-  const githubPaths = !isLocalBlogEnvironment()
-    ? await loadBlogPathsFromGitHub().catch(() => [])
-    : [];
-
-  const paths = [...manifestPaths, ...githubPaths]
-    .map((item) => normalizeBlogPath(item.path || item))
-    .filter((path) => path.startsWith("blog/"))
-    .filter((path) => path.endsWith(".md"));
-
-  return [...new Set(paths)].map((path) => ({ path }));
-}
-
-function isLocalBlogEnvironment() {
-  return ["localhost", "127.0.0.1"].includes(location.hostname);
-}
-
-async function loadBlogPathsFromGitHub() {
-  if (!location.protocol.startsWith("http")) return [];
-  const files = [];
-  await collectGitHubMarkdownFiles(BLOG_ROOT, files);
-  return files.map((path) => ({ path }));
-}
-
-async function collectGitHubMarkdownFiles(directory, files) {
-  const url = `https://api.github.com/repos/${BLOG_REPOSITORY}/contents/${encodeURIComponent(directory).replace(/%2F/g, "/")}?ref=${encodeURIComponent(BLOG_BRANCH)}`;
-  const entries = await fetchJson(url);
-  if (!Array.isArray(entries)) return;
-
-  const sortedEntries = entries.slice().sort((a, b) => String(a.name).localeCompare(String(b.name)));
-  for (const entry of sortedEntries) {
-    if (entry.type === "dir") {
-      await collectGitHubMarkdownFiles(entry.path, files);
-    } else if (entry.type === "file" && entry.path.endsWith(".md")) {
-      files.push(entry.path);
-    }
-  }
+function normalizeBlogManifestPost(entry) {
+  if (!entry || typeof entry !== "object" || !entry.path || !entry.title) return null;
+  const path = normalizeBlogPath(entry.path);
+  if (!path.startsWith("blog/") || !path.endsWith(".md")) return null;
+  return {
+    path,
+    slug: entry.slug || getBlogSlug(path),
+    title: entry.title,
+    description: entry.description || entry.excerpt || "Leia este conteúdo editorial do Ryuzen Anime Hub.",
+    excerpt: entry.excerpt || entry.description || "Leia este conteúdo editorial do Ryuzen Anime Hub.",
+    date: entry.date || getDateFromPath(path),
+    updated: entry.updated || entry.date || getDateFromPath(path),
+    category: entry.category || "Editorial",
+    author: entry.author || "Ryuzen Anime Hub",
+    cover: entry.cover || "",
+    coverAlt: entry.coverAlt || `Imagem de capa do post ${entry.title}`,
+    tags: parseBlogTags(entry.tags),
+    readingTime: Number(entry.readingTime) || 1,
+    content: "",
+  };
 }
 
 function resolveBlogResource(path = "") {
@@ -378,12 +362,14 @@ function renderInline(value = "") {
   html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (match, alt, src) => {
     const imageSrc = safeBlogAsset(src);
     if (!imageSrc) return "";
-    return `<img src="${escapeHtml(imageSrc)}" alt="${escapeHtml(alt)}" loading="lazy">`;
+    return `<img src="${escapeHtml(imageSrc)}" alt="${escapeHtml(alt)}" loading="lazy" decoding="async">`;
   });
   html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, label, url) => {
     const href = safeBlogHref(url);
     if (!href) return label;
-    return `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${label}</a>`;
+    const external = /^https?:\/\//i.test(href) && !href.startsWith(location.origin);
+    const attributes = external ? ' target="_blank" rel="noopener noreferrer"' : "";
+    return `<a href="${escapeHtml(href)}"${attributes}>${label}</a>`;
   });
   return html;
 }

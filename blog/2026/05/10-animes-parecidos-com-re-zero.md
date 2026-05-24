@@ -292,7 +292,5 @@ Se você quer algo intenso e inteligente, comece por **Steins;Gate**. Se quer ou
 
 # Leia também no Ryuzen Anime Hub
 
-- [O que é isekai? Entenda o gênero que dominou os animes de fantasia](/blog/post/?slug=o-que-e-isekai)
-- [10 animes parecidos com KonoSuba](/blog/post/?slug=10-animes-parecidos-com-konosuba)
-- [Diferença entre anime, mangá, light novel e web novel](/blog/post/?slug=diferenca-entre-anime-manga-light-novel-web-novel)
-- [Como criar uma light novel no estilo japonês](/blog/post/?slug=como-criar-uma-light-novel)
+- [Animes Confirmados para 2026 e 2027: Lista Atualizada de Próximas Estreias](/blog/2026/05/animes-confirmados-2026-2027/)
+- [Boas-vindas ao Blog do Ryuzen Anime Hub](/blog/2026/05/boas-vindas-ao-blog-ryuzen/)

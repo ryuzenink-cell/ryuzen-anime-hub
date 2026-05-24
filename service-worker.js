@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v1.0.7-clean-blog-urls";
+const CACHE_VERSION = "v1.0.8-static-blog-posts";
 const STATIC_CACHE = `ryuzen-static-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `ryuzen-runtime-${CACHE_VERSION}`;
 

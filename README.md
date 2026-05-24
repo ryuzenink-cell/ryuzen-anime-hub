@@ -178,10 +178,11 @@ Exemplo: para adicionar janeiro de 2026, crie `data/2026/01/manga-market-2026-01
 O projeto agora possui uma área editorial em Markdown:
 
 - `blog/index.html` (`/blog/`): listagem dos posts.
-- `blog/post/index.html` (`/blog/post/`): página de leitura do artigo.
-- `blog/ANO/MES/*.md`: arquivos dos posts.
-- `data/blog-posts.json`: índice estático usado como fallback/local.
-- `scripts/build-blog-index.js`: script para recriar o índice a partir dos arquivos `.md`.
+- `blog/post/index.html` (`/blog/post/`): leitor legado que redireciona URLs antigas e não deve ser indexado.
+- `blog/ANO/MES/*.md`: fontes editoriais dos posts.
+- `blog/ANO/MES/SLUG/index.html`: página completa gerada automaticamente para cada artigo.
+- `data/blog-posts.json`: índice público com metadados usados na listagem e em posts relacionados.
+- `scripts/build-blog-index.js`: gerador das páginas estáticas, metadados SEO, dados estruturados e índice do blog.
 
 ### Criar um novo post
 
@@ -204,6 +205,7 @@ blog/2026/05/animes-parecidos-com-rezero.md
 title: Animes parecidos com Re:Zero
 description: Recomendações para quem gosta de fantasia sombria, loops temporais e protagonistas sofridos.
 date: 2026-05-16
+updated: 2026-05-24
 category: Guias
 author: Ryuzen Anime Hub
 tags: isekai, fantasia, rezero
@@ -215,18 +217,20 @@ cover: assets/images/logo-placeholder.png
 Escreva o conteúdo do post aqui.
 ```
 
-4. Atualize o índice local antes de subir o site:
+4. Execute o build antes de publicar ou testar as URLs finais:
 
 ```bash
-node scripts/build-blog-index.js
+npm run build
 ```
 
-Em produção, o blog também tenta descobrir automaticamente arquivos `.md` dentro da pasta `blog/` usando a API pública do GitHub. O arquivo `data/blog-posts.json` fica como fallback e facilita testes locais.
+O build gera o índice, o sitemap e um `index.html` pré-renderizado para cada Markdown. O HTML final já contém título, descrição, canonical, Open Graph, Twitter Card, `BlogPosting`, índice navegável para textos longos e conteúdo legível sem depender de JavaScript.
+
+A listagem pública utiliza somente `data/blog-posts.json`, evitando requisições em tempo de navegação à API pública do GitHub. No Cloudflare Pages, mantenha `npm run build` como comando de build; no GitHub Pages, execute o comando localmente e publique os arquivos gerados.
 
 
 ## URLs limpas
 
-As páginas foram organizadas em pastas com `index.html`, permitindo acessar rotas como `/search/`, `/anime/`, `/ranking/`, `/blog/` e `/blog/post/` sem exibir `.html` na URL.
+As páginas foram organizadas em pastas com `index.html`, permitindo acessar rotas como `/search/`, `/anime/`, `/ranking/` e `/blog/` sem exibir `.html` na URL. Cada post também possui sua própria página estática em `/blog/ANO/MES/SLUG/`; `/blog/post/` existe apenas para compatibilidade com links antigos.
 
 ## Deploy em produção com Cloudflare Pages
 

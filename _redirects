@@ -21,8 +21,7 @@
 /blog /blog/ 301
 /blog/post /blog/post/ 301
 
-# Clean blog post URLs. Keep Markdown files accessible and serve clean routes through the post reader.
+# Clean blog post URLs. Cada artigo possui index.html pré-renderizado no build.
 /blog/:year/:month/:slug.md /blog/:year/:month/:slug.md 200
 /blog/:year/:month/:slug /blog/:year/:month/:slug/ 301
-/blog/:year/:month/:slug/ /blog/post/index.html 200
 /vendas-mangas /vendas-mangas/ 301

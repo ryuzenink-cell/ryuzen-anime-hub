@@ -3,6 +3,7 @@ title: "Animes Confirmados para 2026 e 2027: Lista Atualizada de Próximas Estre
 slug: "animes-confirmados-2026-2027"
 description: "Veja animes confirmados para 2026 e 2027, com próximas estreias, datas, formatos e status atualizados."
 date: "2026-05-19"
+updated: "2026-05-19"
 author: "Ryuzen Anime Hub"
 category: "Animes"
 tags:
@@ -948,4 +949,4 @@ Por isso, o **Ryuzen Anime Hub** poderá atualizar este post conforme novas conf
 
 # Leia também no Ryuzen Anime Hub
 
-- [10 animes parecidos com Re:Zero](/blog/post/?slug=10-animes-parecidos-com-re-zero)
+- [10 animes parecidos com Re:Zero](/blog/2026/05/10-animes-parecidos-com-re-zero/)
