@@ -32,3 +32,5 @@ coverage/
 
 .wrangler/
 .dev.vars
+
+.functions-dist/

@@ -1,0 +1,111 @@
+import { Parser } from "htmlparser2";
+import { RequestError } from "./http.js";
+
+const ALLOWED_TAGS = new Set([
+  "p", "h2", "h3", "strong", "em", "ul", "ol", "li", "a", "blockquote",
+  "hr", "figure", "img", "figcaption", "span", "br"
+]);
+const BLOCKED_TAGS = new Set(["script", "style", "iframe", "object", "embed", "svg", "math", "template"]);
+const VOID_TAGS = new Set(["img", "hr", "br"]);
+
+export function safeWebUrl(value = "", required = false) {
+  const input = String(value || "").trim();
+  if (!input && !required) return "";
+  try {
+    const parsed = new URL(input);
+    if (!["http:", "https:"].includes(parsed.protocol)) throw new Error();
+    return parsed.href;
+  } catch {
+    throw new RequestError("Use somente URLs válidas iniciadas em http:// ou https://.", 400);
+  }
+}
+
+export function sanitizeArticleHtml(value = "") {
+  const input = String(value || "").slice(0, 500000);
+  let output = "";
+  let blockedDepth = 0;
+  const stack = [];
+
+  const parser = new Parser({
+    onopentag(name, attributes) {
+      const original = String(name || "").toLowerCase();
+      if (blockedDepth || BLOCKED_TAGS.has(original)) {
+        blockedDepth += 1;
+        stack.push({ blocked: true, outputTag: "" });
+        return;
+      }
+      const tag = original === "h1" ? "h2" : original;
+      if (!ALLOWED_TAGS.has(tag)) {
+        stack.push({ blocked: false, outputTag: "" });
+        return;
+      }
+      const serialized = serializeAllowedTag(tag, attributes || {});
+      if (!serialized) {
+        stack.push({ blocked: false, outputTag: "" });
+        return;
+      }
+      output += serialized;
+      stack.push({ blocked: false, outputTag: VOID_TAGS.has(tag) ? "" : tag });
+    },
+    ontext(text) {
+      if (!blockedDepth) output += escapeText(text);
+    },
+    onclosetag() {
+      const item = stack.pop();
+      if (!item) return;
+      if (item.blocked) {
+        blockedDepth = Math.max(0, blockedDepth - 1);
+        return;
+      }
+      if (!blockedDepth && item.outputTag) output += `</${item.outputTag}>`;
+    },
+  }, { decodeEntities: true, lowerCaseTags: true });
+
+  parser.write(input);
+  parser.end();
+  return output.trim();
+}
+
+function serializeAllowedTag(tag, attrs) {
+  if (tag === "a") {
+    let href = "";
+    try { href = safeWebUrl(attrs.href || "", true); } catch { return ""; }
+    const title = attrs.title ? ` title="${escapeAttribute(String(attrs.title).slice(0, 200))}"` : "";
+    return `<a href="${escapeAttribute(href)}"${title} target="_blank" rel="noopener noreferrer nofollow">`;
+  }
+  if (tag === "img") {
+    const src = safeWebUrl(attrs.src || "", true);
+    const alt = String(attrs.alt || "").trim().slice(0, 240);
+    if (!alt) throw new RequestError("Toda imagem interna precisa de URL e texto alternativo.", 400);
+    return `<img src="${escapeAttribute(src)}" alt="${escapeAttribute(alt)}" loading="lazy" decoding="async">`;
+  }
+  if (tag === "figure") return attrs.class === "article-figure" ? '<figure class="article-figure">' : "<figure>";
+  if (tag === "figcaption") return attrs.class === "article-caption" ? '<figcaption class="article-caption">' : "<figcaption>";
+  if (tag === "span") {
+    const cssClass = ["caption", "credit"].includes(attrs.class) ? ` class="${attrs.class}"` : "";
+    return `<span${cssClass}>`;
+  }
+  return `<${tag}>`;
+}
+
+function escapeText(value = "") {
+  return String(value).replace(/[&<>]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[character]));
+}
+function escapeAttribute(value = "") {
+  return String(value).replace(/[&<>"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[character]));
+}
+
+export function normalizeImage(image = {}, index = 0) {
+  const imageUrl = safeWebUrl(image.image_url || image.imageUrl || image.url, true);
+  const altText = String(image.alt_text || image.altText || "").trim().slice(0, 240);
+  if (!altText) throw new RequestError("Toda imagem interna precisa de texto alternativo.", 400);
+  return {
+    image_url: imageUrl,
+    alt_text: altText,
+    caption: String(image.caption || "").trim().slice(0, 400),
+    credit_text: String(image.credit_text || image.creditText || "").trim().slice(0, 240),
+    source_url: safeWebUrl(image.source_url || image.sourceUrl || ""),
+    placement: ["inline", "gallery", "highlight"].includes(image.placement) ? image.placement : "inline",
+    position_order: Number.isInteger(Number(image.position_order ?? image.positionOrder)) ? Number(image.position_order ?? image.positionOrder) : index,
+  };
+}

@@ -557,3 +557,25 @@
   flex-wrap: wrap;
   gap: 10px;
 }
+
+
+.blog-content .article-figure {
+  margin: 1.8rem 0;
+}
+
+.blog-content .article-figure img {
+  margin-bottom: 0;
+}
+
+.blog-content .article-caption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 9px;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.blog-content .article-caption a {
+  font-size: inherit;
+}

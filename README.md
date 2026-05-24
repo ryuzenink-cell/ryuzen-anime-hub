@@ -245,3 +245,18 @@ Configuração recomendada:
 
 Depois que `anime.ryuzen.ink` estiver ativo no Cloudflare Pages, mantenha o GitHub Pages desativado para evitar conflitos. Mais detalhes estão em `docs/CLOUDFLARE_PAGES_DEPLOY.md`.
 
+
+
+## Painel Editorial dinâmico — Cloudflare D1
+
+O blog agora possui uma camada CMS progressiva para novos artigos, preservando os posts Markdown existentes:
+
+- `/admin/blog/`: painel editorial protegido por `BLOG_ADMIN_TOKEN`;
+- editor visual HTML para escrever artigos sem Markdown;
+- imagens por URL com texto alternativo, crédito e fonte;
+- Pages Functions em `/functions` para API pública e administrativa;
+- D1 acessado pelo binding `BLOG_DB`;
+- páginas dinâmicas publicadas com HTML server-side em `/blog/p/SLUG/`;
+- artigos antigos em Markdown permanecem pré-renderizados e continuam funcionando.
+
+Antes do deploy, configure no Cloudflare Pages o secret `BLOG_ADMIN_TOKEN` e execute a migration de `migrations/0001_blog_editor_cms.sql` no D1, somente para colunas ainda ausentes. A documentação operacional completa está em `docs/BLOG_EDITORIAL_CMS.md`.

@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://anime.ryuzen.ink/sitemap.xml
+Sitemap: https://anime.ryuzen.ink/sitemap-blog-dynamic.xml

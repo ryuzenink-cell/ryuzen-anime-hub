@@ -56,7 +56,7 @@ function renderBlogFeatured() {
           <span>${post.readingTime} min de leitura</span>
         </div>
       </div>
-      <a class="btn primary" href="${escapeHtml(blogPostCleanUrl(post.path))}">Ler post</a>
+      <a class="btn primary" href="${escapeHtml(getBlogPostUrl(post))}">Ler post</a>
     </article>`;
 }
 
@@ -120,7 +120,7 @@ function renderBlogPosts() {
       </div>
       <div class="blog-card-footer">
         <span>${post.readingTime} min de leitura</span>
-        <a class="btn ghost" href="${escapeHtml(blogPostCleanUrl(post.path))}">Abrir</a>
+        <a class="btn ghost" href="${escapeHtml(getBlogPostUrl(post))}">Abrir</a>
       </div>
     </article>
   `).join("");
@@ -130,5 +130,5 @@ function renderBlogCardCover(post) {
   if (!post.cover) return "";
   const cover = safeUrl(post.cover, "");
   if (!cover) return "";
-  return `<img class="blog-card-cover" src="${escapeHtml(cover)}" alt="Imagem de capa do post ${escapeHtml(post.title)}" loading="lazy">`;
+  return `<img class="blog-card-cover" src="${escapeHtml(cover)}" alt="${escapeHtml(post.coverAlt || `Imagem de capa do post ${post.title}`)}" loading="lazy">`;
 }

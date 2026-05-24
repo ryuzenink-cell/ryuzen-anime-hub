@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v1.0.8-static-blog-posts";
+const CACHE_VERSION = "v1.1.0-editorial-cms";
 const STATIC_CACHE = `ryuzen-static-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `ryuzen-runtime-${CACHE_VERSION}`;
 
@@ -62,6 +62,10 @@ const STATIC_ASSETS = [
   "/assets/js/blog-core.js",
   "/assets/js/blog.js",
   "/assets/js/blog-post.js",
+  "/assets/css/admin-blog.css",
+  "/assets/js/admin-auth.js",
+  "/assets/js/admin-blog-list.js",
+  "/assets/js/admin-blog-editor.js",
   "/assets/js/analytics.js",
   "/assets/images/logo-placeholder.png",
   "/assets/images/banners/banner-left.png",
@@ -105,6 +109,11 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(request.url);
 
   if (url.origin !== self.location.origin) {
+    event.respondWith(fetch(request));
+    return;
+  }
+
+  if (url.pathname.startsWith("/api/") || url.pathname.startsWith("/admin/")) {
     event.respondWith(fetch(request));
     return;
   }

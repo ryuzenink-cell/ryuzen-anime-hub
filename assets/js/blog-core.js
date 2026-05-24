@@ -218,7 +218,43 @@ async function loadBlogPosts() {
       return null;
     }
   }));
-  return sortBlogPosts(posts.filter(Boolean));
+  const dynamicPosts = await fetchJson("/api/posts?limit=40")
+    .then((result) => (result.posts || []).map(normalizeDynamicBlogPost).filter(Boolean))
+    .catch(() => []);
+  const combined = [...posts.filter(Boolean), ...dynamicPosts];
+  const seen = new Set();
+  return sortBlogPosts(combined.filter((post) => {
+    const key = post.url || post.path || post.slug;
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }));
+}
+
+function getBlogPostUrl(post = {}) {
+  return post.url || blogPostCleanUrl(post.path);
+}
+
+function normalizeDynamicBlogPost(entry) {
+  if (!entry || !entry.slug || !entry.title) return null;
+  const date = String(entry.published_at || entry.updated_at || "").slice(0, 10);
+  return {
+    path: "",
+    url: entry.url || `/blog/p/${entry.slug}/`,
+    slug: entry.slug,
+    title: entry.title,
+    description: entry.seo_description || entry.excerpt || "Leia este conteúdo editorial do Ryuzen Anime Hub.",
+    excerpt: entry.excerpt || entry.seo_description || "Leia este conteúdo editorial do Ryuzen Anime Hub.",
+    date,
+    updated: String(entry.updated_at || entry.published_at || "").slice(0, 10),
+    category: entry.category_name || "Editorial",
+    author: entry.author_name || "Ryuzen Anime Hub",
+    cover: entry.cover_image_url || "",
+    coverAlt: entry.cover_alt || `Imagem de capa do post ${entry.title}`,
+    tags: [],
+    readingTime: 1,
+    content: "",
+  };
 }
 
 function normalizeBlogManifestPost(entry) {
