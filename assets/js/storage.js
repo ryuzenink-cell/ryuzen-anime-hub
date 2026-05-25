@@ -19,6 +19,7 @@ function getAnimeList() {
 
 function setAnimeList(list) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  document.dispatchEvent(new CustomEvent("ryuzen:list-updated", { detail: { count: list.length } }));
 }
 
 function saveAnimeToList(anime) {

@@ -18,21 +18,24 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png?v=20260519">
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192.png?v=20260519">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png?v=20260519">
-  <link rel="stylesheet" href="../assets/css/global.css"><link rel="stylesheet" href="../assets/css/layout.css"><link rel="stylesheet" href="../assets/css/components.css"><link rel="stylesheet" href="../assets/css/pages.css"><link rel="stylesheet" href="../assets/css/responsive.css">
+  <link rel="stylesheet" href="../assets/css/global.css?v=20260526public-ui-v1"><link rel="stylesheet" href="../assets/css/layout.css?v=20260526public-ui-v1"><link rel="stylesheet" href="../assets/css/components.css?v=20260526public-ui-v1"><link rel="stylesheet" href="../assets/css/pages.css?v=20260526public-ui-v1"><link rel="stylesheet" href="../assets/css/responsive.css?v=20260526public-ui-v1">
+  <link rel="stylesheet" href="/assets/css/public-ui.css?v=20260526public-ui-v1">
 </head>
-<body>
+<body class="public-site">
   <div data-header></div>
-  <main class="container">
-    <section class="page-hero"><p class="eyebrow">Temporada atual</p><h1>Animes em exibição agora.</h1><p>Explore lançamentos da temporada com filtros simples para chegar mais rápido ao que combina com sua lista.</p></section>
-    <section class="list-toolbar">
+  <main id="main-content" class="container season-page">
+    <section class="page-hero"><p class="eyebrow">Temporada atual</p><h1>Animes em exibição agora.</h1><p>Explore lançamentos da temporada e adicione novas descobertas à sua lista com um toque.</p></section>
+    <section class="page-toolbar" aria-label="Filtros da temporada">
       <label>Tipo<select id="typeFilter"><option value="all">Todos</option><option value="TV">TV</option><option value="Movie">Filme</option><option value="OVA">OVA</option><option value="Special">Especial</option></select></label>
-      <label>Ordenar por<select id="sortFilter"><option value="score">Nota</option><option value="popularity">Popularidade</option><option value="title">Título</option></select></label>
+      <label>Ordenar por<select id="sortFilter"><option value="score">Melhor nota</option><option value="popularity">Popularidade</option><option value="title">Título</option></select></label>
+      <p id="seasonCount" class="muted" aria-live="polite"></p>
     </section>
     <section class="section"><div id="seasonGrid"></div></section>
   </main>
   <div data-footer></div>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-CW8SW35Y3N"></script>
-  <script src="/assets/js/analytics.js"></script>
-  <script src="../assets/js/api.js"></script><script src="../assets/js/storage.js"></script><script src="../assets/js/ui.js"></script><script src="../assets/js/season.js"></script>
+  <script src="/assets/js/analytics.js?v=20260526public-ui-v1"></script>
+  <script src="../assets/js/api.js?v=20260526public-ui-v1"></script><script src="../assets/js/storage.js?v=20260526public-ui-v1"></script><script src="../assets/js/ui.js?v=20260526public-ui-v1"></script><script src="../assets/js/season.js?v=20260526public-ui-v1"></script>
+  <script src="/assets/js/public-ui.js?v=20260526public-ui-v1"></script>
 </body>
 </html>

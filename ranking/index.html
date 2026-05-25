@@ -18,23 +18,25 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png?v=20260519">
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192.png?v=20260519">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png?v=20260519">
-  <link rel="stylesheet" href="../assets/css/global.css"><link rel="stylesheet" href="../assets/css/layout.css"><link rel="stylesheet" href="../assets/css/components.css"><link rel="stylesheet" href="../assets/css/pages.css"><link rel="stylesheet" href="../assets/css/responsive.css">
+  <link rel="stylesheet" href="../assets/css/global.css?v=20260526public-ui-v1"><link rel="stylesheet" href="../assets/css/layout.css?v=20260526public-ui-v1"><link rel="stylesheet" href="../assets/css/components.css?v=20260526public-ui-v1"><link rel="stylesheet" href="../assets/css/pages.css?v=20260526public-ui-v1"><link rel="stylesheet" href="../assets/css/responsive.css?v=20260526public-ui-v1">
+  <link rel="stylesheet" href="/assets/css/public-ui.css?v=20260526public-ui-v1">
 </head>
-<body>
+<body class="public-site">
   <div data-header></div>
-  <main class="container">
-    <section class="page-hero"><p class="eyebrow">Rankings</p><h1>Listas para descobrir obras fortes.</h1><p>Compare nota, popularidade e formato em uma visualização de database.</p></section>
+  <main id="main-content" class="container ranking-page">
+    <section class="page-hero"><p class="eyebrow">Rankings</p><h1>Obras que merecem sua atenção.</h1><p>Compare títulos bem avaliados, populares, filmes e animes atualmente em exibição.</p></section>
     <div class="tabs" role="tablist" aria-label="Tipos de ranking">
-      <button class="tab active" data-ranking="top" type="button">Top Animes</button>
-      <button class="tab" data-ranking="popular" type="button">Mais Populares</button>
-      <button class="tab" data-ranking="movies" type="button">Filmes</button>
-      <button class="tab" data-ranking="airing" type="button">Em Exibição</button>
+      <button class="tab active" data-ranking="top" type="button" aria-selected="true">Top Animes</button>
+      <button class="tab" data-ranking="popular" type="button" aria-selected="false">Mais Populares</button>
+      <button class="tab" data-ranking="movies" type="button" aria-selected="false">Filmes</button>
+      <button class="tab" data-ranking="airing" type="button" aria-selected="false">Em Exibição</button>
     </div>
     <section class="section"><div id="rankingList"></div></section>
   </main>
   <div data-footer></div>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-CW8SW35Y3N"></script>
-  <script src="/assets/js/analytics.js"></script>
-  <script src="../assets/js/api.js"></script><script src="../assets/js/storage.js"></script><script src="../assets/js/ui.js"></script><script src="../assets/js/ranking.js"></script>
+  <script src="/assets/js/analytics.js?v=20260526public-ui-v1"></script>
+  <script src="../assets/js/api.js?v=20260526public-ui-v1"></script><script src="../assets/js/storage.js?v=20260526public-ui-v1"></script><script src="../assets/js/ui.js?v=20260526public-ui-v1"></script><script src="../assets/js/ranking.js?v=20260526public-ui-v1"></script>
+  <script src="/assets/js/public-ui.js?v=20260526public-ui-v1"></script>
 </body>
 </html>

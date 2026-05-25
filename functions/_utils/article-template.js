@@ -1,6 +1,6 @@
 const SITE_URL = "https://anime.ryuzen.ink";
 const SITE_NAME = "Ryuzen Anime Hub";
-const ASSET_VERSION = "20260526admin-center";
+const ASSET_VERSION = "20260526public-ui-v1";
 
 export function escapeHtml(value = "") {
   return String(value).replace(/[&<>'"]/g, (character) => ({
@@ -127,10 +127,11 @@ export function renderDynamicArticlePage({ post, tags = [], contentHtml = "", he
   <link rel="stylesheet" href="/assets/css/components.css?v=${ASSET_VERSION}">
   <link rel="stylesheet" href="/assets/css/pages.css?v=${ASSET_VERSION}">
   <link rel="stylesheet" href="/assets/css/responsive.css?v=${ASSET_VERSION}">
+  <link rel="stylesheet" href="/assets/css/public-ui.css?v=${ASSET_VERSION}">
 </head>
-<body data-blog-prerendered="true">
+<body class="public-site" data-blog-prerendered="true">
   <div data-header></div>
-  <main class="container blog-post-page">
+  <main id="main-content" class="container blog-post-page">
     <div id="blogPostRoot"><article class="blog-article panel">
       <nav class="blog-breadcrumb" aria-label="Caminho do post">
         <a href="/">Home</a><span>/</span><a href="/blog/">Blog</a><span>/</span><span>${escapeHtml(post.category_name || "Editorial")}</span>
@@ -164,6 +165,7 @@ export function renderDynamicArticlePage({ post, tags = [], contentHtml = "", he
   <script src="/assets/js/ui.js?v=${ASSET_VERSION}"></script>
   <script src="/assets/js/blog-core.js?v=${ASSET_VERSION}"></script>
   <script src="/assets/js/blog-post.js?v=${ASSET_VERSION}"></script>
+  <script src="/assets/js/public-ui.js?v=${ASSET_VERSION}"></script>
 </body>
 </html>`;
 }

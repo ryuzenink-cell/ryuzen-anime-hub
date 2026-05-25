@@ -3,6 +3,8 @@ let currentQuery = new URLSearchParams(location.search).get("q") || "";
 const searchInput = document.getElementById("searchInput");
 const results = document.getElementById("searchResults");
 const moreButton = document.getElementById("loadMore");
+const searchSummary = document.getElementById("searchSummary");
+const clearSearch = document.getElementById("clearSearch");
 
 searchInput.value = currentQuery;
 
@@ -13,10 +15,24 @@ document.getElementById("searchForm").addEventListener("submit", (event) => {
   if (!currentQuery) {
     renderEmpty(results, "Digite um termo de busca", "Procure pelo nome de um anime, franquia ou filme.");
     moreButton.classList.add("hidden");
+    searchSummary.textContent = "Comece pesquisando um título.";
+    clearSearch.classList.add("hidden");
     return;
   }
   history.replaceState(null, "", routeWithQuery(RYZEN_ROUTES.search, { q: currentQuery }));
   runSearch();
+});
+
+clearSearch?.addEventListener("click", () => {
+  currentQuery = "";
+  currentPage = 1;
+  searchInput.value = "";
+  history.replaceState(null, "", RYZEN_ROUTES.search);
+  clearSearch.classList.add("hidden");
+  searchSummary.textContent = "Comece pesquisando um título.";
+  renderEmpty(results, "Comece sua busca", "Encontre animes por título, franquia ou nome alternativo.");
+  moreButton.classList.add("hidden");
+  searchInput.focus();
 });
 
 moreButton.addEventListener("click", () => {
@@ -28,6 +44,10 @@ async function runSearch(append = false) {
   if (!append) renderLoading(results, 6);
   try {
     const { data, pagination } = await searchAnime(currentQuery, currentPage);
+    if (!append) {
+      searchSummary.textContent = `${data.length || 0} resultado${data.length === 1 ? "" : "s"} encontrado${data.length === 1 ? "" : "s"} para “${currentQuery}”.`;
+      clearSearch.classList.remove("hidden");
+    }
     if (!data.length && !append) {
       renderEmpty(results, "Nenhum anime encontrado", "Tente buscar por outro título ou por uma franquia mais conhecida.");
       moreButton.classList.add("hidden");
@@ -44,4 +64,4 @@ async function runSearch(append = false) {
 }
 
 if (currentQuery) runSearch();
-else renderEmpty(results, "Comece sua busca", "Encontre animes por título e abra detalhes completos com dados da Jikan API.");
+else renderEmpty(results, "Comece sua busca", "Encontre animes por título, franquia ou nome alternativo.");

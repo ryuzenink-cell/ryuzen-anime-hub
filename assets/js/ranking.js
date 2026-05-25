@@ -11,6 +11,7 @@ rankingTabs.forEach((tab) => {
   tab.addEventListener("click", () => {
     rankingTabs.forEach((item) => item.classList.remove("active"));
     tab.classList.add("active");
+    rankingTabs.forEach((item) => item.setAttribute("aria-selected", item === tab ? "true" : "false"));
     loadRanking(tab.dataset.ranking);
   });
 });

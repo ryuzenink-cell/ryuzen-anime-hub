@@ -393,7 +393,7 @@ function writeCleanPostPages(posts) {
       .replace(/<meta name="description" content="[^"]*">/i, `<meta name="description" content="${escapeHtml(post.description)}">`)
       .replace(/\s*<meta name="robots" content="[^"]*">\s*/i, "\n")
       .replace("</head>", `${renderSeo(post)}\n</head>`)
-      .replace(/<body(?:\s+[^>]*)?>/i, '<body data-blog-prerendered="true">')
+      .replace(/<body(?:\s+[^>]*)?>/i, '<body class="public-site" data-blog-prerendered="true">')
       .replace('<div id="blogPostRoot"></div>', `<div id="blogPostRoot">${renderArticle(post)}</div>`)
       .replace('<div id="relatedPosts"></div>', `<div id="relatedPosts">${renderRelatedPosts(post, posts)}</div>`);
     const cleanDirectory = path.join(projectRoot, post.path.replace(/\.md$/i, ""));

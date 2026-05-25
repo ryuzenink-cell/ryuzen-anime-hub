@@ -2,6 +2,7 @@ let seasonData = [];
 const seasonRoot = document.getElementById("seasonGrid");
 const typeFilter = document.getElementById("typeFilter");
 const sortFilter = document.getElementById("sortFilter");
+const seasonCount = document.getElementById("seasonCount");
 
 async function loadSeason() {
   renderLoading(seasonRoot, 8);
@@ -23,7 +24,8 @@ function renderSeason() {
     if (sort === "popularity") return (a.popularity || 99999) - (b.popularity || 99999);
     return (b.score || 0) - (a.score || 0);
   });
-  seasonRoot.innerHTML = `<div class="anime-grid">${items.map(createAnimeCard).join("")}</div>`;
+  seasonCount.textContent = `${items.length} título${items.length === 1 ? "" : "s"} encontrado${items.length === 1 ? "" : "s"}.`;
+  seasonRoot.innerHTML = items.length ? `<div class="anime-grid">${items.map(createAnimeCard).join("")}</div>` : `<div class="state"><h2>Nenhum título neste filtro</h2><p>Tente outro tipo de anime para explorar a temporada.</p></div>`;
 }
 
 typeFilter.addEventListener("change", renderSeason);

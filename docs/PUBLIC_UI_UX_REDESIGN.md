@@ -1,0 +1,135 @@
+# Redesign público — Ryuzen Discovery
+
+## Escopo
+
+Esta rodada altera somente a experiência pública do Ryuzen Anime Hub. O dashboard administrativo, autenticação, Pages Functions de dados, D1, migrations e regras do CMS não foram modificados funcionalmente. A única adaptação em Function é a inclusão da camada visual pública no template SSR dos artigos dinâmicos, mantendo consulta, SEO e regras de publicação existentes.
+
+## Diagnóstico anterior
+
+- A home comunicava o produto, mas tinha aparência de MVP e dependia visualmente de blocos carregados pela API.
+- A navegação mobile apenas quebrava o menu em múltiplas linhas.
+- Cards não ofereciam ação direta para a lista pessoal e carregavam imagem grande quando uma capa de card seria suficiente.
+- O footer ainda transmitia caráter experimental.
+- Busca, temporada, ranking, detalhes e lista possuíam UI funcional, porém pouco conectada à experiência editorial madura do blog.
+- Artigos precisavam de ferramentas de leitura e melhor tratamento de imagens internas.
+- Assets públicos não eram versionados de forma consistente em todas as páginas.
+
+## Direção visual
+
+A camada `assets/css/public-ui.css` introduz a linguagem **Ryuzen Discovery**: superfícies escuras premium, gradientes azul/violeta, cards elevados, tipografia mais clara, espaçamentos consistentes, microinterações discretas e comportamento responsivo aprimorado.
+
+## Alterações principais
+
+### Componentes compartilhados
+
+- Header público premium e sticky com navegação reduzida no desktop.
+- Drawer acessível e navegação inferior no mobile.
+- Footer institucional com rotas reais e ligação com Ryuzen Read Plus.
+- Anime Card 2.0 com botão rápido para a lista, badge contextual e imagem dimensionada para card.
+- Skeletons, empty states, toasts e botões harmonizados.
+- Link “Pular para o conteúdo”, foco visível e suporte a `prefers-reduced-motion`.
+
+### Home
+
+- Hero com busca, CTAs prioritários, painel Top Agora e pílulas de proposta de valor.
+- Faixa de recursos e seções com hierarquia editorial mais clara.
+- CTA final para Minha Lista e bloco editorial com ligação ao Ryuzen Read Plus.
+
+### Exploração
+
+- Busca com resumo de resultados e ação de limpar.
+- Temporada com toolbar premium e contador de títulos filtrados.
+- Ranking com abas acessíveis, top 3 destacado e ação direta de lista.
+- Detalhes do anime com backdrop visual, capa de alta prioridade e ações mais claras.
+- Minha Lista com aviso de armazenamento local, busca interna e progresso de episódios.
+
+### Blog e artigos
+
+- Blog recebe a mesma camada visual pública sem alterar a integração entre posts estáticos e CMS.
+- Artigos recebem barra de progresso, copiar link, compartilhamento e botão voltar ao topo.
+- Sumários longos tornam-se recolhíveis em mobile.
+- Imagens internas passam a preservar a proporção, evitando cortes indevidos.
+- Artigos SSR dinâmicos carregam apenas a nova camada visual e de leitura, mantendo o SEO já implementado.
+
+### Navegação secundária
+
+- “Mercado de Mangás” substitui o rótulo ambíguo “Mangás” na navegação secundária.
+- Guias deixa de competir no menu principal e permanece acessível no menu expandido/footer.
+
+## Performance e cache
+
+- Todas as páginas públicas alteradas carregam assets versionados com `?v=20260526public-ui-v1`.
+- O service worker passou para `v1.5.0-public-ui` e pré-cacheia `public-ui.css` e `public-ui.js` versionados.
+- Cards utilizam imagem média disponível da Jikan; imagem grande permanece reservada para detalhes.
+- Imagens de cards recebem dimensões, `loading="lazy"` e `decoding="async"`.
+
+## Arquivos públicos criados
+
+- `assets/css/public-ui.css`
+- `assets/js/public-ui.js`
+- `docs/PUBLIC_UI_UX_REDESIGN.md`
+
+## Arquivos públicos alterados
+
+- `index.html`
+- `search/index.html`
+- `season/index.html`
+- `ranking/index.html`
+- `anime/index.html`
+- `my-list/index.html`
+- `blog/index.html`
+- `blog/post/index.html`
+- `guides/index.html`
+- `vendas-mangas/index.html`
+- `404.html`
+- `offline.html`
+- `assets/js/ui.js`
+- `assets/js/storage.js`
+- `assets/js/home.js`
+- `assets/js/search.js`
+- `assets/js/season.js`
+- `assets/js/ranking.js`
+- `assets/js/anime.js`
+- `assets/js/my-list.js`
+- `service-worker.js`
+- `functions/_utils/article-template.js` (somente apresentação pública SSR/asset visual)
+
+## Limitações preservadas
+
+- Dados da Jikan continuam client-side; nenhuma nova API/proxy foi criada.
+- A página de detalhes ainda não é SSR nesta rodada.
+- Exportação/importação da lista e filtros avançados dependem de uma rodada futura.
+- A imagem de hero institucional não inventa obra em destaque; utiliza o ranking já disponível para o painel lateral.
+
+## Testes recomendados após deploy
+
+1. Acessar home em desktop e mobile e confirmar menu/drawer/bottom nav.
+2. Buscar um anime, adicionar/remover pelo card e confirmar Minha Lista.
+3. Abrir Temporada e Ranking, alternar filtros/tabs.
+4. Abrir detalhes e salvar uma obra.
+5. Validar Blog, artigo estático e artigo dinâmico publicado pelo CMS.
+6. Testar barra de progresso, compartilhar/copy e voltar ao topo.
+7. Confirmar que `/admin/login/` e `/admin/` continuam sem efeitos visuais da camada pública.
+8. Em atualização antiga cacheada, atualizar uma vez após o novo service worker assumir controle.
+
+## Validações executadas nesta entrega
+
+- `npm ci --no-audit --no-fund` concluído usando dependências do registro público.
+- `npm run build` concluído: índice e páginas estáticas do blog regenerados e sitemap atualizado.
+- `npm run functions:build` concluído: Pages Functions compiladas sem alteração de lógica administrativa ou de dados.
+- `node --check` executado para os JavaScripts públicos modificados e `service-worker.js`.
+- Validação estrutural de 15 páginas públicas: inclusão única da camada `public-ui`, versionamento dos assets e isolamento da área administrativa.
+- Validação de 8 páginas administrativas: nenhuma referência aos novos assets/classes públicos.
+- Validação dos três artigos estáticos: canonical e JSON-LD preservados.
+- Validação da estratégia PWA: os assets públicos versionados essenciais foram incluídos no pré-cache do novo service worker.
+- `git diff --check` sem erros de whitespace.
+- Conferência de escopo: em `functions/`, apenas o template visual público dos artigos dinâmicos foi ajustado; nenhum arquivo de `admin/` ou `migrations/` foi alterado.
+- Conferência do `package-lock.json`: sem referências a registry interno inacessível.
+
+### Validação visual disponível
+
+Foram geradas capturas da home em desktop/mobile, ranking e artigo mobile durante a rodada de implementação, permitindo conferir o novo layout, a navegação compacta e o comportamento editorial. Após o refinamento final de `prefers-reduced-motion` e do pré-cache PWA, a repetição da automação no navegador foi impedida por uma política do Chromium disponível no ambiente (`ERR_BLOCKED_BY_ADMINISTRATOR` para qualquer navegação, inclusive páginas locais). Por isso, não se afirma uma nova bateria visual automatizada após esse refinamento final; as alterações finais foram validadas por build, sintaxe e checagens estruturais.
+
+## Validação recomendada após deploy
+
+Além do roteiro funcional abaixo, validar visualmente em produção em 1440 px, 1280 px, 768 px, 390 px e 360 px, com atenção especial a capas reais da API, drawer mobile, bottom navigation, cards com ação rápida e carregamento de dados externos.

@@ -19,71 +19,81 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png?v=20260519">
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192.png?v=20260519">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png?v=20260519">
-  <link rel="stylesheet" href="assets/css/global.css">
-  <link rel="stylesheet" href="assets/css/layout.css">
-  <link rel="stylesheet" href="assets/css/components.css">
-  <link rel="stylesheet" href="assets/css/pages.css">
-  <link rel="stylesheet" href="assets/css/responsive.css">
+  <link rel="stylesheet" href="assets/css/global.css?v=20260526public-ui-v1">
+  <link rel="stylesheet" href="assets/css/layout.css?v=20260526public-ui-v1">
+  <link rel="stylesheet" href="assets/css/components.css?v=20260526public-ui-v1">
+  <link rel="stylesheet" href="assets/css/pages.css?v=20260526public-ui-v1">
+  <link rel="stylesheet" href="assets/css/responsive.css?v=20260526public-ui-v1">
+  <link rel="stylesheet" href="/assets/css/public-ui.css?v=20260526public-ui-v1">
 </head>
-<body>
+<body class="public-site">
   <div data-header></div>
-  <main>
-    <section class="hero">
+  <main id="main-content">
+    <section class="hero home-hero">
       <div class="container hero-grid">
-        <div>
-          <p class="eyebrow">anime.ryuzen.ink</p>
-          <h1>Descubra, acompanhe e organize seus animes favoritos em português.</h1>
-          <p>O Ryuzen Anime Hub é uma central brasileira para explorar temporadas, rankings, detalhes de obras e montar sua própria lista de animes.</p>
-          <div id="homeSearch"></div>
+        <div class="hero-copy">
+          <p class="eyebrow">Ryuzen Discovery</p>
+          <h1>Descubra seu próximo anime favorito.</h1>
+          <p>Explore temporadas, rankings e artigos editoriais enquanto organiza tudo em uma lista pessoal salva no seu dispositivo.</p>
+          <div id="homeSearch" class="hero-search-wrap"></div>
           <div class="hero-actions">
             <a class="btn primary" href="season/">Explorar temporada</a>
-            <a class="btn" href="search/">Buscar anime</a>
-            <a class="btn accent" href="my-list/">Minha lista</a>
-            <a class="btn" href="blog/">Ler blog</a>
+            <a class="btn" href="my-list/">Minha lista</a>
+          </div>
+          <div class="discovery-pills" aria-label="Destaques da plataforma">
+            <span>Animes da temporada</span><span>Rankings atualizados</span><span>Blog editorial</span>
           </div>
         </div>
         <aside class="hero-panel" aria-label="Destaques do ranking">
-          <p class="eyebrow">Top agora</p>
-          <h2>Obras em destaque</h2>
+          <div class="hero-panel-heading"><div><p class="eyebrow">Em alta</p><h2>Top agora</h2></div><a href="ranking/">Ver ranking</a></div>
           <div id="heroSpotlight"></div>
         </aside>
       </div>
     </section>
+    <div class="container home-value-strip" aria-label="Recursos do Ryuzen Anime Hub">
+      <div class="value-card"><span class="value-icon">⌕</span><div><strong>Descubra obras</strong><span>Busca e rankings em um só lugar.</span></div></div>
+      <div class="value-card"><span class="value-icon">♡</span><div><strong>Organize sua lista</strong><span>Acompanhe episódios localmente.</span></div></div>
+      <div class="value-card"><span class="value-icon">✦</span><div><strong>Leia o editorial</strong><span>Guias e novidades do mundo anime.</span></div></div>
+    </div>
     <section class="section">
       <div class="container">
-        <div class="section-head"><div><p class="eyebrow">temporada</p><h2>Animes da Temporada</h2></div><a class="btn" href="season/">Ver temporada</a></div>
+        <div class="section-head"><div><p class="eyebrow">Temporada</p><h2>Animes em exibição</h2><p>Novas histórias para acompanhar agora.</p></div><a class="btn" href="season/">Ver temporada</a></div>
         <div id="seasonNow"></div>
       </div>
     </section>
     <section class="section">
       <div class="container">
-        <div class="section-head"><div><p class="eyebrow">ranking</p><h2>Top Animes</h2></div><a class="btn" href="ranking/">Ver ranking</a></div>
+        <div class="section-head"><div><p class="eyebrow">Ranking</p><h2>Mais bem avaliados</h2><p>Obras reconhecidas pelos fãs.</p></div><a class="btn" href="ranking/">Ver ranking</a></div>
         <div id="topAnime"></div>
       </div>
     </section>
     <section class="section">
       <div class="container">
-        <div class="section-head"><div><p class="eyebrow">popularidade</p><h2>Mais Populares</h2></div></div>
+        <div class="section-head"><div><p class="eyebrow">Popularidade</p><h2>Descobertas populares</h2><p>Títulos que a comunidade não para de acompanhar.</p></div><a class="btn" href="search/">Buscar mais</a></div>
         <div id="popularAnime"></div>
       </div>
     </section>
     <section class="section">
       <div class="container">
-        <div class="section-head"><div><p class="eyebrow">editorial</p><h2>Guias e Blog Ryuzen</h2></div><a class="btn" href="blog/">Abrir blog</a></div>
+        <div class="section-head"><div><p class="eyebrow">Editorial</p><h2>Guias e Blog Ryuzen</h2><p>Conteúdo para escolher melhor o que assistir.</p></div><a class="btn" href="blog/">Abrir blog</a></div>
         <div class="guide-grid">
-          <article class="guide-card"><h3>Por onde começar nos isekais?</h3><p>Uma curadoria inicial para entrar no gênero sem se perder.</p></article>
-          <article class="guide-card"><h3>Animes curtos para um fim de semana</h3><p>Boas histórias para maratonar em poucos episódios.</p></article>
-          <article class="guide-card"><h3>Ordem para assistir franquias</h3><p>Guias futuros para sagas longas, filmes e especiais.</p></article>
+          <article class="guide-card"><p class="eyebrow">Listas</p><h3>Recomendações para descobrir novos mundos</h3><p>Encontre títulos por tema, estilo e experiência.</p><a class="btn ghost" href="blog/">Explorar artigos</a></article>
+          <article class="guide-card"><p class="eyebrow">Temporadas</p><h3>Acompanhe os próximos lançamentos</h3><p>Veja o que está em exibição e monte sua lista.</p><a class="btn ghost" href="season/">Abrir temporada</a></article>
+          <article class="guide-card"><p class="eyebrow">Ryuzen</p><h3>Histórias originais para leitores</h3><p>Conheça a plataforma editorial Ryuzen Read Plus.</p><a class="btn ghost" href="https://readplus.ryuzen.ink" target="_blank" rel="noopener noreferrer">Conhecer Read Plus</a></article>
         </div>
       </div>
+    </section>
+    <section class="section">
+      <div class="container home-cta-panel"><div><p class="eyebrow">Sua jornada</p><h2>Monte uma lista que acompanha seu ritmo.</h2><p>Salve o que quer assistir, marque o progresso e volte quando quiser.</p></div><a class="btn primary" href="my-list/">Abrir minha lista</a></div>
     </section>
   </main>
 <div data-footer></div>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-CW8SW35Y3N"></script>
-  <script src="/assets/js/analytics.js"></script>
-  <script src="assets/js/api.js"></script>
-  <script src="assets/js/storage.js"></script>
-  <script src="assets/js/ui.js"></script>
-  <script src="assets/js/home.js"></script>
+  <script src="/assets/js/analytics.js?v=20260526public-ui-v1"></script>
+  <script src="assets/js/api.js?v=20260526public-ui-v1"></script>
+  <script src="assets/js/storage.js?v=20260526public-ui-v1"></script>
+  <script src="assets/js/ui.js?v=20260526public-ui-v1"></script>
+  <script src="assets/js/home.js?v=20260526public-ui-v1"></script>
+  <script src="/assets/js/public-ui.js?v=20260526public-ui-v1"></script>
 </body>
 </html>

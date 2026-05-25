@@ -18,24 +18,28 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png?v=20260519">
   <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192.png?v=20260519">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png?v=20260519">
-  <link rel="stylesheet" href="../assets/css/global.css"><link rel="stylesheet" href="../assets/css/layout.css"><link rel="stylesheet" href="../assets/css/components.css"><link rel="stylesheet" href="../assets/css/pages.css"><link rel="stylesheet" href="../assets/css/responsive.css">
+  <link rel="stylesheet" href="../assets/css/global.css?v=20260526public-ui-v1"><link rel="stylesheet" href="../assets/css/layout.css?v=20260526public-ui-v1"><link rel="stylesheet" href="../assets/css/components.css?v=20260526public-ui-v1"><link rel="stylesheet" href="../assets/css/pages.css?v=20260526public-ui-v1"><link rel="stylesheet" href="../assets/css/responsive.css?v=20260526public-ui-v1">
+  <link rel="stylesheet" href="/assets/css/public-ui.css?v=20260526public-ui-v1">
 </head>
-<body>
+<body class="public-site">
   <div data-header></div>
-  <main class="container">
+  <main id="main-content" class="container search-page">
     <section class="page-hero">
-      <p class="eyebrow">Busca</p><h1>Encontre seu próximo anime.</h1>
+      <p class="eyebrow">Descoberta</p><h1>Encontre seu próximo anime.</h1>
+      <p>Pesquise pelo título, franquia ou nome alternativo e salve suas descobertas na sua lista.</p>
       <form id="searchForm" class="search-box">
         <label class="sr-only" for="searchInput">Buscar anime</label>
-        <input id="searchInput" name="q" type="search" placeholder="Ex.: Fullmetal, Naruto, Frieren">
+        <input id="searchInput" name="q" type="search" placeholder="Ex.: Frieren, Naruto, Re:Zero" autocomplete="off">
         <button class="btn primary" type="submit">Pesquisar</button>
       </form>
     </section>
+    <div class="results-summary"><p id="searchSummary" aria-live="polite">Comece pesquisando um título.</p><button id="clearSearch" class="btn ghost hidden" type="button">Limpar busca</button></div>
     <section class="section" aria-live="polite"><div id="searchResults"></div><button id="loadMore" class="btn hidden" type="button">Carregar mais</button></section>
   </main>
   <div data-footer></div>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-CW8SW35Y3N"></script>
-  <script src="/assets/js/analytics.js"></script>
-  <script src="../assets/js/api.js"></script><script src="../assets/js/storage.js"></script><script src="../assets/js/ui.js"></script><script src="../assets/js/search.js"></script>
+  <script src="/assets/js/analytics.js?v=20260526public-ui-v1"></script>
+  <script src="../assets/js/api.js?v=20260526public-ui-v1"></script><script src="../assets/js/storage.js?v=20260526public-ui-v1"></script><script src="../assets/js/ui.js?v=20260526public-ui-v1"></script><script src="../assets/js/search.js?v=20260526public-ui-v1"></script>
+  <script src="/assets/js/public-ui.js?v=20260526public-ui-v1"></script>
 </body>
 </html>

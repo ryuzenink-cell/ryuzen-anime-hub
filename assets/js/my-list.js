@@ -2,6 +2,9 @@ const listRoot = document.getElementById("myList");
 const countersRoot = document.getElementById("listCounters");
 const filterButtons = document.querySelectorAll("[data-status-filter]");
 let activeFilter = "all";
+const myListSearch = document.getElementById("myListSearch");
+let listQuery = "";
+myListSearch?.addEventListener("input", () => { listQuery = myListSearch.value.toLocaleLowerCase("pt-BR").trim(); renderMyList(); });
 
 filterButtons.forEach((button) => {
   button.addEventListener("click", () => {
@@ -24,7 +27,8 @@ function renderCounters(list) {
 function renderMyList() {
   const list = getAnimeList();
   renderCounters(list);
-  const filtered = activeFilter === "all" ? list : list.filter((item) => item.status === activeFilter);
+  const statusFiltered = activeFilter === "all" ? list : list.filter((item) => item.status === activeFilter);
+  const filtered = listQuery ? statusFiltered.filter((item) => item.title.toLocaleLowerCase("pt-BR").includes(listQuery)) : statusFiltered;
   if (!filtered.length) {
     renderEmpty(listRoot, "Sua lista está vazia por aqui", "Busque animes e salve seus favoritos para acompanhar tudo no navegador.", `<a class="btn primary" href="${RYZEN_ROUTES.search}">Buscar animes</a>`);
     return;
@@ -34,6 +38,9 @@ function renderMyList() {
 }
 
 function createListItem(item) {
+  const total = Number(item.totalEpisodes) || 0;
+  const watched = Number(item.episodesWatched) || 0;
+  const progress = total ? Math.min(100, Math.round((watched / total) * 100)) : 0;
   const image = escapeHtml(safeUrl(item.image, assetPath("images/logo-placeholder.png")));
   const title = escapeHtml(item.title);
   return `
@@ -46,6 +53,7 @@ function createListItem(item) {
           <span>Nota pessoal: ${item.personalScore || "-"}</span>
           <span>Eps: ${item.episodesWatched || 0}/${item.totalEpisodes || "?"}</span>
         </div>
+        ${total ? `<progress class="list-progress" value="${progress}" max="100" aria-label="Progresso: ${progress}%"></progress>` : ""}
         <div class="list-actions">
           <select data-edit="status">${Object.entries(STATUS_LABELS).map(([value, label]) => `<option value="${value}" ${item.status === value ? "selected" : ""}>${label}</option>`).join("")}</select>
           <input class="field" data-edit="personalScore" type="number" min="0" max="10" step="0.5" value="${item.personalScore || ""}" placeholder="Nota">
@@ -67,6 +75,7 @@ function bindListActions() {
     });
     row.querySelector("[data-remove]").addEventListener("click", () => {
       removeAnimeFromList(id);
+      if (window.ryuzenPublicToast) window.ryuzenPublicToast("Anime removido da sua lista.");
       renderMyList();
     });
   });

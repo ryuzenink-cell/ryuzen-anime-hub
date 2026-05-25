@@ -23,7 +23,7 @@ async function loadSpotlight() {
       <div class="spotlight-list">
         ${data.slice(0, 4).map((anime, index) => `
           <a class="spotlight-item" href="${routeWithQuery(RYZEN_ROUTES.anime, { id: Number(anime.mal_id) })}">
-            <img src="${escapeHtml(imageOf(anime))}" alt="Capa de ${escapeHtml(anime.title)}" loading="lazy">
+            <img src="${escapeHtml(imageOf(anime))}" alt="Capa de ${escapeHtml(anime.title)}" width="54" height="76" loading="lazy" decoding="async">
             <div>
               <strong>#${index + 1} ${escapeHtml(anime.title)}</strong>
               <div class="meta-line"><span class="badge score">Nota ${formatScore(anime.score)}</span><span>${escapeHtml(anime.type || "Anime")}</span></div>

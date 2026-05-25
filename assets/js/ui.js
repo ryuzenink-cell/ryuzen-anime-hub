@@ -58,8 +58,11 @@ function dataPath(path = "") {
   return sitePath(`data/${String(path).replace(/^\/+/, "")}`);
 }
 
-function imageOf(anime) {
-  const imageUrl = anime?.images?.webp?.large_image_url || anime?.images?.jpg?.large_image_url || anime?.image;
+function imageOf(anime, size = "card") {
+  const imageSet = anime?.images?.webp || anime?.images?.jpg || {};
+  const imageUrl = size === "large"
+    ? (imageSet.large_image_url || imageSet.image_url || anime?.image)
+    : (imageSet.image_url || imageSet.small_image_url || imageSet.large_image_url || anime?.image);
   return safeUrl(imageUrl, assetPath("images/logo-placeholder.png"));
 }
 
@@ -87,35 +90,69 @@ function getCurrentRouteKey() {
 
 function setActiveNav() {
   const currentRoute = getCurrentRouteKey();
-  document.querySelectorAll(".main-nav a").forEach((link) => {
+  document.querySelectorAll("[data-route]").forEach((link) => {
     const route = link.dataset.route;
     const isActive = route === currentRoute || (currentRoute === "blogPost" && route === "blog");
     link.classList.toggle("active", isActive);
   });
 }
 
+function publicIcon(name) {
+  const icons = {
+    search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>',
+    heart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.8 8.6c0 5-8.8 10.4-8.8 10.4S3.2 13.6 3.2 8.6A4.7 4.7 0 0112 6.5a4.7 4.7 0 018.8 2.1z"/></svg>',
+    menu: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
+    close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+    home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11.5L12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/></svg>',
+    calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>'
+  };
+  return icons[name] || "";
+}
+
 function renderHeader() {
   const header = document.querySelector("[data-header]");
   if (!header) return;
   header.innerHTML = `
-    <header class="site-header">
+    <header class="site-header public-header">
       <div class="container nav-wrap">
-        <a class="brand" href="${RYZEN_ROUTES.home}" aria-label="Ryuzen Anime Hub">
-          <img src="${assetPath("images/logo-placeholder.png")}" alt="" width="38" height="38">
-          <strong>Ryuzen <span>Anime Hub</span></strong>
+        <a class="brand" href="${RYZEN_ROUTES.home}" aria-label="Ryuzen Anime Hub — Início">
+          <img src="${assetPath("images/logo-placeholder.png")}" alt="" width="42" height="42">
+          <span class="brand-copy"><strong>Ryuzen <span>Anime Hub</span></strong><small>Discovery</small></span>
         </a>
         <nav class="main-nav" aria-label="Navegação principal">
-          <a data-route="home" href="${RYZEN_ROUTES.home}">Home</a>
-          <a data-route="search" href="${RYZEN_ROUTES.search}">Busca</a>
+          <a data-route="home" href="${RYZEN_ROUTES.home}">Início</a>
           <a data-route="season" href="${RYZEN_ROUTES.season}">Temporada</a>
           <a data-route="ranking" href="${RYZEN_ROUTES.ranking}">Ranking</a>
-          <a data-route="mangaSales" href="${RYZEN_ROUTES.mangaSales}">Mangás</a>
           <a data-route="blog" href="${RYZEN_ROUTES.blog}">Blog</a>
-          <a data-route="myList" href="${RYZEN_ROUTES.myList}">Minha lista</a>
-          <a data-route="guides" href="${RYZEN_ROUTES.guides}">Guias</a>
         </nav>
+        <div class="header-actions">
+          <a class="header-icon-link header-search-link" href="${RYZEN_ROUTES.search}" aria-label="Buscar animes">${publicIcon("search")}</a>
+          <a class="header-icon-link list-header-link" href="${RYZEN_ROUTES.myList}" aria-label="Abrir minha lista">${publicIcon("heart")}<span>Minha lista</span><span class="list-count" data-list-count hidden>0</span></a>
+          <button class="menu-toggle" data-menu-toggle type="button" aria-expanded="false" aria-controls="mobile-public-nav" aria-label="Abrir menu">${publicIcon("menu")}</button>
+        </div>
       </div>
-    </header>`;
+    </header>
+    <div class="mobile-backdrop" data-menu-backdrop aria-hidden="true"></div>
+    <aside class="mobile-drawer" id="mobile-public-nav" data-mobile-drawer aria-hidden="true" aria-label="Menu público">
+      <div class="drawer-head"><strong>Ryuzen Anime Hub</strong><button class="menu-toggle" data-menu-close type="button" aria-label="Fechar menu">${publicIcon("close")}</button></div>
+      <nav class="drawer-links" aria-label="Navegação mobile">
+        <a data-route="home" href="${RYZEN_ROUTES.home}">Início</a>
+        <a data-route="search" href="${RYZEN_ROUTES.search}">Buscar animes</a>
+        <a data-route="season" href="${RYZEN_ROUTES.season}">Temporada atual</a>
+        <a data-route="ranking" href="${RYZEN_ROUTES.ranking}">Rankings</a>
+        <a data-route="blog" href="${RYZEN_ROUTES.blog}">Blog Ryuzen</a>
+        <a data-route="myList" href="${RYZEN_ROUTES.myList}">Minha lista</a>
+        <div class="drawer-divider"></div>
+        <a data-route="mangaSales" href="${RYZEN_ROUTES.mangaSales}">Mercado de Mangás</a>
+        <a data-route="guides" href="${RYZEN_ROUTES.guides}">Guias</a>
+      </nav>
+    </aside>
+    <nav class="mobile-bottom-nav" aria-label="Atalhos principais">
+      <a data-route="home" href="${RYZEN_ROUTES.home}">${publicIcon("home")}<span>Início</span></a>
+      <a data-route="search" href="${RYZEN_ROUTES.search}">${publicIcon("search")}<span>Buscar</span></a>
+      <a data-route="season" href="${RYZEN_ROUTES.season}">${publicIcon("calendar")}<span>Temporada</span></a>
+      <a data-route="myList" href="${RYZEN_ROUTES.myList}">${publicIcon("heart")}<span>Lista</span></a>
+    </nav>`;
   setActiveNav();
 }
 
@@ -123,13 +160,29 @@ function renderFooter() {
   const footer = document.querySelector("[data-footer]");
   if (!footer) return;
   footer.innerHTML = `
-    <footer class="site-footer">
-      <div class="container footer-grid">
-        <div>
-          <strong>Ryuzen Anime Hub</strong>
-          <p>Central brasileira para descobrir, acompanhar e organizar animes.</p>
+    <footer class="site-footer public-footer">
+      <div class="container">
+        <div class="footer-premium-grid">
+          <div class="footer-brand">
+            <a class="brand" href="${RYZEN_ROUTES.home}"><img src="${assetPath("images/logo-placeholder.png")}" alt="" width="42" height="42"><span class="brand-copy"><strong>Ryuzen <span>Anime Hub</span></strong><small>Discovery</small></span></a>
+            <p>Descubra, acompanhe e organize seus animes favoritos em português.</p>
+          </div>
+          <nav class="footer-links" aria-label="Explorar">
+            <h2>Explorar</h2>
+            <a href="${RYZEN_ROUTES.season}">Temporada atual</a>
+            <a href="${RYZEN_ROUTES.ranking}">Rankings</a>
+            <a href="${RYZEN_ROUTES.search}">Buscar anime</a>
+            <a href="${RYZEN_ROUTES.myList}">Minha lista</a>
+          </nav>
+          <nav class="footer-links" aria-label="Ryuzen">
+            <h2>Ryuzen</h2>
+            <a href="${RYZEN_ROUTES.blog}">Blog</a>
+            <a href="${RYZEN_ROUTES.guides}">Guias</a>
+            <a href="${RYZEN_ROUTES.mangaSales}">Mercado de Mangás</a>
+            <a href="https://readplus.ryuzen.ink" target="_blank" rel="noopener noreferrer">Ryuzen Read Plus</a>
+          </nav>
         </div>
-        <p>Produto experimental da Ryuzen para anime.ryuzen.ink.</p>
+        <div class="footer-bottom"><span>© 2026 Ryuzen Anime Hub. Todos os direitos reservados.</span><span>Dados de animes fornecidos pela Jikan API / MyAnimeList.</span></div>
       </div>
     </footer>`;
 }
@@ -158,19 +211,33 @@ function createGenreTags(genres = []) {
   return `<div class="tags">${genres.slice(0, 3).map((genre) => `<span class="tag">${escapeHtml(genre.name)}</span>`).join("")}</div>`;
 }
 
+function contextualBadge(anime) {
+  const status = String(anime.status || "").toLowerCase();
+  if (status.includes("airing") || status.includes("exibição")) return "Em exibição";
+  if (String(anime.type || "").toLowerCase() === "movie") return "Filme";
+  if ((anime.popularity || 99999) <= 100) return "Popular";
+  return "Anime";
+}
+
 function createAnimeCard(anime) {
   const animeId = Number(anime.mal_id);
   const title = escapeHtml(anime.title);
+  const poster = escapeHtml(imageOf(anime));
   const animeUrl = routeWithQuery(RYZEN_ROUTES.anime, { id: animeId });
   return `
     <article class="anime-card">
-      <a href="${animeUrl}" aria-label="Ver detalhes de ${title}">
-        <img class="poster" src="${escapeHtml(imageOf(anime))}" alt="Capa de ${title}" loading="lazy">
-      </a>
+      <div class="poster-wrap">
+        <a href="${animeUrl}" aria-label="Ver detalhes de ${title}">
+          <img class="poster" src="${poster}" alt="Capa de ${title}" width="240" height="360" loading="lazy" decoding="async">
+          <span class="poster-gradient" aria-hidden="true"></span>
+          <span class="badge card-badge">${escapeHtml(contextualBadge(anime))}</span>
+        </a>
+        <button class="card-save" data-quick-save="${animeId}" data-title="${title}" data-image="${poster}" data-episodes="${escapeHtml(anime.episodes || "")}" type="button" aria-label="Adicionar à minha lista" aria-pressed="false">${publicIcon("heart")}</button>
+      </div>
       <div class="anime-card-body">
-        <h3 class="anime-title">${title}</h3>
+        <h3 class="anime-title"><a href="${animeUrl}">${title}</a></h3>
         <div class="meta-line">
-          <span class="badge score">Nota ${formatScore(anime.score)}</span>
+          <span class="badge score">★ ${formatScore(anime.score)}</span>
           <span>${escapeHtml(anime.type || "Anime")}</span>
           <span>${escapeHtml(yearOf(anime))}</span>
         </div>
@@ -179,7 +246,7 @@ function createAnimeCard(anime) {
           <span>${escapeHtml(anime.status || "Status indef.")}</span>
         </div>
         ${createGenreTags(anime.genres)}
-        <a class="btn ghost" href="${animeUrl}">Ver detalhes</a>
+        <div class="card-actions"><a class="btn ghost" href="${animeUrl}">Ver detalhes</a></div>
       </div>
     </article>`;
 }
@@ -187,26 +254,30 @@ function createAnimeCard(anime) {
 function createRankingRow(anime, position) {
   const animeId = Number(anime.mal_id);
   const title = escapeHtml(anime.title);
+  const poster = escapeHtml(imageOf(anime));
   const animeUrl = routeWithQuery(RYZEN_ROUTES.anime, { id: animeId });
   return `
-    <article class="ranking-row">
+    <article class="ranking-row ${position <= 3 ? "top-three" : ""}">
       <div class="ranking-pos">#${escapeHtml(position)}</div>
-      <img class="ranking-thumb" src="${escapeHtml(imageOf(anime))}" alt="Capa de ${title}" loading="lazy">
+      <img class="ranking-thumb" src="${poster}" alt="Capa de ${title}" width="58" height="82" loading="lazy" decoding="async">
       <div>
-        <h3>${title}</h3>
+        <h3><a href="${animeUrl}">${title}</a></h3>
         <div class="meta-line">
-          <span class="badge score">Nota ${formatScore(anime.score)}</span>
+          <span class="badge score">★ ${formatScore(anime.score)}</span>
           <span>${escapeHtml(anime.type || "Anime")}</span>
           <span>${escapeHtml(anime.episodes || "?")} eps</span>
           <span>${escapeHtml(yearOf(anime))}</span>
         </div>
       </div>
-      <a class="btn" href="${animeUrl}">Ver detalhes</a>
+      <div class="ranking-actions">
+        <button class="btn ghost quick-save-mini" data-quick-save="${animeId}" data-title="${title}" data-image="${poster}" data-episodes="${escapeHtml(anime.episodes || "")}" type="button" aria-label="Adicionar à minha lista" aria-pressed="false">${publicIcon("heart")}</button>
+        <a class="btn" href="${animeUrl}">Detalhes</a>
+      </div>
     </article>`;
 }
 
 function renderLoading(target, count = 5) {
-  target.innerHTML = `<div class="skeleton-grid">${Array.from({ length: count }, () => `<div class="skeleton"></div>`).join("")}</div>`;
+  target.innerHTML = `<div class="skeleton-grid" aria-label="Carregando conteúdo">${Array.from({ length: count }, () => `<div class="skeleton skeleton-card" aria-hidden="true"></div>`).join("")}</div>`;
 }
 
 function renderEmpty(target, title, text, button = "") {
@@ -388,7 +459,7 @@ function registerRyuzenServiceWorker() {
 }
 
 function setupInstallAppButton() {
-  const header = document.querySelector(".nav-wrap");
+  const header = document.querySelector(".header-actions");
   if (!header || isStandaloneApp()) return;
 
   let deferredInstallPrompt = null;

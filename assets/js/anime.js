@@ -34,14 +34,16 @@ async function loadAnimeDetail() {
     document.title = `${data.title || "Detalhes do Anime"} | Ryuzen Anime Hub`;
 
     detailRoot.innerHTML = `
+      <div class="detail-backdrop" aria-hidden="true"><img src="${escapeHtml(imageOf(data, "large"))}" alt="" decoding="async"></div>
       <section class="detail-layout">
         <aside>
-          <img class="detail-cover" src="${escapeHtml(imageOf(data))}" alt="Capa de ${escapeHtml(data.title)}">
+          <img class="detail-cover" src="${escapeHtml(imageOf(data, "large"))}" width="360" height="540" loading="eager" fetchpriority="high" alt="Capa de ${escapeHtml(data.title)}">
         </aside>
         <article>
           <p class="eyebrow">Detalhes do anime</p>
           <h1>${escapeHtml(data.title)}</h1>
           ${data.title_japanese ? `<p>${escapeHtml(data.title_japanese)}</p>` : ""}
+          <div class="detail-actions"><a class="btn ghost" href="${RYZEN_ROUTES.search}">Voltar à busca</a><a class="btn primary" href="#saveForm">Organizar na lista</a></div>
           <div class="stats-grid">
             <div class="stat"><strong>${formatScore(data.score)}</strong><span>Nota</span></div>
             <div class="stat"><strong>#${data.rank || "-"}</strong><span>Ranking</span></div>
@@ -93,7 +95,7 @@ function saveDetail(event, anime) {
   saveAnimeToList({
     id: anime.mal_id,
     title: anime.title,
-    image: imageOf(anime),
+    image: imageOf(anime, "large"),
     status: form.get("status"),
     personalScore: form.get("personalScore"),
     episodesWatched: form.get("episodesWatched"),
@@ -101,6 +103,7 @@ function saveDetail(event, anime) {
     notes: form.get("notes")
   });
   event.currentTarget.querySelector("button").textContent = "Salvo na minha lista";
+  if (window.ryuzenPublicToast) window.ryuzenPublicToast("Anime salvo na sua lista.");
 }
 
 loadAnimeDetail();
