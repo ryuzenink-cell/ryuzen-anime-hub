@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v1.2.0-admin-auth";
+const CACHE_VERSION = "v1.3.0-blog-cms-sync";
 const STATIC_CACHE = `ryuzen-static-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `ryuzen-runtime-${CACHE_VERSION}`;
 
@@ -116,6 +116,13 @@ self.addEventListener("fetch", (event) => {
   }
 
   if (url.pathname.startsWith("/api/") || url.pathname.startsWith("/admin/")) {
+    event.respondWith(fetch(request));
+    return;
+  }
+
+  // Artigos dinâmicos e sitemap do D1 devem refletir publicação/arquivamento imediatamente.
+  // Não oferecer fallback estático de /blog/ para um slug dinâmico inexistente ou arquivado.
+  if (url.pathname.startsWith("/blog/p/") || url.pathname === "/sitemap-blog-dynamic.xml") {
     event.respondWith(fetch(request));
     return;
   }

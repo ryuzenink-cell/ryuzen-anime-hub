@@ -1,21 +1,50 @@
 import { sanitizeArticleHtml, safeWebUrl } from "../../_utils/sanitize.js";
 import { requireDatabase } from "../../_utils/http.js";
-function esc(value = "") { return String(value).replace(/[&<>'"]/g, (c) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[c])); }
-function fmt(value) { if (!value) return ""; const normalized = String(value).includes("T") ? String(value) : `${String(value).replace(" ", "T")}Z`; return new Intl.DateTimeFormat("pt-BR", { dateStyle: "long" }).format(new Date(normalized)); }
+import { enrichArticleContent, estimateReadingTimeFromHtml, renderDynamicArticlePage } from "../../_utils/article-template.js";
+
+function optionalSafeUrl(value = "") {
+  if (!value) return "";
+  try { return safeWebUrl(value); } catch { return ""; }
+}
+
 export async function onRequestGet({ params, env }) {
   try {
     const db = requireDatabase(env);
-    const post = await db.prepare(`SELECT p.*, c.name AS category_name FROM posts p LEFT JOIN categories c ON c.id = p.category_id WHERE p.slug = ? AND p.status = 'published'`).bind(String(params.slug || "")).first();
-    if (!post) return new Response("Artigo não encontrado.", { status: 404 });
-    const tagsResult = await db.prepare(`SELECT t.name FROM tags t INNER JOIN post_tags pt ON pt.tag_id=t.id WHERE pt.post_id=? ORDER BY t.name`).bind(post.id).all();
-    const tags = (tagsResult.results || []).map((t) => t.name);
-    const canonical = post.canonical_url || `https://anime.ryuzen.ink/blog/p/${post.slug}/`;
-    const title = post.seo_title || post.title; const description = post.seo_description || post.excerpt;
-    const image = post.social_image_url || post.cover_image_url || "https://anime.ryuzen.ink/assets/images/logo-placeholder.png";
-    const content = sanitizeArticleHtml(post.content_html || "");
-    const cover = post.cover_image_url ? `<img class="blog-article-cover" src="${esc(safeWebUrl(post.cover_image_url))}" alt="${esc(post.cover_alt || post.title)}" loading="eager" fetchpriority="high">` : "";
-    const schema = JSON.stringify({ "@context": "https://schema.org", "@type": "BlogPosting", headline: post.title, description, image: [image], datePublished: post.published_at, dateModified: post.updated_at, author: { "@type": "Organization", name: post.author_name || "Ryuzen Anime Hub" }, publisher: { "@type": "Organization", name: "Ryuzen Anime Hub" }, mainEntityOfPage: canonical });
-    const html = `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${esc(title)} | Ryuzen Anime Hub</title><meta name="description" content="${esc(description)}"><meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="${esc(canonical)}"><meta property="og:type" content="article"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${esc(canonical)}"><meta property="og:image" content="${esc(image)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${esc(title)}"><meta name="twitter:description" content="${esc(description)}"><meta name="twitter:image" content="${esc(image)}"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://api.jikan.moe https://www.google-analytics.com https://region1.google-analytics.com https://analytics.google.com; img-src 'self' https:; script-src 'self' https://www.googletagmanager.com; style-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests"><link rel="icon" href="/favicon.ico"><link rel="stylesheet" href="/assets/css/global.css?v=20260524"><link rel="stylesheet" href="/assets/css/layout.css?v=20260524"><link rel="stylesheet" href="/assets/css/components.css?v=20260524"><link rel="stylesheet" href="/assets/css/pages.css?v=20260524"><link rel="stylesheet" href="/assets/css/responsive.css?v=20260524"><script type="application/ld+json">${schema.replace(/</g, "\\u003c")}</script></head><body><div data-header></div><main class="blog-post-page"><article class="blog-article"><nav class="blog-breadcrumb"><a href="/blog/">Blog</a><span>/</span><span>${esc(post.category_name || "Editorial")}</span></nav><header class="blog-article-header"><p class="eyebrow">${esc(post.category_name || "Editorial")}</p><h1>${esc(post.title)}</h1><p>${esc(post.excerpt)}</p><div class="meta-line"><span>Publicado em ${esc(fmt(post.published_at))}</span><span>Atualizado em ${esc(fmt(post.updated_at))}</span><span>${esc(post.author_name || "Ryuzen Anime Hub")}</span></div>${tags.length ? `<div class="blog-tag-list">${tags.map((t) => `<span class="tag">${esc(t)}</span>`).join("")}</div>` : ""}</header>${cover}<div class="blog-content">${content}</div><section class="blog-cta"><p class="eyebrow">Ryuzen Anime Hub</p><h2>Continue explorando animes</h2><p>Pesquise novas obras e monte sua lista pessoal no Hub.</p><div class="blog-cta-actions"><a class="btn primary" href="/search/">Buscar animes</a><a class="btn ghost" href="/my-list/">Minha lista</a></div></section></article></main><div data-footer></div><script src="/assets/js/ui.js?v=20260524"></script><script src="/assets/js/analytics.js?v=20260524"></script></body></html>`;
-    return new Response(html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=60, stale-while-revalidate=300", "X-Content-Type-Options": "nosniff", "Referrer-Policy": "strict-origin-when-cross-origin" } });
-  } catch (error) { console.error("Falha ao renderizar artigo dinâmico:", error?.message); return new Response("Não foi possível carregar este artigo.", { status: 500 }); }
+    const post = await db.prepare(`SELECT p.*, c.name AS category_name FROM posts p
+      LEFT JOIN categories c ON c.id = p.category_id
+      WHERE p.slug = ? AND p.status = 'published'`).bind(String(params.slug || "")).first();
+    if (!post) return new Response("Artigo não encontrado.", { status: 404, headers: { "Cache-Control": "no-store" } });
+
+    post.cover_image_url = optionalSafeUrl(post.cover_image_url);
+    post.social_image_url = optionalSafeUrl(post.social_image_url);
+    post.canonical_url = optionalSafeUrl(post.canonical_url);
+    const tagResult = await db.prepare(`SELECT t.name FROM tags t INNER JOIN post_tags pt ON pt.tag_id = t.id
+      WHERE pt.post_id = ? ORDER BY t.name`).bind(post.id).all();
+    const tags = (tagResult.results || []).map((tag) => tag.name);
+    const cleanContent = sanitizeArticleHtml(post.content_html || "");
+    const article = enrichArticleContent(cleanContent);
+
+    const relatedResult = await db.prepare(`SELECT p.id, p.title, p.slug, p.excerpt, p.cover_image_url, p.cover_alt, p.content_html,
+      c.name AS category_name
+      FROM posts p LEFT JOIN categories c ON c.id = p.category_id
+      WHERE p.status = 'published' AND p.id <> ?
+      ORDER BY CASE WHEN p.category_id = ? THEN 0 ELSE 1 END, p.published_at DESC, p.id DESC LIMIT 3`)
+      .bind(post.id, post.category_id || -1).all();
+    const relatedPosts = (relatedResult.results || []).map((related) => ({
+      ...related,
+      cover_image_url: optionalSafeUrl(related.cover_image_url),
+      reading_time: estimateReadingTimeFromHtml(related.content_html || ""),
+    }));
+
+    const html = renderDynamicArticlePage({ post, tags, contentHtml: article.html, headings: article.headings, relatedPosts });
+    return new Response(html, { headers: {
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "public, max-age=60, stale-while-revalidate=120",
+      "X-Content-Type-Options": "nosniff",
+      "Referrer-Policy": "strict-origin-when-cross-origin",
+    } });
+  } catch (error) {
+    console.error("Falha ao renderizar artigo dinâmico:", error?.message || "erro desconhecido");
+    return new Response("Não foi possível carregar este artigo.", { status: 500, headers: { "Cache-Control": "no-store" } });
+  }
 }

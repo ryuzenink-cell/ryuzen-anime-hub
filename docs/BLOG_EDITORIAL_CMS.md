@@ -49,3 +49,7 @@ As rotas administrativas exigem sessão `HttpOnly`; mutações também exigem to
 - Posts novos: editor visual + D1 + página SSR.
 - Apenas artigos com status `published` aparecem publicamente.
 - Não existe exclusão definitiva no painel nesta versão.
+
+## Template público e sincronização da listagem
+
+A padronização visual dos posts dinâmicos, o sumário automático H2/H3 e a integração imediata de publicações do D1 com `/blog/` estão detalhados em `docs/BLOG_CMS_PUBLICATION_SYNC.md`.

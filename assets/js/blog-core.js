@@ -218,13 +218,20 @@ async function loadBlogPosts() {
       return null;
     }
   }));
-  const dynamicPosts = await fetchJson("/api/posts?limit=40")
+  const dynamicPosts = await fetch("/api/posts?limit=40", {
+    cache: "no-store",
+    headers: { Accept: "application/json" },
+  })
+    .then((response) => response.ok ? response.json() : Promise.reject(new Error(`Falha na API dinâmica: ${response.status}`)))
     .then((result) => (result.posts || []).map(normalizeDynamicBlogPost).filter(Boolean))
-    .catch(() => []);
+    .catch((error) => {
+      console.warn("Posts dinâmicos indisponíveis; mantendo artigos estáticos.", error);
+      return [];
+    });
   const combined = [...posts.filter(Boolean), ...dynamicPosts];
   const seen = new Set();
   return sortBlogPosts(combined.filter((post) => {
-    const key = post.url || post.path || post.slug;
+    const key = String(post.canonical || post.url || post.path || post.slug || "").replace(/\/$/, "");
     if (!key || seen.has(key)) return false;
     seen.add(key);
     return true;
@@ -251,8 +258,9 @@ function normalizeDynamicBlogPost(entry) {
     author: entry.author_name || "Ryuzen Anime Hub",
     cover: entry.cover_image_url || "",
     coverAlt: entry.cover_alt || `Imagem de capa do post ${entry.title}`,
-    tags: [],
-    readingTime: 1,
+    tags: Array.isArray(entry.tags) ? entry.tags : [],
+    readingTime: Number(entry.readingTime) || 1,
+    canonical: entry.canonical_url || entry.url || `/blog/p/${entry.slug}/`,
     content: "",
   };
 }
@@ -275,6 +283,7 @@ function normalizeBlogManifestPost(entry) {
     coverAlt: entry.coverAlt || `Imagem de capa do post ${entry.title}`,
     tags: parseBlogTags(entry.tags),
     readingTime: Number(entry.readingTime) || 1,
+    canonical: entry.url || "",
     content: "",
   };
 }
