@@ -342,16 +342,36 @@ function renderPromoSidebars() {
   `;*/
 
   wrapper.innerHTML = `
-  <a class="promo-rail promo-rail-image promo-rail-left" href="${RYZEN_ROUTES.blog}">
+  <a class="promo-rail promo-rail-image promo-rail-left" data-banner-placement="blog_sidebar_left" href="${RYZEN_ROUTES.blog}">
     <img src="${assetPath("images/banners/banner-left.png")}" alt="Leia o blog do Ryuzen Anime Hub">
   </a>
 
-  <a class="promo-rail promo-rail-image promo-rail-right" href="${RYZEN_ROUTES.guides}">
+  <a class="promo-rail promo-rail-image promo-rail-right" data-banner-placement="blog_sidebar_right" href="${RYZEN_ROUTES.guides}">
     <img src="${assetPath("images/banners/banner-right.png")}" alt="Guias do Ryuzen Anime Hub">
   </a>
 `;
 
   document.body.appendChild(wrapper);
+  loadConfiguredBanners(wrapper);
+}
+
+async function loadConfiguredBanners(wrapper) {
+  try {
+    const response = await fetch(sitePath("api/banners"), { cache: "no-store", headers: { Accept: "application/json" } });
+    if (!response.ok) return;
+    const data = await response.json();
+    (data.banners || []).forEach((banner) => {
+      const slot = wrapper.querySelector(`[data-banner-placement="${banner.placement}"]`);
+      if (!slot) return;
+      const image = slot.querySelector("img");
+      const src = safeUrl(banner.image_url, "");
+      const href = safeUrl(banner.target_url, "");
+      if (!src || !href || !banner.alt_text) return;
+      slot.href = href;
+      image.src = src;
+      image.alt = banner.alt_text;
+    });
+  } catch { /* O banner padrão permanece como fallback. */ }
 }
 
 function isStandaloneApp() {

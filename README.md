@@ -261,3 +261,7 @@ O blog possui um CMS progressivo para novos artigos, preservando os posts Markdo
 - posts legados em Markdown continuam pré-renderizados e operacionais.
 
 Antes do deploy, aplique `migrations/0001_blog_editor_cms.sql` quando necessário e `migrations/0002_admin_auth_security.sql`, configure os Secrets administrativos e, preferencialmente, o Cloudflare Turnstile. Consulte `docs/BLOG_EDITORIAL_CMS.md` e `docs/ADMIN_AUTH_SECURITY.md`.
+
+## Central Administrativa (v1)
+
+A área `/admin/` agora reúne dashboard, posts, SEO Assistant, taxonomias, banners e segurança/auditoria. Antes do deploy desta versão, execute no D1 de produção a migration `migrations/0003_admin_dashboard_banners_taxonomies.sql`. Consulte `docs/ADMIN_CONTROL_CENTER.md` para rotas, APIs e roteiro de validação.

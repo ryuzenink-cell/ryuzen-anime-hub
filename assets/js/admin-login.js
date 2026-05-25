@@ -34,7 +34,7 @@ form?.addEventListener("submit", async (event) => {
     if (!response.ok || !data.authenticated) throw new Error("E-mail ou credenciais inválidos.");
     form.reset();
     const next = new URLSearchParams(location.search).get("next");
-    window.location.replace(next && next.startsWith("/admin/blog") ? next : "/admin/blog/");
+    window.location.replace(next && next.startsWith("/admin/") && !next.startsWith("/admin/login") ? next : "/admin/");
   } catch { setMessage("E-mail ou credenciais inválidos."); if (window.turnstile) window.turnstile.reset(); }
   finally { button.disabled = false; button.textContent = "Entrar"; }
 });

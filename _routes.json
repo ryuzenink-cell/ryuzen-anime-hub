@@ -4,7 +4,8 @@
     "/api/*",
     "/blog/p/*",
     "/sitemap-blog-dynamic.xml",
-    "/admin/*"
+    "/admin/*",
+    "/admin"
   ],
   "exclude": [
     "/assets/*",

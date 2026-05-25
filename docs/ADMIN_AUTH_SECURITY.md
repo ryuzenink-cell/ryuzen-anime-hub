@@ -4,7 +4,7 @@
 
 O painel editorial deixou de utilizar a chave administrativa no navegador para autenticar cada requisição. O fluxo atual é:
 
-1. O visitante acessa `/admin/blog/`.
+1. O visitante acessa qualquer página protegida, como `/admin/` ou `/admin/blog/`.
 2. O middleware de Pages Functions verifica o cookie de sessão.
 3. Sem sessão válida, o servidor redireciona para `/admin/login/` antes de servir o HTML do painel.
 4. No login, o único administrador informa e-mail, senha e chave administrativa adicional.
@@ -86,7 +86,7 @@ Quando as duas configurações existem, o formulário mostra o widget e o endpoi
 - Somente hash HMAC do token de sessão é gravado no D1.
 - Apenas uma sessão administrativa ativa por vez; novo login revoga sessões anteriores.
 - CSRF exigido em criação, edição, publicação, arquivamento, imagens e logout.
-- Middleware protege os HTMLs de `/admin/blog/*` e a API `/api/admin/*`.
+- Middleware protege todos os HTMLs de `/admin/*`, exceto `/admin/login/`, e a API `/api/admin/*`.
 - Cinco falhas em 15 minutos criam bloqueio por 30 minutos por origem/identidade hash.
 - Auditoria registra login, logout, criação, edição, publicação, arquivamento e alterações de imagens sem armazenar credenciais.
 - Headers `no-store`, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy` e CSP nas páginas administrativas.
@@ -104,9 +104,13 @@ Quando as duas configurações existem, o formulário mostra o widget e o endpoi
 
 ### Protegidas
 
+- `/admin/`
 - `/admin/blog/`
 - `/admin/blog/novo/`
 - `/admin/blog/editar/?id=ID`
+- `/admin/taxonomias/`
+- `/admin/banners/`
+- `/admin/seguranca/`
 - `/api/admin/*`
 
 ## Teste local

@@ -1,6 +1,6 @@
 const SITE_URL = "https://anime.ryuzen.ink";
 const SITE_NAME = "Ryuzen Anime Hub";
-const ASSET_VERSION = "20260525cms-sync";
+const ASSET_VERSION = "20260526admin-center";
 
 export function escapeHtml(value = "") {
   return String(value).replace(/[&<>'"]/g, (character) => ({

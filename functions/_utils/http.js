@@ -40,9 +40,10 @@ export class RequestError extends Error {
 
 export function handleError(error) {
   if (error instanceof RequestError) return apiError(error.message, error.status);
-  if (String(error?.message || "").includes("UNIQUE constraint failed: posts.slug")) {
-    return apiError("Já existe um artigo com este slug.", 409);
-  }
+  const message = String(error?.message || "");
+  if (message.includes("UNIQUE constraint failed: posts.slug")) return apiError("Já existe um artigo com este slug.", 409);
+  if (message.includes("UNIQUE constraint failed: categories.slug") || message.includes("UNIQUE constraint failed: categories.name")) return apiError("Já existe uma categoria com este nome ou slug.", 409);
+  if (message.includes("UNIQUE constraint failed: tags.slug") || message.includes("UNIQUE constraint failed: tags.name")) return apiError("Já existe uma tag com este nome ou slug.", 409);
   console.error("Falha controlada na API editorial:", error?.message || "erro desconhecido");
   return apiError("Não foi possível concluir esta operação.", 500);
 }

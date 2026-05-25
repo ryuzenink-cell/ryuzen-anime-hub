@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v1.3.0-blog-cms-sync";
+const CACHE_VERSION = "v1.4.0-admin-center";
 const STATIC_CACHE = `ryuzen-static-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `ryuzen-runtime-${CACHE_VERSION}`;
 

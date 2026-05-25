@@ -1,26 +1,15 @@
-const adminListState = { status: "", query: "" };
-const postsTable = document.getElementById("adminPostsTable");
-const statusButtons = document.querySelectorAll("[data-status-filter]");
-const searchInput = document.getElementById("adminPostSearch");
-requireAdminSession(loadAdminPosts);
-document.getElementById("adminLogout")?.addEventListener("click", logoutAdmin);
-statusButtons.forEach((button) => button.addEventListener("click", () => { adminListState.status = button.dataset.statusFilter; statusButtons.forEach((b) => b.classList.toggle("active", b === button)); loadAdminPosts(); }));
-searchInput?.addEventListener("input", () => { adminListState.query = searchInput.value.trim(); loadAdminPosts(); });
-async function loadAdminPosts() {
-  postsTable.innerHTML = `<div class="admin-empty">Carregando publicações...</div>`;
-  try {
-    const query = new URLSearchParams({ q: adminListState.query, status: adminListState.status });
-    const result = await adminFetch(`/api/admin/posts?${query}`);
-    renderRows(result.posts || []);
-  } catch (error) { postsTable.innerHTML = `<div class="admin-alert error">${escapeAdmin(error.message)}</div>`; }
-}
-function renderRows(posts) {
-  if (!posts.length) { postsTable.innerHTML = `<div class="admin-empty"><h3>Nenhuma publicação encontrada</h3><p>Crie um novo artigo para começar a alimentar o editorial.</p><a class="btn primary" href="/admin/blog/novo/">Novo post</a></div>`; return; }
-  postsTable.innerHTML = `<div class="admin-post-table"><div class="admin-post-row header"><span>Título</span><span>Status</span><span>Categoria</span><span>Atualização</span><span>Ações</span></div>${posts.map((post) => `<article class="admin-post-row"><div><strong>${escapeAdmin(post.title)}</strong><small>/${escapeAdmin(post.slug)}</small></div><span class="status-pill ${escapeAdmin(post.status)}">${statusLabel(post.status)}</span><span>${escapeAdmin(post.category_name || "Sem categoria")}</span><span>${formatAdminDate(post.updated_at)}</span><div class="row-actions"><a class="btn ghost small" href="/admin/blog/editar/?id=${post.id}">Editar</a>${post.status === "published" ? `<a class="btn ghost small" href="/blog/p/${escapeAdmin(post.slug)}/" target="_blank" rel="noopener">Ver</a>` : `<button class="btn primary small" data-publish="${post.id}">Publicar</button>`}<button class="btn danger small" data-archive="${post.id}">Arquivar</button></div></article>`).join("")}</div>`;
-  postsTable.querySelectorAll("[data-publish]").forEach((button) => button.addEventListener("click", () => updateStatus(button.dataset.publish, "publish")));
-  postsTable.querySelectorAll("[data-archive]").forEach((button) => button.addEventListener("click", () => updateStatus(button.dataset.archive, "archive")));
-}
-async function updateStatus(id, action) { if (!confirm(action === "publish" ? "Publicar este artigo agora?" : "Arquivar este artigo?")) return; try { await adminFetch(`/api/admin/posts/${id}/${action}`, { method: "POST" }); loadAdminPosts(); } catch (error) { alert(error.message); } }
-function statusLabel(status) { return ({draft:"Rascunho",published:"Publicado",archived:"Arquivado",scheduled:"Agendado"})[status] || status; }
-function formatAdminDate(value) { return value ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium", timeStyle: "short" }).format(new Date(value + (value.includes("Z") ? "" : "Z"))) : "—"; }
-function escapeAdmin(value="") { return String(value).replace(/[&<>'"]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
+const state = { status:"", query:"", category:"", tag:"", quality:"", order:"updated_desc" };
+const root=document.getElementById("adminPostsTable");
+requireAdminSession(async ()=>{ await loadFilterData(); loadPosts(); });
+document.querySelectorAll("[data-status-filter]").forEach(btn=>btn.addEventListener("click",()=>{state.status=btn.dataset.statusFilter;document.querySelectorAll("[data-status-filter]").forEach(x=>x.classList.toggle("active",x===btn));loadPosts();}));
+document.getElementById("adminPostSearch")?.addEventListener("input",e=>{state.query=e.target.value.trim();loadPosts();});
+[["filterCategory","category"],["filterTag","tag"],["filterQuality","quality"],["sortPosts","order"]].forEach(([id,key])=>document.getElementById(id)?.addEventListener("change",e=>{state[key]=e.target.value;loadPosts();}));
+async function loadFilterData(){ try { const [cats,tags]=await Promise.all([adminFetch("/api/admin/categories"),adminFetch("/api/admin/tags")]); document.getElementById("filterCategory").insertAdjacentHTML("beforeend", cats.categories.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("")); document.getElementById("filterTag").insertAdjacentHTML("beforeend", tags.tags.map(t=>`<option value="${esc(t.slug)}">${esc(t.name)}</option>`).join("")); } catch {} }
+async function loadPosts(){ root.innerHTML=`<div class="admin-empty">Carregando publicações...</div>`; try { const p=new URLSearchParams({status:state.status,q:state.query,category:state.category,tag:state.tag,order:state.order}); if(state.quality==="seo") p.set("seo","missing"); if(state.quality==="cover") p.set("cover","missing"); const result=await adminFetch(`/api/admin/posts?${p}`); render(result.posts||[]); } catch(error){ root.innerHTML=`<div class="admin-alert error">${esc(error.message)}</div>`; } }
+function render(posts){ if(!posts.length){ root.innerHTML=`<div class="admin-empty"><h3>Nenhuma publicação encontrada</h3><p>Crie um novo artigo ou ajuste os filtros.</p><a class="btn primary" href="/admin/blog/novo/">Novo post</a></div>`;return;} root.innerHTML=`<div class="admin-post-table"><div class="admin-post-row header"><span>Título</span><span>Status</span><span>Categoria</span><span>Atualização</span><span>Ações</span></div>${posts.map(row).join("")}</div>`; bindActions(); }
+function row(post){ return `<article class="admin-post-row"><div><strong>${esc(post.title)}</strong><small>/${esc(post.slug)}</small><div class="quality-badges">${post.seo_incomplete?'<span class="badge-soft">SEO incompleto</span>':''}${!post.cover_image_url?'<span class="badge-soft">Sem capa</span>':''}</div></div><span class="status-pill ${esc(post.status)}">${statusLabel(post.status)}</span><span>${esc(post.category_name||"Sem categoria")}</span><span>${esc(formatDate(post.updated_at))}</span><div class="row-actions"><a class="btn ghost small" href="/admin/blog/editar/?id=${post.id}">Editar</a>${post.status === "published" ? `<a class="btn ghost small" href="/blog/p/${esc(post.slug)}/" target="_blank" rel="noopener">Ver</a><button class="btn ghost small" data-copy="${esc(`/blog/p/${post.slug}/`)}">Copiar URL</button>` : `<button class="btn primary small" data-action="publish" data-id="${post.id}">Publicar</button>`}<button class="btn ghost small" data-action="duplicate" data-id="${post.id}">Duplicar</button>${post.status!=="archived"?`<button class="btn danger small" data-action="archive" data-id="${post.id}">Arquivar</button>`:""}</div></article>`; }
+function bindActions(){ root.querySelectorAll("[data-action]").forEach(btn=>btn.addEventListener("click",()=>action(btn.dataset.id,btn.dataset.action))); root.querySelectorAll("[data-copy]").forEach(btn=>btn.addEventListener("click",async()=>{ await navigator.clipboard.writeText(`${location.origin}${btn.dataset.copy}`).catch(()=>null); btn.textContent="Copiado"; })); }
+async function action(id,name){ const messages={publish:"Publicar este artigo agora?",archive:"Arquivar este artigo?",duplicate:"Criar uma cópia como rascunho?"}; if(!confirm(messages[name])) return; try { const result=await adminFetch(`/api/admin/posts/${id}/${name}`,{method:"POST"}); if(name==="duplicate" && result.id && confirm("Cópia criada. Deseja editá-la agora?")) location.href=`/admin/blog/editar/?id=${result.id}`; else loadPosts(); } catch(e){ alert(e.message); } }
+function statusLabel(s){return({draft:"Rascunho",published:"Publicado",archived:"Arquivado",scheduled:"Agendado"})[s]||s;}
+function formatDate(v){return v?new Intl.DateTimeFormat("pt-BR",{dateStyle:"short",timeStyle:"short"}).format(new Date(String(v).includes("T")?v:`${v.replace(" ","T")}Z`)):"—";}
+function esc(v=""){return String(v).replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));}
