@@ -395,7 +395,8 @@ function renderPromoSidebars() {
   if (existing) existing.remove();
 
   const wrapper = document.createElement("aside");
-  wrapper.className = "promo-sidebars";
+  const promoContext = (currentRoute === "blog" && document.querySelector(".blog-article")) ? "blogPost" : currentRoute;
+  wrapper.className = `promo-sidebars promo-context-${promoContext}`;
   wrapper.setAttribute("aria-label", "Banners promocionais Ryuzen");
 
   /*wrapper.innerHTML = `

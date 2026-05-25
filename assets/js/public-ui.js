@@ -1,5 +1,5 @@
 (() => {
-  const PUBLIC_UI_VERSION = "20260526public-ui-v1";
+  const PUBLIC_UI_VERSION = "20260527article-tools-v3";
 
   function icon(name) {
     const icons = {
@@ -11,6 +11,9 @@
       heart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.8 8.6c0 5-8.8 10.4-8.8 10.4S3.2 13.6 3.2 8.6A4.7 4.7 0 0112 6.5a4.7 4.7 0 018.8 2.1z"/></svg>',
       up: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>',
       copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15H4a1 1 0 01-1-1V4a1 1 0 011-1h10a1 1 0 011 1v1"/></svg>',
+      whatsapp: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M19.1 4.8A9 9 0 005 15.4L4 20l4.8-1.2A9 9 0 1019.1 4.8z"/><path d="M9.2 8.4c-.3 0-.7.4-.8.8-.5 1.7 1 4.4 3.3 6 2.1 1.5 4.4 1.7 5.2.6.2-.3.3-.8.1-1l-1.7-.9c-.3-.1-.5-.1-.7.2l-.5.6c-.2.2-.5.2-.8.1-1.2-.5-2.4-1.6-3-2.8-.1-.3-.1-.5.1-.7l.5-.5c.2-.2.2-.5.1-.7l-.8-1.6c-.2-.2-.6-.2-1-.1z"/></svg>',
+      x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4l16 16M20 4L4 20"/></svg>',
+      chevron: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>',
     };
     return icons[name] || "";
   }
@@ -165,14 +168,16 @@
     const header = article.querySelector(".blog-article-header");
     const toc = article.querySelector(".blog-toc");
     const content = article.querySelector(".blog-content");
+
     if (header && !article.querySelector(".article-tools")) {
       const tools = document.createElement("nav");
       tools.className = "article-tools";
-      tools.setAttribute("aria-label", "Ferramentas do artigo");
+      tools.setAttribute("aria-label", "Compartilhar artigo");
       tools.innerHTML = `
-        <button type="button" class="article-tool" data-share-copy>${icon("copy")} Copiar link</button>
-        <a class="article-tool" data-share-whatsapp target="_blank" rel="noopener noreferrer">WhatsApp</a>
-        <a class="article-tool" data-share-x target="_blank" rel="noopener noreferrer">X</a>`;
+        <p class="article-tools-label">Compartilhar</p>
+        <button type="button" class="article-tool" data-share-copy>${icon("copy")}<span>Copiar link</span></button>
+        <a class="article-tool" data-share-whatsapp target="_blank" rel="noopener noreferrer" aria-label="Compartilhar no WhatsApp">${icon("whatsapp")}<span>WhatsApp</span></a>
+        <a class="article-tool" data-share-x target="_blank" rel="noopener noreferrer" aria-label="Compartilhar no X">${icon("x")}<span>X</span></a>`;
       header.after(tools);
       tools.querySelector("[data-share-copy]").addEventListener("click", async () => {
         try { await navigator.clipboard.writeText(location.href); toast("Link copiado."); }
@@ -183,22 +188,48 @@
       tools.querySelector("[data-share-whatsapp]").href = `https://wa.me/?text=${shareText}%20${shareUrl}`;
       tools.querySelector("[data-share-x]").href = `https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}`;
     }
+
     if (toc && toc.querySelectorAll("a").length > 4) {
-      toc.classList.add("collapsible");
-      if (!toc.querySelector(".toc-toggle")) {
-        const button = document.createElement("button");
-        button.className = "toc-toggle";
-        button.type = "button";
-        button.setAttribute("aria-expanded", "false");
-        button.innerHTML = '<span>Ver tópicos deste artigo</span><span aria-hidden="true">＋</span>';
-        toc.prepend(button);
-        button.addEventListener("click", () => {
-          const isOpen = toc.classList.toggle("open");
+      const list = toc.querySelector("ol");
+      const mobile = window.matchMedia("(max-width: 700px)");
+      if (list) {
+        list.id = list.id || "article-toc-items";
+        let button = toc.querySelector(".toc-toggle");
+        if (!button) {
+          button = document.createElement("button");
+          button.className = "toc-toggle";
+          button.type = "button";
+          button.setAttribute("aria-controls", list.id);
+          button.innerHTML = `<span class="toc-toggle-label">Ver tópicos deste artigo</span><span class="toc-toggle-icon" aria-hidden="true">${icon("chevron")}</span>`;
+          toc.prepend(button);
+        }
+        const setOpen = (isOpen) => {
+          toc.classList.toggle("open", isOpen);
           button.setAttribute("aria-expanded", String(isOpen));
-          button.lastElementChild.textContent = isOpen ? "−" : "＋";
+          const label = button.querySelector(".toc-toggle-label");
+          if (label) label.textContent = isOpen ? "Ocultar tópicos" : "Ver tópicos deste artigo";
+          if (mobile.matches) list.hidden = !isOpen;
+          else list.hidden = false;
+        };
+        const syncMode = () => {
+          if (mobile.matches) {
+            toc.classList.add("collapsible");
+            setOpen(false);
+          } else {
+            toc.classList.remove("collapsible", "open");
+            button.setAttribute("aria-expanded", "false");
+            list.hidden = false;
+          }
+        };
+        button.addEventListener("click", () => {
+          if (!mobile.matches) return;
+          setOpen(!toc.classList.contains("open"));
         });
+        mobile.addEventListener?.("change", syncMode);
+        syncMode();
       }
     }
+
     if (content) {
       const progress = document.createElement("progress");
       progress.className = "reading-progress";

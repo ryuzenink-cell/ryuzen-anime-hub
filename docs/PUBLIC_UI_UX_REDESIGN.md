@@ -133,3 +133,17 @@ Foram geradas capturas da home em desktop/mobile, ranking e artigo mobile durant
 ## Validação recomendada após deploy
 
 Além do roteiro funcional abaixo, validar visualmente em produção em 1440 px, 1280 px, 768 px, 390 px e 360 px, com atenção especial a capas reais da API, drawer mobile, bottom navigation, cards com ação rápida e carregamento de dados externos.
+
+## Correção posterior — posicionamento dos banners laterais
+
+O redesign ampliou a largura máxima pública de `1160px` para `1240px`, enquanto a regra legada dos banners fixos ainda posicionava os rails com base na largura anterior. Em telas desktop, isso podia fazer os banners encostarem ou invadirem os cards laterais das seções da home.
+
+A correção aplicada recalcula os offsets dos rails com `--public-max`, preserva um gutter real entre promoção e conteúdo e oculta os banners quando a viewport não comporta com segurança os dois rails e a coluna principal. O versionamento dos assets e a versão do service worker também foram atualizados para impedir que navegadores mantenham a regra antiga em cache.
+
+
+## Ajuste v7 — Blog e ferramentas do artigo
+
+- A página inicial do blog deixa de exibir rails laterais: seu hero usa toda a área editorial e os banners sobrepunham o título em telas largas. Os banners continuam disponíveis em páginas compatíveis, incluindo artigos quando há margem lateral segura.
+- O cartão de compartilhamento dos artigos deixou de ser `sticky`; agora permanece no topo do post, sem acompanhar a rolagem nem disputar espaço com a leitura.
+- Os atalhos de compartilhamento agora possuem ícones consistentes para copiar link, WhatsApp e X.
+- O sumário móvel recebeu controle expansível real, com `aria-controls`, `aria-expanded`, rótulo dinâmico e lista efetivamente aberta/fechada no JavaScript.

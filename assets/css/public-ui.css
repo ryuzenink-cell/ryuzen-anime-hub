@@ -321,11 +321,44 @@ body:not(.admin-page):has([data-header]) .container {
 .public-site .blog-content img { height:auto; max-height:none; object-fit:contain; border-radius: var(--public-radius-sm); }
 .public-site .blog-toc { border-radius: 18px; background: rgba(115,141,255,.075); }
 .article-tools {
-  position: sticky; top: 90px; display:flex; flex-wrap:wrap; gap:8px; margin: 0 0 24px;
-  padding: 9px; border-radius: 999px; border:1px solid var(--public-border); background: rgba(8,11,23,.82); backdrop-filter: blur(18px); z-index: 5;
+  position: static;
+  width: fit-content;
+  max-width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 28px;
+  padding: 8px;
+  border-radius: 18px;
+  border: 1px solid var(--public-border);
+  background: rgba(10, 14, 29, .68);
 }
-.article-tool { min-height:40px; padding: 8px 13px; border-radius:999px; color:var(--public-muted); background:transparent; border:0; font-weight:750; display:inline-flex; gap:7px; align-items:center; }
-.article-tool:hover { color:var(--public-text); background:rgba(255,255,255,.06); }
+.article-tools-label {
+  margin: 0 5px 0 8px;
+  color: var(--public-muted);
+  font-size: .72rem;
+  font-weight: 850;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.article-tool {
+  min-height: 44px;
+  padding: 9px 14px;
+  border-radius: 12px;
+  color: var(--public-text);
+  background: rgba(255,255,255,.035);
+  border: 1px solid transparent;
+  font-weight: 750;
+  display: inline-flex;
+  gap: 9px;
+  align-items: center;
+  transition: background var(--public-transition), border-color var(--public-transition), transform var(--public-transition);
+}
+.article-tool svg { width: 20px; height: 20px; color: var(--public-primary-soft); flex: none; }
+.article-tool:hover { color: var(--public-text); background: rgba(115,141,255,.12); border-color: var(--public-border-bright); transform: translateY(-1px); }
+.article-tool:focus-visible { background: rgba(115,141,255,.14); border-color: var(--public-border-bright); }
+.toc-toggle { display: none; }
 .reading-progress { appearance:none; position:fixed; left:0; top:0; z-index:200; height:3px; width:100%; border:0; background:transparent; pointer-events:none; }
 .reading-progress::-webkit-progress-bar { background:transparent; }
 .reading-progress::-webkit-progress-value { background:linear-gradient(90deg,var(--public-primary),var(--public-accent)); }
@@ -349,9 +382,36 @@ body:not(.admin-page):has([data-header]) .container {
 .footer-links a:hover { color:var(--public-text); }
 .footer-bottom { padding-top:22px; display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; color:var(--public-muted); font-size:.85rem; }
 
-/* Promos */
-.public-site .promo-rail { border-radius: 22px; opacity:.9; transition: transform var(--public-transition), opacity var(--public-transition), border-color var(--public-transition); }
-.public-site .promo-rail:hover { opacity:1; }
+/* Promos — rails stay outside the enlarged 1240px public container. */
+.public-site .promo-rail {
+  border-radius: 22px;
+  opacity: .9;
+  transition: transform var(--public-transition), opacity var(--public-transition), border-color var(--public-transition);
+}
+.public-site .promo-rail:hover { opacity: 1; }
+
+/*
+ * The original banner offsets were calculated for the former 1160px layout.
+ * Ryuzen Discovery expands public containers to 1240px, so the legacy offset
+ * placed fixed rails over the first/last anime cards. Keep a real gutter
+ * between promotional rails and the public content column.
+ */
+@media (min-width: 1641px) {
+  .public-site .promo-rail-left {
+    left: max(18px, calc(50% - (var(--public-max) / 2) - 176px));
+  }
+  .public-site .promo-rail-right {
+    right: max(18px, calc(50% - (var(--public-max) / 2) - 176px));
+  }
+}
+
+/* The editorial landing hero uses its full canvas; rails would cover its headline. */
+.public-site .promo-context-blog { display: none !important; }
+
+/* If there is no safe side gutter, favor reading/exploration over promotion. */
+@media (max-width: 1640px) {
+  .public-site .promo-sidebars { display: none !important; }
+}
 
 /* State / toasts */
 .public-site .state { padding: clamp(30px,6vw,52px); border-style: solid; }
@@ -415,11 +475,22 @@ body:not(.admin-page):has([data-header]) .container {
   .public-site .ranking-row { grid-template-columns:34px 54px minmax(0,1fr); gap:10px; }
   .ranking-actions { grid-column:1 / -1; justify-content:flex-end; }
   .detail-actions .btn { flex:1 1 150px; }
-  .article-tools { position:static; border-radius:16px; }
-  .public-site .blog-toc.collapsible ol { display:none; }
-  .public-site .blog-toc.collapsible.open ol { display:grid; }
-  .toc-toggle { width:100%; display:flex; align-items:center; justify-content:space-between; padding:0; color:var(--public-text); background:transparent; font-weight:800; text-transform:uppercase; letter-spacing:.06em; }
+  .article-tools { width:100%; padding:8px; border-radius:16px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; }
+  .article-tools-label { grid-column:1 / -1; margin: 3px 6px 2px; }
+  .article-tool { justify-content:center; padding:9px 8px; font-size:.88rem; }
+  .article-tool svg { width:19px; height:19px; }
   .public-site .blog-toc.collapsible .blog-toc-title { display:none; }
+  .toc-toggle {
+    width:100%; display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:14px 15px; border:1px solid var(--public-border); border-radius:13px;
+    color:var(--public-text); background:rgba(255,255,255,.035); font-weight:800;
+    font-size:.9rem; letter-spacing:.02em; text-align:left;
+  }
+  .toc-toggle:hover, .toc-toggle:focus-visible { background:rgba(115,141,255,.12); border-color:var(--public-border-bright); }
+  .toc-toggle-icon { width:22px; height:22px; display:grid; place-items:center; color:var(--public-primary-soft); transition:transform var(--public-transition); }
+  .toc-toggle-icon svg { width:20px; height:20px; }
+  .public-site .blog-toc.open .toc-toggle-icon { transform:rotate(180deg); }
+  .public-site .blog-toc.collapsible ol { margin-top:14px; }
   .footer-premium-grid { grid-template-columns:1fr; gap:28px; }
   .footer-brand { grid-column:auto; }
   .home-cta-panel { grid-template-columns:1fr; }
