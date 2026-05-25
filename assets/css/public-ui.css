@@ -272,7 +272,7 @@ body:not(.admin-page):has([data-header]) .container {
 .quick-save-mini { width:46px; padding:0; }
 
 /* Page heroes/controls */
-.public-site .page-hero { padding: clamp(42px, 7vw, 72px) 0 25px; max-width: 920px; }
+.public-site .page-hero { padding: clamp(42px, 7vw, 72px) 0 25px; }
 .public-site .page-hero h1 { font-size: clamp(2.25rem, 5vw, 4.35rem); margin-bottom: 14px; }
 .public-site .page-hero p:not(.eyebrow) { max-width: 640px; font-size: 1.05rem; }
 .page-toolbar {
@@ -312,6 +312,31 @@ body:not(.admin-page):has([data-header]) .container {
 .list-progress::-moz-progress-bar { background:linear-gradient(90deg,var(--public-primary),var(--public-accent)); border-radius:99px; }
 
 /* Blog and article */
+/*
+ * Layout contract: the blog landing page owns the complete public container.
+ * Promotional rails are never part of this grid and cannot reserve horizontal space.
+ * Articles keep their own reading-focused layout and may opt into rails separately.
+ */
+.public-site.blog-index-page .blog-page-hero {
+  width: 100%;
+  max-width: none;
+  padding-top: clamp(44px, 6vw, 72px);
+  padding-bottom: clamp(24px, 4vw, 42px);
+}
+.public-site.blog-index-page .blog-hero-grid {
+  grid-template-columns: minmax(400px, 1fr) minmax(350px, 468px);
+  align-items: center;
+  gap: clamp(28px, 5vw, 62px);
+}
+.public-site.blog-index-page .blog-hero-grid > :first-child { max-width: 690px; }
+.public-site.blog-index-page .blog-hero-grid h1 {
+  max-width: 12ch;
+  font-size: clamp(2.7rem, 4.7vw, 4.9rem);
+  line-height: .98;
+}
+.public-site.blog-index-page #blogFeatured { width: 100%; align-self: center; }
+.public-site.blog-index-page .section.compact-section { padding: clamp(22px, 3vw, 36px) 0; }
+.public-site.blog-index-page .blog-grid { align-items: stretch; }
 .public-site .blog-page-hero { padding-top: clamp(42px,7vw,76px); }
 .public-site .blog-featured-card { border-radius: var(--public-radius-lg); overflow:hidden; padding:22px; }
 .public-site .blog-card { border-radius: var(--public-radius); }
@@ -405,7 +430,8 @@ body:not(.admin-page):has([data-header]) .container {
   }
 }
 
-/* The editorial landing hero uses its full canvas; rails would cover its headline. */
+/* Blog landing pages never render rails; this CSS is a safety net for cached/legacy JS. */
+.public-site.blog-index-page .promo-sidebars,
 .public-site .promo-context-blog { display: none !important; }
 
 /* If there is no safe side gutter, favor reading/exploration over promotion. */
@@ -443,6 +469,12 @@ body:not(.admin-page):has([data-header]) .container {
   .home-value-strip { grid-template-columns:1fr; }
   .footer-premium-grid { grid-template-columns:1fr 1fr; }
   .footer-brand { grid-column:1 / -1; }
+}
+@media (max-width: 980px) {
+  .public-site.blog-index-page .blog-hero-grid { grid-template-columns: 1fr; gap: 24px; }
+  .public-site.blog-index-page .blog-hero-grid > :first-child { max-width: none; }
+  .public-site.blog-index-page .blog-hero-grid h1 { max-width: 13ch; }
+  .public-site.blog-index-page #blogFeatured { max-width: 600px; }
 }
 @media (max-width: 720px) {
   body.public-site { padding-bottom:70px; }

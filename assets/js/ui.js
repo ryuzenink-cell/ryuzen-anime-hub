@@ -389,6 +389,11 @@ function renderPromoSidebars() {
 
   const currentRoute = getCurrentRouteKey();
 
+  // The blog landing layout deliberately uses the full-width editorial canvas.
+  // Do not append fixed promo rails there; they previously covered the hero or
+  // left a false gutter after being hidden via CSS. Articles remain eligible.
+  if (document.body.dataset.publicLayout === "blog-index") return;
+
   if (!allowedRoutes.includes(currentRoute)) return;
 
   const existing = document.querySelector(".promo-sidebars");

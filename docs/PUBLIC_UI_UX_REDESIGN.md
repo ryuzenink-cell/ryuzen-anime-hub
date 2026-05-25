@@ -147,3 +147,28 @@ A correção aplicada recalcula os offsets dos rails com `--public-max`, preserv
 - O cartão de compartilhamento dos artigos deixou de ser `sticky`; agora permanece no topo do post, sem acompanhar a rolagem nem disputar espaço com a leitura.
 - Os atalhos de compartilhamento agora possuem ícones consistentes para copiar link, WhatsApp e X.
 - O sumário móvel recebeu controle expansível real, com `aria-controls`, `aria-expanded`, rótulo dinâmico e lista efetivamente aberta/fechada no JavaScript.
+
+## Correção preventiva de layout da home editorial do blog — v8
+
+### Causa raiz
+
+A camada pública do redesign aplicava `max-width: 920px` diretamente a `.page-hero`. Na maioria das páginas, o hero já vive dentro de um container; em `/blog/`, no entanto, a seção `page-hero` envolve o container e o grid do post em destaque. A restrição foi aplicada à seção inteira, comprimindo o hero à esquerda e deixando um grande espaço vazio na página. A ocultação dos banners tratava somente a sobreposição visual e não removia essa causa estrutural.
+
+### Correção
+
+- A restrição global indevida foi removida de `.page-hero`.
+- A home editorial recebeu escopo explícito `blog-index-page` e `data-public-layout="blog-index"`.
+- O grid do hero de `/blog/` agora ocupa o container público completo e colapsa corretamente no responsivo.
+- Seções compactas da landing do blog receberam espaçamento próprio para evitar grandes vazios entre categorias e posts.
+- `renderPromoSidebars()` não cria banners na home editorial do blog; o CSS mantém uma proteção de fallback para navegadores com script antigo em cache.
+
+### Prevenção de regressão
+
+Foi adicionado `scripts/validate-public-layout.mjs`, executado por `npm run build` e `npm run precommit`. Ele interrompe o build caso:
+
+- a home do blog perca seu identificador de layout;
+- a regra global que limita o hero completo seja reintroduzida;
+- os rails promocionais possam voltar a ser criados na landing editorial;
+- a proteção CSS de fallback seja removida.
+
+Assim, futuras alterações visuais que reintroduzam o mesmo tipo de bug falharão antes do deploy.
