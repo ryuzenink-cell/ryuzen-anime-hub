@@ -17,6 +17,7 @@ const staticRoutes = [
   { path: "guides/proximos-animes/", file: "guides/proximos-animes/index.html", changefreq: "daily", priority: "0.9" },
   { path: "vendas-mangas/", file: "vendas-mangas/index.html", changefreq: "monthly", priority: "0.7" },
   { path: "blog/", file: "blog/index.html", changefreq: "daily", priority: "0.9" },
+  { path: "loja/", file: "loja/index.html", changefreq: "weekly", priority: "0.8" },
   { path: "my-list/", file: "my-list/index.html", changefreq: "monthly", priority: "0.5" },
 ];
 

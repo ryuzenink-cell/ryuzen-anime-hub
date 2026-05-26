@@ -265,3 +265,7 @@ Antes do deploy, aplique `migrations/0001_blog_editor_cms.sql` quando necessári
 ## Central Administrativa (v1)
 
 A área `/admin/` agora reúne dashboard, posts, SEO Assistant, taxonomias, banners e segurança/auditoria. Antes do deploy desta versão, execute no D1 de produção a migration `migrations/0003_admin_dashboard_banners_taxonomies.sql`. Consulte `docs/ADMIN_CONTROL_CENTER.md` para rotas, APIs e roteiro de validação.
+
+## Loja Ryuzen — vitrine afiliada
+
+A rota `/loja/` apresenta uma curadoria editorial de produtos para fãs de anime com links afiliados da Amazon, sem preços manuais ou checkout interno. A gestão fica disponível em `/admin/loja/`, incluindo produtos, banner da home e métricas agregadas de clique. Antes de usar a Loja em produção, aplique `migrations/0004_store_ryuzen.sql` no D1 vinculado como `BLOG_DB`. Consulte `docs/LOJA_RYUZEN_REFINEMENT_V2.md`.

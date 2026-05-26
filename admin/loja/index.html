@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Loja Ryuzen | Ryuzen Admin</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/assets/css/global.css?v=20260526-store-v2">
+  <link rel="stylesheet" href="/assets/css/components.css?v=20260526-store-v2">
+  <link rel="stylesheet" href="/assets/css/admin-shell.css?v=20260526-store-v2">
+  <link rel="stylesheet" href="/assets/css/admin-blog.css?v=20260526-store-v2">
+</head>
+<body data-admin-section="store">
+  <div class="admin-app">
+    <aside data-admin-nav></aside>
+    <main class="admin-content">
+      <button class="btn ghost admin-mobile-toggle" data-admin-menu type="button">☰ Menu</button>
+      <section class="admin-view">
+        <header class="admin-page-head">
+          <div>
+            <p class="eyebrow">Curadoria afiliada</p>
+            <h1>Loja Ryuzen</h1>
+            <p>Gerencie produtos recomendados, a divulgação na home e métricas não identificáveis.</p>
+          </div>
+          <div class="admin-page-head-actions">
+            <button class="btn primary" id="newProduct" type="button">Novo produto</button>
+            <a class="btn ghost" href="/loja/" target="_blank" rel="noopener noreferrer">Abrir Loja pública</a>
+            <span class="admin-session-badge">Sessão segura ativa</span>
+          </div>
+        </header>
+        <p id="storeFeedback" class="admin-alert hidden" role="status" aria-live="polite"></p>
+        <section id="storeMetrics" class="admin-stat-grid store-stat-grid" aria-label="Resumo da loja">
+          <article class="admin-stat"><span>Carregando</span><strong>—</strong></article>
+        </section>
+        <nav id="storeTabs" class="store-admin-tabs" aria-label="Seções da Loja">
+          <button class="store-admin-tab active" type="button" data-store-tab="products" aria-selected="true" aria-controls="storeProductsPanel">Produtos</button>
+          <button class="store-admin-tab" type="button" data-store-tab="banner" aria-selected="false" aria-controls="storeBannerPanel">Banner da Home</button>
+          <button class="store-admin-tab" type="button" data-store-tab="metrics" aria-selected="false" aria-controls="storeMetricsPanel">Métricas</button>
+        </nav>
+
+        <section id="storeProductsPanel" class="store-panel" data-store-panel="products" aria-labelledby="productsPanelTitle">
+          <h2 class="sr-only" id="productsPanelTitle">Produtos</h2>
+          <div class="store-admin-layout">
+            <section class="admin-card store-product-editor">
+              <div class="admin-card-head">
+                <div><h2 id="productEditorTitle">Novo produto</h2><p class="muted">A Loja não exibe preços nesta versão.</p></div>
+                <button class="btn ghost small" id="clearProduct" type="button">Limpar</button>
+              </div>
+              <form id="productForm" class="admin-form-grid" novalidate>
+                <input type="hidden" id="productId">
+                <fieldset class="store-form-group">
+                  <legend>Informações públicas</legend>
+                  <label>Nome do produto <span class="required">Obrigatório</span><input class="field" id="productName" maxlength="140" required placeholder="Re:Zero — Light Novel Volume 1"></label>
+                  <div class="admin-field-pair">
+                    <label>Categoria <span class="required">Obrigatório</span><select class="field" id="productCategory" required><option value="manga">Mangá</option><option value="light_novel">Light novel</option><option value="collectible">Colecionável</option><option value="digital_reading">Leitura digital</option><option value="geek_gift">Presente geek</option><option value="apparel">Roupa/acessório</option><option value="creators">Para criadores</option><option value="other">Outro</option></select></label>
+                    <label>Status <span class="required">Obrigatório</span><select class="field" id="productStatus" required><option value="draft">Rascunho</option><option value="published">Publicado</option><option value="archived">Arquivado</option></select></label>
+                  </div>
+                  <label>Descrição curta <span class="required">Obrigatório</span><small class="field-hint"><span id="descriptionCount">0</span>/180</small><textarea class="field" id="productDescription" maxlength="180" required placeholder="Descrição editorial original e objetiva."></textarea></label>
+                  <label>Link afiliado Amazon <span class="required">Obrigatório</span><input class="field" id="productAffiliateUrl" type="url" inputmode="url" placeholder="https://www.amazon.com.br/..." required><small class="field-help">Aceita links HTTPS da Amazon ou amzn.to.</small></label>
+                  <label>URL externa da imagem <span class="required">Obrigatório</span><input class="field" id="productImageUrl" type="url" inputmode="url" placeholder="https://..." required><small class="field-help">Use imagem HTTPS; o site exibirá um fallback em caso de falha.</small></label>
+                  <label>Texto alternativo da imagem <span class="required">Obrigatório</span><input class="field" id="productImageAlt" maxlength="240" required placeholder="Capa do produto..."></label>
+                </fieldset>
+                <fieldset class="store-form-group">
+                  <legend>Organização interna</legend>
+                  <div class="admin-field-pair"><label>ASIN (opcional)<input class="field" id="productAsin" maxlength="20"></label><label>Obra relacionada<input class="field" id="productRelatedTitle" maxlength="100"></label></div>
+                  <div class="admin-field-pair"><label>Selo editorial<select class="field" id="productBadge"><option value="none">Nenhum</option><option value="ryuzen_choice">Escolha Ryuzen</option><option value="getting_started">Para começar</option><option value="highlight">Destaque</option><option value="recommended">Recomendado</option><option value="geek_gift">Presente geek</option></select></label><label>Ordem de exibição<input class="field" id="productSortOrder" type="number" min="0" max="9999" value="100"></label></div>
+                  <label class="admin-checkbox"><input id="productFeatured" type="checkbox"> Produto em destaque</label>
+                  <label>Observações internas<textarea class="field" id="productNotes" maxlength="1000" placeholder="Visível somente no painel"></textarea></label>
+                </fieldset>
+                <div class="store-preview-label"><h3>Prévia do card público</h3><p>Visual aproximado, sem preço.</p></div>
+                <div id="productPreview" class="store-admin-preview hidden" aria-label="Prévia do card"></div>
+                <div class="row-actions"><button class="btn primary" id="saveProductButton" type="submit">Salvar produto</button></div>
+              </form>
+            </section>
+            <section class="admin-card store-products-admin">
+              <div class="admin-card-head"><div><h2>Produtos cadastrados</h2><p class="muted">Publicados ficam visíveis na Loja pública.</p></div></div>
+              <div class="admin-toolbar compact store-admin-filters">
+                <label class="sr-only" for="productSearch">Buscar produto</label><input id="productSearch" class="field" type="search" placeholder="Buscar produto">
+                <label class="sr-only" for="productFilterStatus">Filtrar status</label><select id="productFilterStatus" class="field"><option value="">Todos os status</option><option value="draft">Rascunhos</option><option value="published">Publicados</option><option value="archived">Arquivados</option></select>
+                <label class="sr-only" for="productFilterCategory">Filtrar categoria</label><select id="productFilterCategory" class="field"><option value="">Todas as categorias</option><option value="manga">Mangá</option><option value="light_novel">Light novel</option><option value="collectible">Colecionável</option><option value="digital_reading">Leitura digital</option><option value="geek_gift">Presente geek</option><option value="apparel">Roupa/acessório</option><option value="creators">Para criadores</option><option value="other">Outro</option></select>
+              </div>
+              <div id="productsList" class="admin-list-table store-product-list" aria-live="polite"><div class="admin-empty">Carregando produtos...</div></div>
+            </section>
+          </div>
+        </section>
+
+        <section id="storeBannerPanel" class="store-panel hidden" data-store-panel="banner" aria-labelledby="bannerPanelTitle">
+          <div class="store-banner-admin-layout">
+            <section class="admin-card store-banner-admin">
+              <div class="admin-card-head"><div><h2 id="bannerPanelTitle">Banner da Home</h2><p class="muted">Exibido abaixo dos três cards institucionais e antes de “Animes em exibição”.</p></div></div>
+              <form id="homeBannerForm" class="admin-form-grid store-banner-form" novalidate>
+                <label class="admin-checkbox"><input id="bannerEnabled" type="checkbox"> Exibir banner na home quando publicado</label>
+                <div class="admin-field-pair"><label>Etiqueta <span class="required">Obrigatório</span><input class="field" id="homeBannerEyebrow" maxlength="80" required></label><label>Status <span class="required">Obrigatório</span><select class="field" id="homeBannerStatus" required><option value="inactive">Inativo</option><option value="active">Publicado</option><option value="archived">Arquivado</option></select></label></div>
+                <label>Título <span class="required">Obrigatório</span><input class="field" id="homeBannerTitle" maxlength="100" required></label>
+                <label>Descrição <span class="required">Obrigatório</span><textarea class="field" id="homeBannerDescription" maxlength="180" required></textarea></label>
+                <div class="admin-field-pair"><label>Texto do botão <span class="required">Obrigatório</span><input class="field" id="homeBannerButtonText" maxlength="42" required></label><label>Link do botão<input class="field" id="homeBannerButtonUrl" value="/loja/" readonly required><small class="field-help">O banner direciona somente para a Loja Ryuzen.</small></label></div>
+                <div class="admin-field-pair"><label>URL da imagem (opcional)<input class="field" type="url" inputmode="url" id="homeBannerImageUrl" placeholder="https://..."></label><label>Texto alternativo da imagem<input class="field" id="homeBannerImageAlt" maxlength="240"></label></div>
+                <label>Aviso de afiliado <span class="required">Obrigatório</span><input class="field" id="homeBannerDisclaimer" maxlength="180" required></label>
+                <div class="row-actions"><button class="btn primary" id="saveBannerButton" type="submit">Salvar banner da home</button></div>
+              </form>
+            </section>
+            <aside class="admin-card store-banner-preview-panel">
+              <div class="admin-card-head"><div><h2>Prévia do banner</h2><p class="muted">A aparência final acompanha a home pública.</p></div></div>
+              <div id="homeBannerPreview" class="home-banner-preview" aria-label="Prévia do banner da Loja"></div>
+            </aside>
+          </div>
+        </section>
+
+        <section id="storeMetricsPanel" class="store-panel hidden" data-store-panel="metrics" aria-labelledby="metricsPanelTitle">
+          <section class="admin-card store-metrics-admin">
+            <div class="admin-card-head"><div><h2 id="metricsPanelTitle">Métricas básicas</h2><p class="muted">Cliques agregados, sem identificação pessoal e sem cookies adicionais.</p></div></div>
+            <div id="storePopularProducts" class="store-popular-list" aria-live="polite"><div class="admin-empty">Carregando métricas...</div></div>
+          </section>
+        </section>
+      </section>
+    </main>
+  </div>
+  <dialog id="storeConfirmDialog" class="store-confirm-dialog" aria-labelledby="storeConfirmTitle">
+    <form method="dialog" class="store-confirm-card">
+      <h2 id="storeConfirmTitle">Confirmar ação</h2>
+      <p id="storeConfirmText">Confirma esta ação?</p>
+      <div class="row-actions"><button class="btn ghost" value="cancel">Cancelar</button><button class="btn danger" id="storeConfirmAction" value="confirm">Confirmar</button></div>
+    </form>
+  </dialog>
+  <script src="/assets/js/admin-auth.js?v=20260526-store-v2"></script>
+  <script src="/assets/js/admin-shell.js?v=20260526-store-v2"></script>
+  <script src="/assets/js/admin-store.js?v=20260526-store-v2"></script>
+</body>
+</html>

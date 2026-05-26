@@ -10,8 +10,10 @@ export async function onRequestGet({ env }) {
       db.prepare("SELECT created_at FROM admin_audit_logs WHERE action = 'auth.login_success' ORDER BY created_at DESC LIMIT 1").first(),
       db.prepare("SELECT action, resource_type, resource_id, metadata_json, created_at FROM admin_audit_logs ORDER BY created_at DESC, id DESC LIMIT 10").all(),
     ]);
+    let publishedStoreProducts = 0;
+    try { const count = await db.prepare("SELECT COUNT(*) AS total FROM store_products WHERE status = 'published'").first(); publishedStoreProducts = Number(count?.total || 0); } catch { /* migration da loja ainda não aplicada */ }
     const counts = { draft: 0, published: 0, archived: 0, scheduled: 0 };
     for (const row of statusCounts.results || []) counts[row.status] = Number(row.total || 0);
-    return json({ counts, legacyStaticPosts: 3, lastPublication: lastPublication || null, categories: Number(categories?.total || 0), activeBanners: Number(banners?.total || 0), lastLoginAt: lastLogin?.created_at || null, activity: activity.results || [] });
+    return json({ counts, legacyStaticPosts: 3, lastPublication: lastPublication || null, categories: Number(categories?.total || 0), activeBanners: Number(banners?.total || 0), publishedStoreProducts, lastLoginAt: lastLogin?.created_at || null, activity: activity.results || [] });
   } catch (error) { return handleError(error); }
 }

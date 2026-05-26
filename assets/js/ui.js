@@ -1,6 +1,7 @@
 const RYZEN_ROUTE_SEGMENTS = [
   "blog/post",
   "vendas-mangas",
+  "loja",
   "my-list",
   "anime",
   "search",
@@ -31,6 +32,7 @@ const RYZEN_ROUTES = {
   blogPost: sitePath("blog/post/"),
   myList: sitePath("my-list/"),
   guides: sitePath("guides/"),
+  store: sitePath("loja/"),
 };
 
 function sitePath(path = "") {
@@ -78,6 +80,7 @@ function getCurrentRouteKey() {
   const path = location.pathname.replace(/\/index\.html$/, "/");
   if (path.includes("/blog/post/")) return "blogPost";
   if (path.includes("/vendas-mangas/")) return "mangaSales";
+  if (path.includes("/loja/")) return "store";
   if (path.includes("/my-list/")) return "myList";
   if (path.includes("/anime/")) return "anime";
   if (path.includes("/search/")) return "search";
@@ -124,6 +127,7 @@ function renderHeader() {
           <a data-route="season" href="${RYZEN_ROUTES.season}">Temporada</a>
           <a data-route="ranking" href="${RYZEN_ROUTES.ranking}">Ranking</a>
           <a data-route="blog" href="${RYZEN_ROUTES.blog}">Blog</a>
+          <a data-route="store" href="${RYZEN_ROUTES.store}">Loja</a>
         </nav>
         <div class="header-actions">
           <a class="header-icon-link header-search-link" href="${RYZEN_ROUTES.search}" aria-label="Buscar animes">${publicIcon("search")}</a>
@@ -141,6 +145,7 @@ function renderHeader() {
         <a data-route="season" href="${RYZEN_ROUTES.season}">Temporada atual</a>
         <a data-route="ranking" href="${RYZEN_ROUTES.ranking}">Rankings</a>
         <a data-route="blog" href="${RYZEN_ROUTES.blog}">Blog Ryuzen</a>
+        <a data-route="store" href="${RYZEN_ROUTES.store}">Loja Ryuzen</a>
         <a data-route="myList" href="${RYZEN_ROUTES.myList}">Minha lista</a>
         <div class="drawer-divider"></div>
         <a data-route="mangaSales" href="${RYZEN_ROUTES.mangaSales}">Mercado de Mangás</a>
@@ -173,6 +178,7 @@ function renderFooter() {
             <a href="${RYZEN_ROUTES.ranking}">Rankings</a>
             <a href="${RYZEN_ROUTES.search}">Buscar anime</a>
             <a href="${RYZEN_ROUTES.myList}">Minha lista</a>
+            <a href="${RYZEN_ROUTES.store}">Loja</a>
           </nav>
           <nav class="footer-links" aria-label="Ryuzen">
             <h2>Ryuzen</h2>

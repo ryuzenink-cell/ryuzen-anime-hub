@@ -8,7 +8,7 @@
     <p class="admin-nav-section">Visão geral</p><nav class="admin-nav">${item("dashboard", "/admin/", "Dashboard")}</nav>
     <p class="admin-nav-section">Editorial</p><nav class="admin-nav">${item("posts", "/admin/blog/", "Posts")}${item("new-post", "/admin/blog/novo/", "Novo post")}</nav>
     <p class="admin-nav-section">Organização</p><nav class="admin-nav">${item("taxonomies", "/admin/taxonomias/", "Categorias e Tags")}</nav>
-    <p class="admin-nav-section">Promoção</p><nav class="admin-nav">${item("banners", "/admin/banners/", "Banners")}</nav>
+    <p class="admin-nav-section">Promoção</p><nav class="admin-nav">${item("banners", "/admin/banners/", "Banners")}${item("store", "/admin/loja/", "Loja")}</nav>
     <p class="admin-nav-section">Sistema</p><nav class="admin-nav">${item("security", "/admin/seguranca/", "Segurança e Auditoria")}</nav>
     <div class="admin-sidebar-footer"><nav class="admin-nav"><a href="/" target="_blank" rel="noopener"><span class="nav-dot"></span>Ver site público</a><button id="adminLogout" type="button"><span class="nav-dot"></span>Sair</button></nav></div>`;
   document.getElementById("adminLogout")?.addEventListener("click", logoutAdmin);

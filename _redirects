@@ -10,6 +10,7 @@
 /blog.html /blog/ 301
 /blog-post.html /blog/post/ 301
 /vendas-mangas.html /vendas-mangas/ 301
+/loja.html /loja/ 301
 
 /search /search/ 301
 /anime /anime/ 301
@@ -25,3 +26,5 @@
 /blog/:year/:month/:slug.md /blog/:year/:month/:slug.md 200
 /blog/:year/:month/:slug /blog/:year/:month/:slug/ 301
 /vendas-mangas /vendas-mangas/ 301
+
+/loja /loja/ 301

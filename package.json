@@ -1,12 +1,13 @@
 {
   "scripts": {
     "blog:index": "node scripts/build-blog-index.js",
-    "precommit": "node scripts/build-blog-index.js && node scripts/build-sitemap.js && node scripts/validate-public-layout.mjs",
-    "build": "node scripts/build-blog-index.js && node scripts/build-sitemap.js && node scripts/validate-public-layout.mjs",
+    "precommit": "node scripts/build-blog-index.js && node scripts/build-sitemap.js && node scripts/validate-public-layout.mjs && node scripts/validate-store.mjs",
+    "build": "node scripts/build-blog-index.js && node scripts/build-sitemap.js && node scripts/validate-public-layout.mjs && node scripts/validate-store.mjs",
     "sitemap:build": "node scripts/build-sitemap.js",
     "functions:build": "wrangler pages functions build --outdir .functions-dist",
     "auth:generate-secrets": "node scripts/generate-admin-secrets.mjs",
-    "test:public-layout": "node scripts/validate-public-layout.mjs"
+    "test:public-layout": "node scripts/validate-public-layout.mjs",
+    "test:store": "node scripts/validate-store.mjs"
   },
   "dependencies": {
     "htmlparser2": "^10.0.0"
