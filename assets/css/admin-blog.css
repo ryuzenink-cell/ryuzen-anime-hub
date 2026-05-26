@@ -23,9 +23,12 @@ main.admin-panel { padding: 34px 0 70px; }
 .admin-editor-layout { display:grid; grid-template-columns:minmax(0, 1fr) 375px; gap:22px; align-items:start; }
 .admin-editor-card, .admin-settings-card { border:1px solid var(--border); background:rgba(23,27,47,.86); border-radius:var(--radius); padding:20px; }
 .admin-editor-card > .field.title { min-height:58px; font-size:1.55rem; font-weight:800; margin-bottom:16px; }
-.editor-toolbar { display:flex; flex-wrap:wrap; gap:6px; padding:10px; border:1px solid var(--border); border-bottom:0; border-radius:var(--radius) var(--radius) 0 0; background:rgba(8,10,20,.48); }
-.editor-tool { min-height:34px; min-width:38px; padding:6px 10px; border:1px solid var(--border); border-radius:6px; background:var(--surface-soft); color:var(--text); font-weight:700; }
-.rich-editor { min-height:540px; padding:24px; border:1px solid var(--border); border-radius:0 0 var(--radius) var(--radius); background:rgba(8,10,20,.42); line-height:1.8; outline:none; }
+.editor-toolbar { position:sticky; top:12px; z-index:25; display:flex; flex-wrap:nowrap; align-items:center; gap:6px; overflow-x:auto; padding:10px; border:1px solid var(--border); border-bottom:0; border-radius:var(--radius) var(--radius) 0 0; background:rgba(8,10,20,.96); backdrop-filter:blur(12px); box-shadow:0 11px 22px rgba(0,0,0,.18); scrollbar-width:thin; }
+.editor-tool { flex:0 0 auto; min-height:34px; min-width:38px; padding:6px 10px; border:1px solid var(--border); border-radius:6px; background:var(--surface-soft); color:var(--text); font-weight:700; transition:border-color .18s ease, background .18s ease, color .18s ease; }
+.editor-tool:hover:not(:disabled), .editor-tool.active, .editor-tool[aria-pressed="true"] { border-color:rgba(142,162,255,.46); background:rgba(91,124,250,.22); }
+.editor-tool:disabled { cursor:not-allowed; opacity:.45; }
+.editor-tool-divider { flex:0 0 1px; height:24px; margin:0 4px; background:var(--border); }
+.rich-editor { min-height:540px; padding:24px; border:1px solid var(--border); border-radius:0 0 var(--radius) var(--radius); background:rgba(8,10,20,.42); line-height:1.8; outline:none; scroll-padding-top:70px; }
 .rich-editor:empty::before { content:"Comece a escrever seu artigo aqui..."; color:var(--muted); }
 .rich-editor h2 { margin-top:2em; }
 .rich-editor figure, .article-figure { margin:25px 0; }
@@ -37,6 +40,15 @@ main.admin-panel { padding: 34px 0 70px; }
 .admin-fieldset:last-child { border:0; padding-bottom:0; }
 .admin-fieldset h2 { font-size:1rem; margin:0; }
 .admin-fieldset textarea { min-height:86px; }
+.editor-writing-meta { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; padding:12px 2px 0; color:var(--muted); font-size:.82rem; font-weight:700; }
+.editor-statistics { white-space:normal; }
+.draft-status { display:inline-flex; align-items:center; gap:7px; padding:5px 10px; border-radius:999px; font-size:.78rem; }
+.draft-status::before { content:""; width:7px; height:7px; border-radius:50%; background:currentColor; }
+.draft-status.clean { color:var(--muted); background:rgba(170,176,197,.09); }
+.draft-status.dirty { color:#ffe4a4; background:rgba(255,204,102,.12); }
+.draft-status.saving { color:#c7d5ff; background:rgba(91,124,250,.14); }
+.draft-status.saved { color:#b8ffe9; background:rgba(51,214,159,.12); }
+.draft-status.error { color:#ffd2d2; background:rgba(255,107,107,.12); }
 .admin-editor-footer { display:flex; gap:10px; flex-wrap:wrap; margin-top:18px; }
 .admin-alert { padding:12px 14px; border-radius:var(--radius); border:1px solid var(--border); font-weight:700; }
 .admin-alert.success { color:#b8ffe9; background:rgba(51,214,159,.12); }
@@ -47,7 +59,13 @@ main.admin-panel { padding: 34px 0 70px; }
 .modal-head { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:20px; }
 .modal-head h2 { margin:0; }
 .modal-form { display:grid; gap:13px; }
+.modal-help { margin:-8px 0 15px; color:var(--muted); font-size:.9rem; }
+.modal-help strong { color:var(--text); }
+.modal-error { margin:0 0 16px; padding:10px 12px; border-radius:var(--radius); border:1px solid rgba(255,107,107,.25); color:#ffd2d2; background:rgba(255,107,107,.12); font-size:.9rem; font-weight:700; }
+.optional-label { color:var(--muted); font-size:.82em; font-weight:600; }
 .modal-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:18px; }
+.modal-actions .btn.danger { margin-right:auto; }
+body.editor-modal-open { overflow:hidden; }
 .admin-login-panel { max-width:480px; text-align:left; }
 .admin-login-panel p { margin-bottom:18px; }
 .seo-preview { border:1px solid var(--border); border-radius:var(--radius); padding:12px; background:rgba(8,10,20,.4); }
@@ -205,4 +223,35 @@ main.admin-panel { padding: 34px 0 70px; }
   .home-banner-preview-visual img { height: 125px; }
   .store-popular-row { grid-template-columns: 40px minmax(0,1fr); }
   .store-popular-row small { grid-column: 2; }
+}
+
+
+/* Editor workflow enhancements: sticky controls, focus mode and responsive authoring. */
+.admin-view.editor-focus-mode .admin-page-head,
+.admin-view.editor-focus-mode .admin-settings-card {
+  display: none;
+}
+.admin-view.editor-focus-mode .admin-editor-layout {
+  display: block;
+}
+.admin-view.editor-focus-mode .admin-editor-card {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+}
+.admin-view.editor-focus-mode .rich-editor {
+  min-height: calc(100vh - 245px);
+}
+.rich-editor > * {
+  scroll-margin-top: 70px;
+}
+
+@media (max-width:620px) {
+  .admin-editor-card { padding:12px; }
+  .editor-toolbar { top:8px; padding:8px; gap:5px; }
+  .editor-tool { min-height:36px; }
+  .editor-tool-divider { height:23px; }
+  .editor-writing-meta { align-items:flex-start; flex-direction:column; }
+  .modal-actions { flex-wrap:wrap; }
+  .modal-actions .btn { flex:1 1 auto; }
+  .modal-actions .btn.danger { flex-basis:100%; margin-right:0; }
 }
