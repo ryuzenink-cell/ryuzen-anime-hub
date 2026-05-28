@@ -38,6 +38,7 @@ export async function ensureStoreSchema(db) {
       )`,
       "CREATE INDEX IF NOT EXISTS idx_store_products_public ON store_products(status, sort_order, updated_at)",
       "CREATE INDEX IF NOT EXISTS idx_store_products_category ON store_products(category, status)",
+      "CREATE INDEX IF NOT EXISTS idx_store_products_order ON store_products(sort_order, id)",
       `CREATE TABLE IF NOT EXISTS store_home_banner (
         id INTEGER PRIMARY KEY CHECK (id = 1),
         enabled INTEGER NOT NULL DEFAULT 0 CHECK (enabled IN (0,1)),
@@ -131,24 +132,26 @@ export function safeStoreImageUrl(value, required = true) {
 }
 
 export function validateProductPayload(payload = {}, { publishing = false } = {}) {
-  const requestedStatus = String(payload.status || "");
+  const requestedStatus = String(payload.status || "draft");
   if (!STORE_STATUSES.includes(requestedStatus)) throw new RequestError("Selecione um status válido.", 400);
+  const shouldPublish = publishing || requestedStatus === "published";
+  const rawAffiliate = String(payload.affiliate_url || payload.affiliateUrl || "").trim();
+  const rawImage = String(payload.image_url || payload.imageUrl || "").trim();
+  const rawAlt = String(payload.image_alt || payload.imageAlt || "").trim();
+  const category = STORE_CATEGORIES.includes(payload.category) ? payload.category : "other";
   const product = {
-    name: requiredText(payload.name, 140, "Informe o nome do produto."),
-    category: STORE_CATEGORIES.includes(payload.category) ? payload.category : "",
-    description: requiredText(payload.description, 180, "Informe uma descrição curta."),
-    affiliate_url: safeAffiliateUrl(payload.affiliate_url || payload.affiliateUrl),
-    asin: clean(payload.asin, 20),
-    related_title: clean(payload.related_title || payload.relatedTitle, 100),
+    name: shouldPublish ? requiredText(payload.name, 140, "Informe o nome do produto.") : clean(payload.name, 140),
+    category,
+    description: shouldPublish ? requiredText(payload.description, 180, "Informe uma descrição curta.") : clean(payload.description, 180),
+    affiliate_url: shouldPublish ? safeAffiliateUrl(rawAffiliate) : (rawAffiliate ? safeAffiliateUrl(rawAffiliate) : ""),
+    asin: clean(payload.asin, 20), related_title: clean(payload.related_title || payload.relatedTitle, 100),
     badge: STORE_BADGES.includes(payload.badge) ? payload.badge : "none",
-    image_url: safeStoreImageUrl(payload.image_url || payload.imageUrl, true),
-    image_alt: requiredText(payload.image_alt || payload.imageAlt, 240, "Informe o texto alternativo da imagem."),
+    image_url: shouldPublish ? safeStoreImageUrl(rawImage, true) : (rawImage ? safeStoreImageUrl(rawImage, true) : ""),
+    image_alt: shouldPublish || rawImage ? requiredText(rawAlt, 240, "Informe o texto alternativo da imagem.") : clean(rawAlt, 240),
     status: publishing ? "published" : requestedStatus,
     is_featured: booleanFlag(payload.is_featured ?? payload.isFeatured) ? 1 : 0,
-    sort_order: orderValue(payload.sort_order ?? payload.sortOrder),
-    internal_notes: cleanMultiline(payload.internal_notes || payload.internalNotes, 1000),
+    sort_order: orderValue(payload.sort_order ?? payload.sortOrder), internal_notes: cleanMultiline(payload.internal_notes || payload.internalNotes, 1000),
   };
-  if (!product.category) throw new RequestError("Selecione uma categoria válida.", 400);
   return product;
 }
 

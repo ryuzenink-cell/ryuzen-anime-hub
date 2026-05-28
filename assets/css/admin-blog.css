@@ -255,3 +255,21 @@ body.editor-modal-open { overflow:hidden; }
   .modal-actions .btn { flex:1 1 auto; }
   .modal-actions .btn.danger { flex-basis:100%; margin-right:0; }
 }
+
+.store-checklist { margin-top:16px; padding:14px; border:1px solid var(--border); border-radius:var(--radius); background:rgba(8,10,20,.28); }
+.store-checklist h3 { margin:0 0 5px; font-size:.92rem; }
+.store-checklist p { margin:0 0 10px; font-size:.78rem; }
+.store-link-review.reviewed { color:#b8ffe9; } .store-link-review.needs_check { color:#ffd2d2; } .store-link-review.not_reviewed { color:#ffe4a4; }
+
+.editor-featured-control { display:grid; gap:8px; margin-top:10px; padding:12px; border:1px solid var(--border); border-radius:10px; }
+.editor-featured-control p { margin:0; } .post-revisions { display:grid; gap:9px; }
+.post-revision { display:grid; gap:9px; padding:11px; border:1px solid var(--border); border-radius:9px; }
+.post-revision small { display:block; margin-top:4px; color:var(--muted); }
+.revision-preview { max-height:260px; overflow:auto; padding:12px; border-radius:8px; background:rgba(8,10,20,.44); font-size:.86rem; }
+.dashboard-operations { display:grid; grid-template-columns:minmax(350px,1.05fr) minmax(310px,.85fr); gap:18px; margin-bottom:18px; }
+.pending-list { display:grid; gap:9px; }
+.pending-item { display:grid; grid-template-columns:auto 1fr auto; gap:10px; align-items:center; padding:11px; border:1px solid var(--border); border-radius:9px; }
+.pending-level { padding:5px 8px; border-radius:999px; font-size:.7rem; font-weight:800; } .pending-level.critical { color:#ffd2d2;background:rgba(255,107,107,.14); } .pending-level.attention { color:#ffe4a4;background:rgba(255,204,102,.13); } .pending-level.recommendation { color:#cdd8ff;background:rgba(91,124,250,.16); }
+.store-summary-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:9px; margin-bottom:14px; } .store-summary-grid div { padding:10px; border:1px solid var(--border); border-radius:8px; } .store-summary-grid span { display:block;color:var(--muted);font-size:.75rem; } .store-summary-grid strong { font-size:1.25rem; }
+.metric-disclaimer { margin-top:16px; color:var(--muted); font-size:.78rem; } .dashboard-subtitle { margin-top:20px; }
+@media(max-width:980px) { .dashboard-operations { grid-template-columns:1fr; } } @media(max-width:600px) { .pending-item { grid-template-columns:1fr; } }

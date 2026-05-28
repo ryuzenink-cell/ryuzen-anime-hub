@@ -6,7 +6,9 @@ const editorState = {
   activeLink: null,
   openModal: null,
   modalTrigger: null,
-  focusMode: false
+  focusMode: false,
+  status: "draft",
+  featured: false
 };
 
 const form = document.getElementById("postEditorForm");
@@ -72,6 +74,7 @@ function bindEditor() {
   document.getElementById("saveDraft").addEventListener("click", () => savePost());
   document.getElementById("publishPost").addEventListener("click", publishPost);
   document.getElementById("previewPost").addEventListener("click", (event) => showPreview(event.currentTarget));
+  document.getElementById("featurePost")?.addEventListener("click", featurePost);
   document.getElementById("closePreview").addEventListener("click", () => closePreview(true));
 
   editor.addEventListener("input", () => {
@@ -151,6 +154,8 @@ async function loadPost(id) {
     val("seoDescription", post.seo_description);
     canonical.value = post.canonical_url || dynamicUrl(post.slug);
     editor.innerHTML = post.content_html || "";
+    editorState.status = post.status || "draft"; editorState.featured = Boolean(post.featured);
+    updateFeaturedControl(); await loadRevisions();
     editorState.slugTouched = true;
     editorState.dirty = false;
     setDraftStatus("clean");
@@ -451,6 +456,7 @@ async function savePost() {
     editorState.dirty = false;
     setDraftStatus("saved");
     showFeedback("Rascunho salvo com sucesso.", "success");
+    if (editorState.id) await loadRevisions();
     return editorState.id;
   } catch (error) {
     setDraftStatus("error");
@@ -471,6 +477,7 @@ async function publishPost() {
       const result = await adminFetch(`/api/admin/posts/${id}/publish`, { method: "POST" });
       editorState.dirty = false;
       setDraftStatus("saved");
+      editorState.status = "published"; updateFeaturedControl();
       showFeedback(`Artigo publicado. URL: ${result.url}`, "success");
     } catch (error) {
       setDraftStatus("error");
@@ -478,6 +485,31 @@ async function publishPost() {
     }
   }
 }
+
+function updateFeaturedControl() {
+  const control = document.getElementById("featuredEditorialControl"); const button = document.getElementById("featurePost"); const status = document.getElementById("featuredStatus");
+  if (!control || !editorState.id) return; control.classList.remove("hidden");
+  button.disabled = editorState.status !== "published" || editorState.featured;
+  status.textContent = editorState.featured ? "Este artigo é o destaque atual." : editorState.status !== "published" ? "Publique o artigo antes de destacá-lo." : "Somente um artigo pode ficar em destaque.";
+}
+async function featurePost() {
+  if (!editorState.id || editorState.status !== "published") return;
+  const ok = window.AdminUI ? await window.AdminUI.confirm("Definir este artigo como o destaque editorial? O destaque anterior será removido.", { confirmText: "Destacar", variant: "primary" }) : window.confirm("Definir este artigo como destaque?");
+  if (!ok) return;
+  try { const data = await adminFetch(`/api/admin/posts/${editorState.id}/feature`, { method: "POST" }); editorState.featured = true; updateFeaturedControl(); showFeedback(data.message, "success"); } catch (error) { showFeedback(error.message, "error"); }
+}
+async function loadRevisions() {
+  if (!editorState.id) return; const panel = document.getElementById("postRevisionsPanel"); const root = document.getElementById("postRevisions"); panel?.classList.remove("hidden");
+  try { const data = await adminFetch(`/api/admin/posts/${editorState.id}/revisions`); const revisions = data.revisions || []; root.innerHTML = revisions.length ? revisions.map((r) => `<article class="post-revision"><div><strong>${escapeText(r.title)}</strong><small>${escapeText(formatRevisionDate(r.created_at))} · ${escapeText(r.revision_note || "Versão salva")}</small></div><div class="row-actions"><button class="btn ghost small" type="button" data-preview-revision="${r.id}">Prévia</button><button class="btn danger small" type="button" data-restore-revision="${r.id}">Restaurar</button></div><div class="revision-preview hidden" data-revision-content="${r.id}"><h3>${escapeText(r.title)}</h3><p>${escapeText(r.excerpt || "")}</p>${escapeText(r.content_markdown || "")}</div></article>`).join("") : '<p class="muted">Nenhuma revisão anterior registrada.</p>';
+    root.querySelectorAll("[data-preview-revision]").forEach((btn) => btn.addEventListener("click", () => root.querySelector(`[data-revision-content="${btn.dataset.previewRevision}"]`)?.classList.toggle("hidden")));
+    root.querySelectorAll("[data-restore-revision]").forEach((btn) => btn.addEventListener("click", () => restoreRevision(btn.dataset.restoreRevision)));
+  } catch (error) { root.innerHTML = `<p class="admin-alert error">${escapeText(error.message)}</p>`; }
+}
+async function restoreRevision(revisionId) {
+  const ok = window.AdminUI ? await window.AdminUI.confirm("Restaurar esta versão? A versão atual será salva no histórico antes da restauração.", { confirmText: "Restaurar" }) : window.confirm("Restaurar esta versão?"); if (!ok) return;
+  try { const result = await adminFetch(`/api/admin/posts/${editorState.id}/revisions/${revisionId}/restore`, { method: "POST" }); showFeedback(result.message, "success"); await loadPost(editorState.id); } catch (error) { showFeedback(error.message, "error"); }
+}
+function formatRevisionDate(value) { return value ? new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" }).format(new Date(String(value).includes("T") ? value : `${value.replace(" ", "T")}Z`)) : "—"; }
 
 function showPreview(trigger = document.getElementById("previewPost")) {
   const body = payload();
@@ -678,9 +710,8 @@ function formatNumber(value) {
 }
 
 function showFeedback(message, type) {
-  feedback.textContent = message;
-  feedback.className = `admin-alert ${type}`;
-  feedback.classList.remove("hidden");
+  if (window.AdminUI) window.AdminUI.toast(message, type === "error" ? "error" : type);
+  feedback.textContent = message; feedback.className = `admin-alert ${type}`; feedback.classList.remove("hidden");
 }
 
 function escapeText(value = "") {

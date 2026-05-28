@@ -6,10 +6,10 @@
   <title>Loja Ryuzen | Ryuzen Admin</title>
   <meta name="robots" content="noindex,nofollow">
   <link rel="icon" href="/favicon.ico">
-  <link rel="stylesheet" href="/assets/css/global.css?v=20260526-store-operational-v3">
-  <link rel="stylesheet" href="/assets/css/components.css?v=20260526-store-operational-v3">
-  <link rel="stylesheet" href="/assets/css/admin-shell.css?v=20260526-store-operational-v3">
-  <link rel="stylesheet" href="/assets/css/admin-blog.css?v=20260526-store-operational-v3">
+  <link rel="stylesheet" href="/assets/css/global.css?v=20260528-admin-v1">
+  <link rel="stylesheet" href="/assets/css/components.css?v=20260528-admin-v1">
+  <link rel="stylesheet" href="/assets/css/admin-shell.css?v=20260528-admin-v1">
+  <link rel="stylesheet" href="/assets/css/admin-blog.css?v=20260528-admin-v1">
 </head>
 <body data-admin-section="store">
   <div class="admin-app">
@@ -69,7 +69,7 @@
                   <label>Observações internas<textarea class="field" id="productNotes" maxlength="1000" placeholder="Visível somente no painel"></textarea></label>
                 </fieldset>
                 <div class="store-preview-label"><h3>Prévia do card público</h3><p>Visual aproximado, sem preço.</p></div>
-                <div id="productPreview" class="store-admin-preview hidden" aria-label="Prévia do card"></div>
+                <div id="productPreview" class="store-admin-preview hidden" aria-label="Prévia do card"></div><section class="store-checklist" aria-labelledby="productChecklistTitle"><h3 id="productChecklistTitle">Checklist de publicação</h3><p class="muted">Rascunhos podem ser salvos incompletos; itens bloqueantes impedem publicação.</p><ul id="productChecklist" class="seo-checklist"></ul></section>
                 <div class="row-actions"><button class="btn primary" id="saveProductButton" type="submit">Salvar produto</button></div>
               </form>
             </section>
@@ -109,7 +109,7 @@
 
         <section id="storeMetricsPanel" class="store-panel hidden" data-store-panel="metrics" aria-labelledby="metricsPanelTitle">
           <section class="admin-card store-metrics-admin">
-            <div class="admin-card-head"><div><h2 id="metricsPanelTitle">Métricas básicas</h2><p class="muted">Cliques agregados, sem identificação pessoal e sem cookies adicionais.</p></div></div>
+            <div class="admin-card-head"><div><h2 id="metricsPanelTitle">Métricas básicas</h2><p class="muted">Cliques registrados, sem identificação pessoal e sem cookies adicionais. Métricas de clique são indicativas e não representam conversões confirmadas.</p></div></div>
             <div id="storePopularProducts" class="store-popular-list" aria-live="polite"><div class="admin-empty">Carregando métricas...</div></div>
           </section>
         </section>
@@ -123,8 +123,8 @@
       <div class="row-actions"><button class="btn ghost" value="cancel">Cancelar</button><button class="btn danger" id="storeConfirmAction" value="confirm">Confirmar</button></div>
     </form>
   </dialog>
-  <script src="/assets/js/admin-auth.js?v=20260526-store-operational-v3"></script>
-  <script src="/assets/js/admin-shell.js?v=20260526-store-operational-v3"></script>
-  <script src="/assets/js/admin-store.js?v=20260526-store-operational-v3"></script>
+  <script src="/assets/js/admin-auth.js?v=20260528-admin-v1"></script>
+  <script src="/assets/js/admin-shell.js?v=20260528-admin-v1"></script><script src="/assets/js/admin-ui.js?v=20260528-admin-v1"></script>
+  <script src="/assets/js/admin-store.js?v=20260528-admin-v1"></script>
 </body>
 </html>

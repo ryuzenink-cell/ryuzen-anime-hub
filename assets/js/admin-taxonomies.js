@@ -1,6 +1,6 @@
 const feedback=document.getElementById("taxonomyFeedback"); const categoryId=document.getElementById("categoryId"), categoryName=document.getElementById("categoryName"), categorySlug=document.getElementById("categorySlug"), categoryDescription=document.getElementById("categoryDescription"), tagId=document.getElementById("tagId"), tagName=document.getElementById("tagName"), tagSlug=document.getElementById("tagSlug"); requireAdminSession(loadAll);
 function slugify(v){return String(v).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");}
-function message(text,type="success"){feedback.textContent=text;feedback.className=`admin-alert ${type}`;feedback.classList.remove("hidden");}
+function message(text,type="success"){window.AdminUI?.toast(text,type==="error"?"error":type);feedback.textContent=text;feedback.className=`admin-alert ${type}`;feedback.classList.remove("hidden");}
 document.getElementById("categoryName").addEventListener("input",e=>{if(!document.getElementById("categoryId").value) document.getElementById("categorySlug").value=slugify(e.target.value);});
 document.getElementById("tagName").addEventListener("input",e=>{if(!document.getElementById("tagId").value) document.getElementById("tagSlug").value=slugify(e.target.value);});
 document.getElementById("clearCategory").addEventListener("click",()=>document.getElementById("categoryForm").reset());

@@ -35,11 +35,9 @@
   }
   function clear(node) { while (node?.firstChild) node.removeChild(node.firstChild); }
   function notice(text, type = "success") {
+    if (window.AdminUI) window.AdminUI.toast(text, type === "error" ? "error" : type);
     if (!storeFeedback) return;
-    storeFeedback.textContent = text;
-    storeFeedback.className = `admin-alert ${type}`;
-    storeFeedback.classList.remove("hidden");
-    storeFeedback.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    storeFeedback.textContent = text; storeFeedback.className = `admin-alert ${type}`; storeFeedback.classList.remove("hidden");
   }
   function debounce(fn, wait) {
     let timer;
@@ -110,19 +108,27 @@
       internal_notes: productFields.notes.value.trim(),
     };
   }
+  function publicationChecklist(payload) {
+    const rows = [
+      [Boolean(payload.name), "Nome do produto preenchido", true], [Boolean(payload.description), "Descrição preenchida", true],
+      [Boolean(safeAffiliateUrl(payload.affiliate_url)), "URL afiliada Amazon HTTPS válida", true], [Boolean(safeHttpsUrl(payload.image_url)), "Imagem HTTPS válida", true],
+      [Boolean(payload.image_alt), "Texto alternativo da imagem", true], [Boolean(payload.category), "Categoria selecionada", true],
+      [Boolean(productFields.id.value && products.find((p) => String(p.id) === String(productFields.id.value))?.link_review_status === "reviewed"), "Link revisado manualmente", false],
+    ];
+    const root = $("productChecklist"); if (root) root.innerHTML = rows.map(([ok, label, blocking]) => `<li class="${ok ? "done" : blocking ? "blocking" : "warning"}"><span>${ok ? "✓" : "!"}</span>${label}${!ok && blocking ? " (bloqueante para publicar)" : ""}</li>`).join("");
+    return rows;
+  }
   function validateProductClient(payload) {
-    clearInvalid(productFields);
-    const errors = [];
-    if (!payload.name) errors.push(markInvalid(productFields.name, "Informe o nome do produto."));
-    if (!payload.description) errors.push(markInvalid(productFields.description, "Informe uma descrição curta."));
+    clearInvalid(productFields); const errors = []; const publishing = payload.status === "published";
+    publicationChecklist(payload);
+    if (publishing && !payload.name) errors.push(markInvalid(productFields.name, "Informe o nome do produto antes de publicar."));
+    if (publishing && !payload.description) errors.push(markInvalid(productFields.description, "Informe uma descrição antes de publicar."));
     if (payload.description.length > 180) errors.push(markInvalid(productFields.description, "A descrição deve ter até 180 caracteres."));
-    if (!safeAffiliateUrl(payload.affiliate_url)) errors.push(markInvalid(productFields.affiliate, "Use um link HTTPS legítimo da Amazon ou amzn.to."));
-    if (!safeHttpsUrl(payload.image_url)) errors.push(markInvalid(productFields.image, "A imagem deve usar uma URL válida iniciada por https://."));
-    if (!payload.image_alt) errors.push(markInvalid(productFields.alt, "Informe o texto alternativo da imagem."));
+    if ((publishing || payload.affiliate_url) && !safeAffiliateUrl(payload.affiliate_url)) errors.push(markInvalid(productFields.affiliate, "Use um link HTTPS legítimo da Amazon ou amzn.to."));
+    if ((publishing || payload.image_url) && !safeHttpsUrl(payload.image_url)) errors.push(markInvalid(productFields.image, "A imagem deve usar uma URL válida iniciada por https://."));
+    if ((publishing || payload.image_url) && !payload.image_alt) errors.push(markInvalid(productFields.alt, "Informe o texto alternativo da imagem."));
     if (!["draft", "published", "archived"].includes(payload.status)) errors.push(markInvalid(productFields.status, "Selecione um status válido."));
-    [productFields.name, productFields.description, productFields.alt, productFields.related, productFields.notes].forEach((field) => {
-      if (containsMarkup(field.value)) errors.push(markInvalid(field, "Não utilize HTML ou scripts nos campos de texto."));
-    });
+    [productFields.name, productFields.description, productFields.alt, productFields.related, productFields.notes].forEach((field) => { if (containsMarkup(field.value)) errors.push(markInvalid(field, "Não utilize HTML ou scripts nos campos de texto.")); });
     return firstError(errors);
   }
 
@@ -217,9 +223,15 @@
       if (product.badge && product.badge !== "none") meta.appendChild(document.createTextNode(` · ${labels.badge[product.badge] || product.badge}`));
       info.appendChild(meta);
       info.appendChild(element("small", "", `Ordem ${Number(product.sort_order)} · Atualizado em ${formatDate(product.updated_at)}`));
+      const reviewLabel = product.link_review_status === "reviewed" ? `Link revisado em ${formatDate(product.last_reviewed_at)}` : product.link_review_status === "needs_check" ? "Link precisa ser verificado" : "Link ainda não revisado";
+      info.appendChild(element("small", `store-link-review ${product.link_review_status || "not_reviewed"}`, reviewLabel));
       row.appendChild(info);
       const actions = element("div", "row-actions");
       actions.appendChild(button("Editar", "btn ghost small", () => editProduct(product)));
+      actions.appendChild(button("↑", "btn ghost small", () => moveProduct(product.id, "move-up")));
+      actions.appendChild(button("↓", "btn ghost small", () => moveProduct(product.id, "move-down")));
+      actions.appendChild(button("Revisado hoje", "btn ghost small", () => reviewLink(product.id, "reviewed")));
+      actions.appendChild(button("Verificar link", "btn ghost small", () => reviewLink(product.id, "needs_check")));
       const affiliate = safeAffiliateUrl(product.affiliate_url);
       if (affiliate) {
         const link = element("a", "btn ghost small", "Ver link");
@@ -252,7 +264,7 @@
     productFields.notes.value = product.internal_notes || "";
     $("productEditorTitle").textContent = "Editar produto";
     $("descriptionCount").textContent = String(productFields.description.value.length);
-    renderProductPreview();
+    renderProductPreview(); publicationChecklist(productPayload());
     productFields.name.focus();
     productForm.scrollIntoView({ behavior: "smooth", block: "start" });
   }
@@ -265,7 +277,7 @@
     $("productEditorTitle").textContent = "Novo produto";
     $("descriptionCount").textContent = "0";
     $("productPreview").classList.add("hidden");
-    clear($("productPreview"));
+    clear($("productPreview")); publicationChecklist(productPayload());
   }
 
   async function saveProduct(event) {
@@ -297,15 +309,8 @@
   }
 
   function confirmAction(message, affirmativeText) {
-    const dialog = $("storeConfirmDialog");
-    if (!dialog || typeof dialog.showModal !== "function") return Promise.resolve(window.confirm(message));
-    $("storeConfirmText").textContent = message;
-    $("storeConfirmAction").textContent = affirmativeText;
-    return new Promise((resolve) => {
-      const close = () => { resolve(dialog.returnValue === "confirm"); dialog.removeEventListener("close", close); };
-      dialog.addEventListener("close", close);
-      dialog.showModal();
-    });
+    if (window.AdminUI) return window.AdminUI.confirm(message, { confirmText: affirmativeText, variant: affirmativeText === "Publicar" ? "primary" : "danger" });
+    return Promise.resolve(window.confirm(message));
   }
   async function actionProduct(id, action) {
     const copy = {
@@ -319,6 +324,13 @@
       notice(copy.success);
       await Promise.all([loadProducts(), loadMetrics()]);
     } catch (error) { notice(error.message, "error"); }
+  }
+
+  async function moveProduct(id, direction) {
+    try { const result = await adminFetch(`/api/admin/store/products/${id}/${direction}`, { method: "POST" }); notice(result.message, result.moved ? "success" : "info"); await loadProducts(); } catch (error) { notice(error.message, "error"); }
+  }
+  async function reviewLink(id, status) {
+    try { const result = await adminFetch(`/api/admin/store/products/${id}/mark-link-reviewed`, { method: "POST", body: JSON.stringify({ status }) }); notice(result.message); await Promise.all([loadProducts(), loadMetrics()]); } catch (error) { notice(error.message, "error"); }
   }
 
   async function loadBanner() {
@@ -395,10 +407,11 @@
   $("productFilterStatus")?.addEventListener("change", loadProducts);
   $("productFilterCategory")?.addEventListener("change", loadProducts);
   $("productSearch")?.addEventListener("input", debounce(loadProducts, 260));
-  productFields.description.addEventListener("input", () => { $("descriptionCount").textContent = String(productFields.description.value.length); renderProductPreview(); });
+  productFields.description.addEventListener("input", () => { $("descriptionCount").textContent = String(productFields.description.value.length); renderProductPreview(); publicationChecklist(productPayload()); });
+  [productFields.affiliate, productFields.status].forEach((field) => field?.addEventListener("input", () => publicationChecklist(productPayload())));
   [productFields.name, productFields.image, productFields.alt, productFields.category, productFields.badge].forEach((field) => {
-    field?.addEventListener("input", renderProductPreview);
-    field?.addEventListener("change", renderProductPreview);
+    field?.addEventListener("input", () => { renderProductPreview(); publicationChecklist(productPayload()); });
+    field?.addEventListener("change", () => { renderProductPreview(); publicationChecklist(productPayload()); });
   });
   Object.values(bannerFields).forEach((field) => field?.addEventListener("input", renderBannerPreview));
   bannerFields.status.addEventListener("change", renderBannerPreview);
@@ -407,7 +420,7 @@
   requireAdminSession(() => {
     setTab("products");
     renderProductPreview();
-    renderBannerPreview();
+    renderBannerPreview(); publicationChecklist(productPayload());
     Promise.all([loadProducts(), loadBanner(), loadMetrics()]);
   });
 })();

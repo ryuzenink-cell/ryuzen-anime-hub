@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v1.6.2-store-operational-hotfix";
+const CACHE_VERSION = "v1.7.0-admin-operations-upgrade";
 const STATIC_CACHE = `ryuzen-static-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `ryuzen-runtime-${CACHE_VERSION}`;
 
@@ -102,15 +102,6 @@ const STATIC_ASSETS = [
   "/assets/js/blog-post.js?v=20260526-store-operational-v3",
   "/assets/js/analytics.js?v=20260526-store-operational-v3",
   "/assets/js/public-ui.js?v=20260526-store-operational-v3",
-  "/assets/css/admin-blog.css",
-  "/assets/css/admin-blog.css?v=20260526-store-operational-v3",
-  "/assets/css/admin-shell.css?v=20260526-store-operational-v3",
-  "/assets/css/admin-login.css",
-  "/assets/js/admin-auth.js",
-  "/assets/js/admin-login.js",
-  "/assets/js/admin-blog-list.js",
-  "/assets/js/admin-blog-editor.js",
-  "/assets/js/admin-store.js?v=20260526-store-operational-v3",
   "/assets/js/analytics.js",
   "/assets/images/logo-placeholder.png",
   "/assets/images/banners/banner-left.png",
@@ -158,8 +149,8 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (url.pathname.startsWith("/api/") || url.pathname.startsWith("/admin/")) {
-    event.respondWith(fetch(request));
+  if (url.pathname.startsWith("/api/") || url.pathname.startsWith("/admin/") || /^\/assets\/(?:js|css)\/admin-/.test(url.pathname)) {
+    event.respondWith(fetch(request, { cache: "no-store" }));
     return;
   }
 
