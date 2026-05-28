@@ -472,7 +472,10 @@ async function publishPost() {
     return;
   }
   const id = await savePost();
-  if (id && confirm("Publicar o artigo agora?")) {
+  const confirmed = id && (window.AdminUI
+    ? await window.AdminUI.confirm("Publicar o artigo agora?", { confirmText: "Publicar", variant: "primary" })
+    : window.confirm("Publicar o artigo agora?"));
+  if (confirmed) {
     try {
       const result = await adminFetch(`/api/admin/posts/${id}/publish`, { method: "POST" });
       editorState.dirty = false;

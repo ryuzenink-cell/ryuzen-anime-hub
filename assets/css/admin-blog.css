@@ -52,6 +52,7 @@ main.admin-panel { padding: 34px 0 70px; }
 .admin-editor-footer { display:flex; gap:10px; flex-wrap:wrap; margin-top:18px; }
 .admin-alert { padding:12px 14px; border-radius:var(--radius); border:1px solid var(--border); font-weight:700; }
 .admin-alert.success { color:#b8ffe9; background:rgba(51,214,159,.12); }
+.admin-alert.attention { color:#ffe4a4; background:rgba(255,204,102,.13); border-color:rgba(255,204,102,.25); }
 .admin-alert.error { color:#ffd2d2; background:rgba(255,107,107,.12); }
 .admin-modal { position:fixed; inset:0; z-index:1000; display:grid; place-items:center; padding:22px; background:rgba(5,7,14,.76); }
 .admin-modal-panel { width:min(620px,100%); max-height:90vh; overflow:auto; border-radius:var(--radius); padding:24px; border:1px solid var(--border); background:#171b2f; box-shadow:var(--shadow); }

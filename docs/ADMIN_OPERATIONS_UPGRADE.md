@@ -1,4 +1,16 @@
-# Ryuzen Anime Hub — Admin Operations Upgrade
+# Ryuzen Anime Hub — Admin Operations Upgrade / Backend Hotfix v2
+
+## Hotfix v2 — falha de carregamento do Dashboard
+
+Após o primeiro deploy do upgrade administrativo, o Dashboard poderia retornar erro genérico e permanecer em “Carregando...” quando o código novo fosse publicado antes da execução da migration `0005_admin_operations_upgrade.sql`. A causa era objetiva: `GET /api/admin/dashboard`, o backup editorial e a edição de produtos consultavam `store_products.link_review_status` sem verificar se a coluna já existia no D1.
+
+A correção v2 torna o deploy compatível com as duas fases:
+
+1. **Antes da migration 0005:** Dashboard, Loja, edição de produtos e backup continuam funcionando; a interface informa que a revisão manual de links aguarda a migration, e a ação específica retorna erro seguro `409`, em vez de derrubar o painel.
+2. **Após a migration 0005:** os botões e alertas de revisão manual de links são habilitados normalmente.
+
+A API detecta a capacidade via `PRAGMA table_info(store_products)` e não executa `ALTER TABLE` silencioso durante requisições. Também foi criado teste de integração com SQLite/D1 compatível que reproduz os cenários antes e depois da migration.
+
 
 ## 1. Causa real do bug da Loja na sidebar
 
@@ -6,7 +18,7 @@ A navegação era criada por `assets/js/admin-shell.js`, que já continha **Loja
 
 ## 2. Correção estrutural e política de cache
 
-Todas as páginas administrativas autenticadas agora carregam `admin-shell.js`, `admin-shell.css`, `admin-auth.js`, `admin-ui.js` e seus assets administrativos com a versão comum `?v=20260528-admin-v1`. O shell é a única fonte da sidebar e contém Dashboard, Posts, Novo post, Categorias e Tags, Banners, Loja, Segurança e Auditoria, Ver site público e Sair.
+Todas as páginas administrativas autenticadas agora carregam `admin-shell.js`, `admin-shell.css`, `admin-auth.js`, `admin-ui.js` e seus assets administrativos com a versão comum `?v=20260528-admin-v2`. O shell é a única fonte da sidebar e contém Dashboard, Posts, Novo post, Categorias e Tags, Banners, Loja, Segurança e Auditoria, Ver site público e Sair.
 
 `_headers` já impedia cache de páginas `/admin/*` (`Cache-Control: no-store`) e preserva assets versionados como `immutable`. O `service-worker.js` foi ajustado para não pré-cachear assets admin nem responder assets `admin-*` por cache; o painel depende da rede e da sessão válida. Ao alterar o shell no futuro, altere a versão comum em todas as páginas e atualize o valor validado por `scripts/validate-admin-shell.mjs`.
 
@@ -15,7 +27,8 @@ Todas as páginas administrativas autenticadas agora carregam `admin-shell.js`, 
 `npm run validate:admin` executa:
 
 - `scripts/validate-admin-shell.mjs`: falha se uma página admin não carregar shell/UI, se houver versões divergentes ou se itens obrigatórios, inclusive Loja, forem removidos;
-- `scripts/validate-admin-security.mjs`: verifica estaticamente proteção central por sessão/CSRF, ausência de token administrativo no frontend e exclusão de tabelas sensíveis do backup.
+- `scripts/validate-admin-security.mjs`: verifica estaticamente proteção central por sessão/CSRF, ausência de token administrativo no frontend e exclusão de tabelas sensíveis do backup;
+- `scripts/validate-admin-backend.mjs`: executa as APIs com uma base SQLite compatível com D1, cobrindo Dashboard, Loja e backup **antes** da migration 0005, além de CRUD editorial/comercial, APIs públicas, revisão de links, busca, destaque, restauração e bloqueio real de sessão/CSRF **depois** da migration.
 
 O comando foi incorporado a `npm run build` e `npm run precommit`.
 
@@ -40,7 +53,8 @@ O comando foi incorporado a `npm run build` e `npm run precommit`.
 
 - ordenação visual por botões acessíveis `↑` e `↓`, com persistência no campo existente `sort_order` e auditoria;
 - checklist de publicação: rascunhos podem ser salvos incompletos, mas publicação bloqueia nome, descrição, link Amazon HTTPS, imagem HTTPS e texto alternativo ausentes/inválidos;
-- revisão manual de links: **Revisado hoje** e **Verificar link**, com status e auditoria;
+- revisão manual de links: **Revisado hoje** e **Verificar link**, com status e auditoria após a migration 0005;
+- fallback seguro pré-migration: Loja permanece utilizável e informa que a revisão manual ainda não foi habilitada;
 - banner e métricas preservados.
 
 ### Editorial
@@ -88,7 +102,7 @@ npx wrangler d1 execute <NOME_OU_UUID_DO_BANCO_D1> --remote --command="PRAGMA ta
 npx wrangler d1 execute <NOME_OU_UUID_DO_BANCO_D1> --remote --command="SELECT name FROM sqlite_master WHERE type='index' AND name IN ('idx_store_products_order','idx_store_products_link_review');"
 ```
 
-Não execute o `ALTER TABLE` novamente na mesma base; uma segunda execução da migration completa falhará por coluna já existente. As rotas que usam revisão de links pressupõem a migration aplicada; isso evita alterações de schema implícitas durante requisições administrativas.
+Não execute o `ALTER TABLE` novamente na mesma base; uma segunda execução da migration completa falhará por coluna já existente. O deploy da v2 pode ser publicado antes da migration sem derrubar o Dashboard ou a Loja: apenas a marcação manual de revisão ficará desabilitada até que a coluna seja criada. Isso evita alterações de schema implícitas durante requisições administrativas.
 
 ## 7. Empacotamento limpo
 
@@ -98,12 +112,12 @@ Gerar entrega:
 npm run package:clean
 ```
 
-Saída: `dist/ryuzen-anime-hub-admin-operations-upgrade.zip`.
+Saída: `dist/ryuzen-anime-hub-admin-backend-hotfix-v2.zip`.
 
 O script exclui `.git`, `node_modules`, `.wrangler`, `.functions-dist`, `dist`, `.env*`, `.dev.vars`, logs, caches e temporários, e valida novamente o ZIP antes de concluir. Confira manualmente antes do deploy:
 
 ```bash
-unzip -Z1 dist/ryuzen-anime-hub-admin-operations-upgrade.zip | grep -Ei '(^|/)(\.git(/|$)|node_modules(/|$)|\.wrangler(/|$)|\.functions-dist(/|$)|\.env([./]|$)|\.dev\.vars(/|$))|\.log$'
+unzip -Z1 dist/ryuzen-anime-hub-admin-backend-hotfix-v2.zip | grep -Ei '(^|/)(\.git(/|$)|node_modules(/|$)|\.wrangler(/|$)|\.functions-dist(/|$)|\.env([./]|$)|\.dev\.vars(/|$))|\.log$'
 ```
 
 A saída deve ser vazia.
@@ -113,6 +127,7 @@ A saída deve ser vazia.
 ```bash
 npm ci --registry=https://registry.npmjs.org/
 npm run validate:admin
+npm run test:admin-backend
 npm run build
 npm run functions:build
 npm run package:clean
@@ -128,7 +143,7 @@ grep -n "registry" package-lock.json | grep -v "registry.npmjs.org" || true
 
 - binding D1 `BLOG_DB` apontando para o banco correto;
 - secrets de autenticação existentes permanecendo somente no ambiente Pages/Workers;
-- aplicação da migration `0005` antes de utilizar revisão de link em produção;
+- aplicação da migration `0005` para habilitar revisão manual de links; o restante do painel permanece operacional antes dela;
 - deployment incluindo `_headers`, `service-worker.js` e as Functions novas;
 - nenhuma variável secreta incluída no ZIP.
 
@@ -155,5 +170,5 @@ git push -u origin feat/admin-operations-upgrade
 ## 12. Limitações conhecidas e próxima fase
 
 - A deduplicação antifraude de cliques não foi introduzida nesta rodada para não adicionar identificadores ou alterar o backend público sem validação adicional de privacidade e volume; o painel exibe corretamente que clique não é conversão.
-- Testes locais validam build do site, sintaxe e invariantes estáticas. Neste ambiente Linux, `functions:build` não concluiu usando o `node_modules` recebido no ZIP, pois ele contém o binário nativo `@cloudflare/workerd-windows-64`; execute `npm ci` no ambiente de deploy/preview para baixar a dependência correta e então rode o build de Functions. Comportamento com dados reais, D1 remoto, headers finais do Pages e sessão real deve ser confirmado após migration em ambiente de preview/produção.
-- Próxima fase recomendada: testes de integração com D1 local/preview e avaliação de deduplicação temporária de cliques com hash efêmero/privacidade revisada.
+- Testes locais agora incluem integração de APIs com SQLite compatível com D1 nos cenários pré e pós-migration. Neste ambiente Linux, `functions:build` não concluiu usando o `node_modules` histórico disponível, pois ele contém o binário nativo `@cloudflare/workerd-windows-64`; execute `npm ci` no ambiente de deploy/preview para baixar `@cloudflare/workerd-linux-64` ou o binário adequado à sua máquina e então rode o build de Functions. O comportamento com D1 remoto, headers finais do Pages e sessão real deve ser confirmado no deploy de preview/produção.
+- Próxima fase recomendada: avaliação de deduplicação temporária de cliques com hash efêmero/privacidade revisada.

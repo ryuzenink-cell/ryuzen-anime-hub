@@ -26,6 +26,7 @@
   const placeholder = "/assets/images/logo-placeholder.png";
   let products = [];
   let metrics = null;
+  let capabilities = { linkReview: false };
 
   function element(tag, className, text) {
     const node = document.createElement(tag);
@@ -113,7 +114,7 @@
       [Boolean(payload.name), "Nome do produto preenchido", true], [Boolean(payload.description), "Descrição preenchida", true],
       [Boolean(safeAffiliateUrl(payload.affiliate_url)), "URL afiliada Amazon HTTPS válida", true], [Boolean(safeHttpsUrl(payload.image_url)), "Imagem HTTPS válida", true],
       [Boolean(payload.image_alt), "Texto alternativo da imagem", true], [Boolean(payload.category), "Categoria selecionada", true],
-      [Boolean(productFields.id.value && products.find((p) => String(p.id) === String(productFields.id.value))?.link_review_status === "reviewed"), "Link revisado manualmente", false],
+      [Boolean(capabilities.linkReview && productFields.id.value && products.find((p) => String(p.id) === String(productFields.id.value))?.link_review_status === "reviewed"), capabilities.linkReview ? "Link revisado manualmente" : "Revisão manual disponível após migration 0005", false],
     ];
     const root = $("productChecklist"); if (root) root.innerHTML = rows.map(([ok, label, blocking]) => `<li class="${ok ? "done" : blocking ? "blocking" : "warning"}"><span>${ok ? "✓" : "!"}</span>${label}${!ok && blocking ? " (bloqueante para publicar)" : ""}</li>`).join("");
     return rows;
@@ -223,15 +224,17 @@
       if (product.badge && product.badge !== "none") meta.appendChild(document.createTextNode(` · ${labels.badge[product.badge] || product.badge}`));
       info.appendChild(meta);
       info.appendChild(element("small", "", `Ordem ${Number(product.sort_order)} · Atualizado em ${formatDate(product.updated_at)}`));
-      const reviewLabel = product.link_review_status === "reviewed" ? `Link revisado em ${formatDate(product.last_reviewed_at)}` : product.link_review_status === "needs_check" ? "Link precisa ser verificado" : "Link ainda não revisado";
+      const reviewLabel = !capabilities.linkReview ? "Revisão de link aguardando migration 0005" : product.link_review_status === "reviewed" ? `Link revisado em ${formatDate(product.last_reviewed_at)}` : product.link_review_status === "needs_check" ? "Link precisa ser verificado" : "Link ainda não revisado";
       info.appendChild(element("small", `store-link-review ${product.link_review_status || "not_reviewed"}`, reviewLabel));
       row.appendChild(info);
       const actions = element("div", "row-actions");
       actions.appendChild(button("Editar", "btn ghost small", () => editProduct(product)));
       actions.appendChild(button("↑", "btn ghost small", () => moveProduct(product.id, "move-up")));
       actions.appendChild(button("↓", "btn ghost small", () => moveProduct(product.id, "move-down")));
-      actions.appendChild(button("Revisado hoje", "btn ghost small", () => reviewLink(product.id, "reviewed")));
-      actions.appendChild(button("Verificar link", "btn ghost small", () => reviewLink(product.id, "needs_check")));
+      if (capabilities.linkReview) {
+        actions.appendChild(button("Revisado hoje", "btn ghost small", () => reviewLink(product.id, "reviewed")));
+        actions.appendChild(button("Verificar link", "btn ghost small", () => reviewLink(product.id, "needs_check")));
+      }
       const affiliate = safeAffiliateUrl(product.affiliate_url);
       if (affiliate) {
         const link = element("a", "btn ghost small", "Ver link");
@@ -301,7 +304,9 @@
       const params = new URLSearchParams({ q: $("productSearch").value.trim(), status: $("productFilterStatus").value, category: $("productFilterCategory").value });
       const data = await adminFetch(`/api/admin/store/products?${params}`);
       products = Array.isArray(data.products) ? data.products : [];
+      capabilities = { linkReview: Boolean(data.capabilities?.linkReview) };
       renderProducts();
+      publicationChecklist(productPayload());
     } catch (error) {
       notice(error.message, "error");
       clear(root); root.appendChild(element("div", "admin-empty", "Não foi possível carregar os produtos."));

@@ -8,8 +8,9 @@
     "auth:generate-secrets": "node scripts/generate-admin-secrets.mjs",
     "test:public-layout": "node scripts/validate-public-layout.mjs",
     "test:store": "node scripts/validate-store.mjs",
-    "validate:admin": "node scripts/validate-admin-shell.mjs && node scripts/validate-admin-security.mjs",
-    "package:clean": "node scripts/package-clean.mjs"
+    "validate:admin": "node scripts/validate-admin-shell.mjs && node scripts/validate-admin-security.mjs && node scripts/validate-admin-backend.mjs",
+    "package:clean": "node scripts/package-clean.mjs",
+    "test:admin-backend": "node scripts/validate-admin-backend.mjs"
   },
   "dependencies": {
     "htmlparser2": "^10.0.0"

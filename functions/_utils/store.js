@@ -6,16 +6,21 @@ export const STORE_BADGES = ["none", "ryuzen_choice", "getting_started", "highli
 export const STORE_STATUSES = ["draft", "published", "archived"];
 const AMAZON_HOST_RE = /(?:^|\.)amazon\.(?:com\.br|com|ca|co\.uk|de|es|fr|it|co\.jp|in|com\.mx|com\.au)$/;
 
-let storeSchemaPromise;
+const storeSchemaPromises = new WeakMap();
 
 /**
- * Inicializa somente a estrutura aditiva da Loja.
- * Protege instalações nas quais a migration 0004 ainda não foi executada,
- * sem alterar tabelas editoriais, autenticação ou dados existentes.
+ * Inicializa a estrutura base da Loja de forma idempotente.
+ *
+ * A revisão manual de links é habilitada somente pela migration 0005.
+ * As APIs detectam se ela já foi aplicada e permanecem operacionais
+ * durante a janela entre deploy e migration, sem executar ALTER TABLE
+ * silencioso em requisições HTTP.
  */
 export async function ensureStoreSchema(db) {
-  if (storeSchemaPromise) return storeSchemaPromise;
-  storeSchemaPromise = (async () => {
+  const cached = storeSchemaPromises.get(db);
+  if (cached) return cached;
+
+  const promise = (async () => {
     const statements = [
       `CREATE TABLE IF NOT EXISTS store_products (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -68,11 +73,27 @@ export async function ensureStoreSchema(db) {
     for (const statement of statements) {
       await db.prepare(statement).run();
     }
-  })().catch((error) => {
-    storeSchemaPromise = undefined;
+  })();
+
+  storeSchemaPromises.set(db, promise);
+  try {
+    return await promise;
+  } catch (error) {
+    storeSchemaPromises.delete(db);
     throw error;
-  });
-  return storeSchemaPromise;
+  }
+}
+
+/**
+ * Retorna recursos opcionais já aplicados na base D1.
+ * Não altera schema: mudanças continuam sendo executadas via migrations.
+ */
+export async function getStoreCapabilities(db) {
+  const tableInfo = await db.prepare("PRAGMA table_info(store_products)").all();
+  const columns = tableInfo.results || [];
+  return {
+    linkReview: columns.some((column) => column.name === "link_review_status"),
+  };
 }
 
 function clean(value, max) {
