@@ -1,6 +1,6 @@
 # Ryuzen Anime Hub
 
-MVP estático de uma plataforma brasileira de informações de animes para o ecossistema Ryuzen, pensado para o futuro subdomínio `anime.ryuzen.ink`.
+Plataforma brasileira de descoberta e conteúdo sobre animes do ecossistema Ryuzen, publicada em `anime.ryuzen.ink` sobre Cloudflare Pages e Pages Functions.
 
 ## Objetivo
 
@@ -12,10 +12,10 @@ Criar uma experiência navegável para fãs brasileiros pesquisarem animes, vere
 - CSS3
 - JavaScript puro
 - LocalStorage
-- Jikan API v4
-- Sem frameworks, backend ou build step
+- Jikan API v4, consumida pelo backend público controlado `/api/discovery`
+- Cloudflare Pages Functions e Cloudflare D1 para CMS, Loja e painel administrativo
+- JavaScript puro no frontend, sem framework pesado
 - PWA instalável no Android/Chrome
-- Compatível com GitHub Pages
 
 ## Como rodar localmente
 
@@ -33,12 +33,9 @@ ou:
 python -m http.server 8080
 ```
 
-## Publicação no GitHub Pages
+## Publicação
 
-1. Envie esta pasta para um repositório GitHub.
-2. Em Settings > Pages, selecione a branch principal.
-3. Use a pasta raiz do projeto como origem.
-4. Aponte futuramente `anime.ryuzen.ink` para a URL publicada.
+O deploy de produção é realizado pelo Cloudflare Pages a partir da branch principal do GitHub. O ambiente precisa preservar o binding D1 `BLOG_DB`, os secrets administrativos e as migrations aplicadas conforme a documentação em `docs/`.
 
 ## Estrutura
 
@@ -87,9 +84,9 @@ Próxima fase recomendada: validar o PWA em produção e gerar o app Android com
 
 ## API usada
 
-Dados públicos da [Jikan API v4](https://docs.api.jikan.moe/), uma API não oficial para dados do MyAnimeList.
+Dados públicos são obtidos da [Jikan API v4](https://docs.api.jikan.moe/) por meio da Function same-origin `GET /api/discovery`, com validação de operações, timeout, cache e fallback temporário de resultados recentes. O navegador não chama diretamente o provedor externo.
 
-Endpoints principais:
+Operações correspondentes aos endpoints principais:
 
 - `/top/anime`
 - `/seasons/now`
@@ -141,7 +138,7 @@ Endpoints principais:
 
 - Refinar identidade visual definitiva da Ryuzen.
 - Criar componentes de recomendações por gênero.
-- Adicionar cache leve para reduzir chamadas repetidas.
+- Monitorar disponibilidade e cache da API pública `/api/discovery`.
 - Preparar domínio e publicação inicial.
 - Completar a base mensal de mercado de mangás para que os detalhes batam 100% com o resumo financeiro.
 

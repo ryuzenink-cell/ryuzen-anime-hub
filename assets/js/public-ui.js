@@ -1,5 +1,5 @@
 (() => {
-  const PUBLIC_UI_VERSION = "20260526-store-operational-v3";
+  const PUBLIC_UI_VERSION = "20260528-public-discovery-v1";
 
   function icon(name) {
     const icons = {

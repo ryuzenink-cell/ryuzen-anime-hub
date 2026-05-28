@@ -65,7 +65,7 @@ function imageOf(anime, size = "card") {
   const imageUrl = size === "large"
     ? (imageSet.large_image_url || imageSet.image_url || anime?.image)
     : (imageSet.image_url || imageSet.small_image_url || imageSet.large_image_url || anime?.image);
-  return safeUrl(imageUrl, assetPath("images/logo-placeholder.png"));
+  return safeUrl(imageUrl, assetPath("images/logo-placeholder.webp?v=20260528-public-discovery-v1"));
 }
 
 function yearOf(anime) {
@@ -119,7 +119,7 @@ function renderHeader() {
     <header class="site-header public-header">
       <div class="container nav-wrap">
         <a class="brand" href="${RYZEN_ROUTES.home}" aria-label="Ryuzen Anime Hub — Início">
-          <img src="${assetPath("images/logo-placeholder.png")}" alt="" width="42" height="42">
+          <img src="${assetPath("icons/icon-192.png?v=20260528-public-discovery-v1")}" alt="" width="42" height="42">
           <span class="brand-copy"><strong>Ryuzen <span>Anime Hub</span></strong><small>Discovery</small></span>
         </a>
         <nav class="main-nav" aria-label="Navegação principal">
@@ -169,7 +169,7 @@ function renderFooter() {
       <div class="container">
         <div class="footer-premium-grid">
           <div class="footer-brand">
-            <a class="brand" href="${RYZEN_ROUTES.home}"><img src="${assetPath("images/logo-placeholder.png")}" alt="" width="42" height="42"><span class="brand-copy"><strong>Ryuzen <span>Anime Hub</span></strong><small>Discovery</small></span></a>
+            <a class="brand" href="${RYZEN_ROUTES.home}"><img src="${assetPath("icons/icon-192.png?v=20260528-public-discovery-v1")}" alt="" width="42" height="42"><span class="brand-copy"><strong>Ryuzen <span>Anime Hub</span></strong><small>Discovery</small></span></a>
             <p>Descubra, acompanhe e organize seus animes favoritos em português.</p>
           </div>
           <nav class="footer-links" aria-label="Explorar">
@@ -426,11 +426,11 @@ function renderPromoSidebars() {
 
   wrapper.innerHTML = `
   <a class="promo-rail promo-rail-image promo-rail-left" data-banner-placement="blog_sidebar_left" href="${RYZEN_ROUTES.blog}">
-    <img src="${assetPath("images/banners/banner-left.png")}" alt="Leia o blog do Ryuzen Anime Hub">
+    <img src="${assetPath("images/banners/banner-left.webp?v=20260528-public-discovery-v1")}" alt="Leia o blog do Ryuzen Anime Hub">
   </a>
 
   <a class="promo-rail promo-rail-image promo-rail-right" data-banner-placement="blog_sidebar_right" href="${RYZEN_ROUTES.guides}">
-    <img src="${assetPath("images/banners/banner-right.png")}" alt="Guias do Ryuzen Anime Hub">
+    <img src="${assetPath("images/banners/banner-right.webp?v=20260528-public-discovery-v1")}" alt="Guias do Ryuzen Anime Hub">
   </a>
 `;
 

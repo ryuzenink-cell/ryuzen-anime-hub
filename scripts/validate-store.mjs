@@ -35,7 +35,7 @@ expect(storeUtils.includes("ensureStoreSchema") && adminProductsApi.includes("en
 expect(publishApi.includes("validateStoredProductForPublishing"), "Publicação administrativa deve validar o registro antes de publicá-lo.");
 expect(home.includes('id="homeStoreBanner"'), "A home deve manter o ponto de montagem do banner da Loja.");
 expect(uiJs.includes('data-route="store"') && uiJs.includes("Loja Ryuzen"), "A navegação pública compartilhada deve exibir a Loja em desktop e mobile.");
-expect(home.includes("20260526-store-operational-v3") && serviceWorker.includes("v1.7.0-admin-operations-upgrade"), "A home pública deve permanecer versionada e o service worker deve invalidar caches após o upgrade admin.");
+expect(home.includes("20260528-public-discovery-v1") && serviceWorker.includes("v1.8.0-public-discovery-proxy"), "A home pública deve permanecer versionada e o service worker deve invalidar caches após atualizações públicas.");
 expect(homeStoreJs.includes('action.href = "/loja/"'), "O banner deve direcionar somente para a Loja interna.");
 expect(adminHtml.includes('data-store-tab="products"') && adminHtml.includes('id="homeBannerPreview"'), "O admin deve oferecer organização e prévia do banner.");
 expect(adminHtml.includes('id="storeConfirmDialog"'), "Ações destrutivas da Loja devem ter confirmação acessível.");

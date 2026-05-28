@@ -1,27 +1,23 @@
-const API_BASE_URL = "https://api.jikan.moe/v4";
+const API_BASE_URL = "/api/discovery";
 const API_CACHE_TTL_MS = 5 * 60 * 1000;
-const API_REQUEST_DELAY_MS = 450;
-const API_MAX_RETRIES = 2;
+const API_REQUEST_TIMEOUT_MS = 10000;
+const API_NETWORK_RETRIES = 1;
 
 const apiCache = new Map();
-let apiQueue = Promise.resolve();
-let lastRequestAt = 0;
 
-async function requestJikan(path, params = {}) {
-  const url = new URL(`${API_BASE_URL}${path}`);
+async function requestDiscovery(operation, params = {}) {
+  const url = new URL(API_BASE_URL, window.location.origin);
+  url.searchParams.set("operation", operation);
   Object.entries(params).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== "") url.searchParams.set(key, value);
   });
 
   const cacheKey = url.toString();
   const cached = apiCache.get(cacheKey);
-  if (cached && cached.expiresAt > Date.now()) {
-    return cached.value || cached.promise;
-  }
+  if (cached && cached.expiresAt > Date.now()) return cached.value || cached.promise;
 
-  const promise = enqueueJikanRequest(() => fetchWithRetry(url));
+  const promise = fetchWithRetry(url);
   apiCache.set(cacheKey, { promise, expiresAt: Date.now() + API_CACHE_TTL_MS });
-
   try {
     const value = await promise;
     apiCache.set(cacheKey, { value, expiresAt: Date.now() + API_CACHE_TTL_MS });
@@ -32,104 +28,71 @@ async function requestJikan(path, params = {}) {
   }
 }
 
-function enqueueJikanRequest(task) {
-  const run = apiQueue.then(async () => {
-    const elapsed = Date.now() - lastRequestAt;
-    if (elapsed < API_REQUEST_DELAY_MS) {
-      await wait(API_REQUEST_DELAY_MS - elapsed);
-    }
-    lastRequestAt = Date.now();
-    return task();
-  });
-
-  apiQueue = run.catch(() => {});
-  return run;
-}
-
 async function fetchWithRetry(url, attempt = 0) {
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), API_REQUEST_TIMEOUT_MS);
   try {
-    const response = await fetch(url.toString());
-    if (response.ok) return response.json();
-
-    if (shouldRetry(response.status) && attempt < API_MAX_RETRIES) {
-      await wait(getRetryDelay(response, attempt));
-      return fetchWithRetry(url, attempt + 1);
-    }
-
-    throw new Error(getApiErrorMessage(response.status));
+    const response = await fetch(url.toString(), {
+      headers: { Accept: "application/json" },
+      signal: controller.signal,
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (response.ok) return payload;
+    throw new Error(payload.error || getApiErrorMessage(response.status));
   } catch (error) {
-    if (attempt < API_MAX_RETRIES && error.name === "TypeError") {
-      await wait(getRetryDelay(null, attempt));
+    if (error.name === "AbortError") throw new Error("A pesquisa demorou demais para responder. Tente novamente.");
+    if (attempt < API_NETWORK_RETRIES && error.name === "TypeError") {
+      await wait(700 * (attempt + 1));
       return fetchWithRetry(url, attempt + 1);
     }
     throw error;
+  } finally {
+    window.clearTimeout(timeout);
   }
-}
-
-function shouldRetry(status) {
-  return status === 429 || status >= 500;
-}
-
-function getRetryDelay(response, attempt) {
-  const retryAfter = response?.headers?.get("Retry-After");
-  const retryAfterMs = Number(retryAfter) * 1000;
-  if (Number.isFinite(retryAfterMs) && retryAfterMs > 0) return retryAfterMs;
-  return 900 * (attempt + 1);
 }
 
 function getApiErrorMessage(status) {
-  if (status === 429) {
-    return "A API limitou muitas chamadas ao mesmo tempo. Aguarde alguns segundos e tente novamente.";
-  }
-  if (status === 404) {
-    return "Não encontramos esses dados na API.";
-  }
+  if (status === 429 || status === 503) return "A pesquisa está temporariamente ocupada. Tente novamente em alguns instantes.";
+  if (status === 404) return "Não encontramos esses dados na pesquisa.";
   return "Não foi possível carregar os dados agora. Tente novamente em alguns instantes.";
 }
 
 function wait(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
 }
 
 async function fetchTopAnime(page = 1) {
-  return requestJikan("/top/anime", { page, limit: 12 });
+  return requestDiscovery("top", { page });
 }
 
 async function fetchSeasonNow(page = 1) {
-  return requestJikan("/seasons/now", { page, limit: 12 });
+  return requestDiscovery("season_now", { page });
 }
 
 async function fetchSeasonUpcoming(page = 1) {
-  return requestJikan("/seasons/upcoming", { page, limit: 24 });
+  return requestDiscovery("season_upcoming", { page });
 }
 
 async function fetchUpcomingAnime(page = 1) {
-  return requestJikan("/anime", {
-    page,
-    limit: 24,
-    status: "upcoming",
-    order_by: "start_date",
-    sort: "asc",
-    sfw: true
-  });
+  return requestDiscovery("upcoming", { page });
 }
 
 async function searchAnime(query, page = 1) {
-  return requestJikan("/anime", { q: query, page, limit: 12, sfw: true });
+  return requestDiscovery("search", { q: query, page });
 }
 
 async function fetchAnimeDetails(id) {
-  return requestJikan(`/anime/${id}/full`);
+  return requestDiscovery("details", { id });
 }
 
 async function fetchPopularAnime(page = 1) {
-  return requestJikan("/top/anime", { page, limit: 12, filter: "bypopularity" });
+  return requestDiscovery("popular", { page });
 }
 
 async function fetchTopMovies(page = 1) {
-  return requestJikan("/top/anime", { page, limit: 12, type: "movie" });
+  return requestDiscovery("movies", { page });
 }
 
 async function fetchAiringAnime(page = 1) {
-  return requestJikan("/top/anime", { page, limit: 12, filter: "airing" });
+  return requestDiscovery("airing", { page });
 }

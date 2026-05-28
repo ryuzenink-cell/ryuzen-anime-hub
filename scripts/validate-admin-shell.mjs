@@ -3,7 +3,7 @@ import path from "node:path";
 const root = process.cwd();
 const requiredPages = ["admin/index.html","admin/blog/index.html","admin/blog/novo/index.html","admin/blog/editar/index.html","admin/taxonomias/index.html","admin/banners/index.html","admin/loja/index.html","admin/seguranca/index.html"];
 const expectedLabels = ["Dashboard","Posts","Novo post","Categorias e Tags","Banners","Loja","Segurança e Auditoria","Ver site público","Sair"];
-const expectedVersion = "20260528-admin-v2";
+const expectedVersion = "20260528-admin-v3";
 const shell = fs.readFileSync(path.join(root,"assets/js/admin-shell.js"),"utf8");
 const errors = [];
 for (const label of expectedLabels) if (!shell.includes(label)) errors.push(`Shell não contém o item: ${label}`);

@@ -18,7 +18,7 @@ A navegação era criada por `assets/js/admin-shell.js`, que já continha **Loja
 
 ## 2. Correção estrutural e política de cache
 
-Todas as páginas administrativas autenticadas agora carregam `admin-shell.js`, `admin-shell.css`, `admin-auth.js`, `admin-ui.js` e seus assets administrativos com a versão comum `?v=20260528-admin-v2`. O shell é a única fonte da sidebar e contém Dashboard, Posts, Novo post, Categorias e Tags, Banners, Loja, Segurança e Auditoria, Ver site público e Sair.
+Todas as páginas administrativas autenticadas agora carregam `admin-shell.js`, `admin-shell.css`, `admin-auth.js`, `admin-ui.js` e seus assets administrativos com a versão comum `?v=20260528-admin-v3`. O shell é a única fonte da sidebar e contém Dashboard, Posts, Novo post, Categorias e Tags, Banners, Loja, Segurança e Auditoria, Ver site público e Sair.
 
 `_headers` já impedia cache de páginas `/admin/*` (`Cache-Control: no-store`) e preserva assets versionados como `immutable`. O `service-worker.js` foi ajustado para não pré-cachear assets admin nem responder assets `admin-*` por cache; o painel depende da rede e da sessão válida. Ao alterar o shell no futuro, altere a versão comum em todas as páginas e atualize o valor validado por `scripts/validate-admin-shell.mjs`.
 
@@ -112,12 +112,12 @@ Gerar entrega:
 npm run package:clean
 ```
 
-Saída: `dist/ryuzen-anime-hub-admin-backend-hotfix-v2.zip`.
+Saída: `dist/ryuzen-anime-hub-public-discovery-hotfix-v3.zip`.
 
 O script exclui `.git`, `node_modules`, `.wrangler`, `.functions-dist`, `dist`, `.env*`, `.dev.vars`, logs, caches e temporários, e valida novamente o ZIP antes de concluir. Confira manualmente antes do deploy:
 
 ```bash
-unzip -Z1 dist/ryuzen-anime-hub-admin-backend-hotfix-v2.zip | grep -Ei '(^|/)(\.git(/|$)|node_modules(/|$)|\.wrangler(/|$)|\.functions-dist(/|$)|\.env([./]|$)|\.dev\.vars(/|$))|\.log$'
+unzip -Z1 dist/ryuzen-anime-hub-public-discovery-hotfix-v3.zip | grep -Ei '(^|/)(\.git(/|$)|node_modules(/|$)|\.wrangler(/|$)|\.functions-dist(/|$)|\.env([./]|$)|\.dev\.vars(/|$))|\.log$'
 ```
 
 A saída deve ser vazia.

@@ -8,7 +8,7 @@ O objetivo do Ryuzen Anime Hub é criar uma central brasileira para fãs de anim
 
 A inspiração conceitual é o MyAnimeList, mas o projeto deve ter identidade própria, visual próprio e foco no público brasileiro.
 
-O MVP será feito com HTML, CSS e JavaScript puro, sem backend, sem frameworks e compatível com GitHub Pages. Os dados serão consumidos inicialmente da Jikan API v4.
+O frontend utiliza HTML, CSS e JavaScript puro, sem framework. O produto está publicado no Cloudflare Pages e utiliza Pages Functions/D1 para CMS, Loja e administração. Os dados públicos de animes são obtidos da Jikan API v4 por uma camada same-origin em `/api/discovery`, com cache e tratamento de indisponibilidade.
 
 O projeto deve priorizar:
 
@@ -25,6 +25,6 @@ O projeto não deve copiar layout, textos, cores exatas, marca ou identidade vis
 
 Roadmap futuro:
 
-1. MVP estático com API pública.
-2. Melhorias de UX, filtros, recomendações e calendário.
-3. Migração futura para Next.js, backend, banco de dados, login e comunidade.
+1. Experiência pública com descoberta e lista local.
+2. CMS, Loja e administração segura em Pages Functions/D1.
+3. Melhorias de UX, recomendações, monitoramento e comunidade.

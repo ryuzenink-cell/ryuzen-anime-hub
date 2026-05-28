@@ -1,6 +1,6 @@
 const SITE_URL = "https://anime.ryuzen.ink";
 const SITE_NAME = "Ryuzen Anime Hub";
-const ASSET_VERSION = "20260526-store-operational-v3";
+const ASSET_VERSION = "20260528-public-discovery-v1";
 
 export function escapeHtml(value = "") {
   return String(value).replace(/[&<>'"]/g, (character) => ({
@@ -108,20 +108,20 @@ export function renderDynamicArticlePage({ post, tags = [], contentHtml = "", he
   <meta name="twitter:description" content="${escapeHtml(description)}">
   <meta name="twitter:image" content="${escapeHtml(image)}">
   <script type="application/ld+json">${schema}</script>
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://api.jikan.moe https://www.google-analytics.com https://region1.google-analytics.com https://analytics.google.com; img-src 'self' https: data:; script-src 'self' https://www.googletagmanager.com; style-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://analytics.google.com; img-src 'self' https: data:; script-src 'self' https://www.googletagmanager.com; style-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=()">
-  <link rel="manifest" href="/manifest.webmanifest?v=20260519">
+  <link rel="manifest" href="/manifest.webmanifest?v=20260528-public-discovery-v1">
   <meta name="theme-color" content="#0f1220">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Ryuzen">
   <meta name="application-name" content="Ryuzen Anime Hub">
-  <link rel="icon" href="/favicon.ico?v=20260519" sizes="any">
-  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/icon-16.png?v=20260519">
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png?v=20260519">
-  <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192.png?v=20260519">
-  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png?v=20260519">
+  <link rel="icon" href="/favicon.ico?v=20260528-public-discovery-v1" sizes="any">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icons/icon-16.png?v=20260528-public-discovery-v1">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/icon-32.png?v=20260528-public-discovery-v1">
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/icons/icon-192.png?v=20260528-public-discovery-v1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png?v=20260528-public-discovery-v1">
   <link rel="stylesheet" href="/assets/css/global.css?v=${ASSET_VERSION}">
   <link rel="stylesheet" href="/assets/css/layout.css?v=${ASSET_VERSION}">
   <link rel="stylesheet" href="/assets/css/components.css?v=${ASSET_VERSION}">

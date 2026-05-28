@@ -1,3 +1,5 @@
+> Nota posterior: a arquitetura de descoberta e o versionamento público foram atualizados no hotfix descrito em `docs/PUBLIC_DISCOVERY_BACKEND_HOTFIX.md`; afirmações históricas abaixo devem ser lidas no contexto da rodada original.
+
 # Redesign público — Ryuzen Discovery
 
 ## Escopo
@@ -96,7 +98,7 @@ A camada `assets/css/public-ui.css` introduz a linguagem **Ryuzen Discovery**: s
 
 ## Limitações preservadas
 
-- Dados da Jikan continuam client-side; nenhuma nova API/proxy foi criada.
+- A observação original de consumo client-side foi superada pelo hotfix de descoberta: os dados de anime agora passam por `/api/discovery`, conforme `docs/PUBLIC_DISCOVERY_BACKEND_HOTFIX.md`.
 - A página de detalhes ainda não é SSR nesta rodada.
 - Exportação/importação da lista e filtros avançados dependem de uma rodada futura.
 - A imagem de hero institucional não inventa obra em destaque; utiliza o ranking já disponível para o painel lateral.

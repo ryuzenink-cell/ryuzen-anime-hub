@@ -6,7 +6,7 @@
   const productSection = document.getElementById("produtos");
   if (!content || !filters) return;
 
-  const placeholder = "/assets/images/logo-placeholder.png";
+  const placeholder = "/assets/images/logo-placeholder.webp?v=20260528-public-discovery-v1";
   const categories = {
     manga: "Mangás", light_novel: "Light novels", collectible: "Colecionáveis",
     digital_reading: "Leitura digital", geek_gift: "Presentes", apparel: "Roupas e acessórios",
