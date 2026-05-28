@@ -1,7 +1,7 @@
 const JIKAN_BASE_URL = "https://api.jikan.moe/v4";
 const FRESH_CACHE_SECONDS = 300;
 const STALE_CACHE_SECONDS = 86400;
-const UPSTREAM_TIMEOUT_MS = 8000;
+const UPSTREAM_TIMEOUT_MS = 6000;
 const UPSTREAM_RETRY_DELAY_MS = 650;
 const PUBLIC_HEADERS = {
   "Content-Type": "application/json; charset=utf-8",
@@ -66,7 +66,12 @@ export async function onRequestGet(context) {
           });
         }
       }
-      if (error instanceof UpstreamError) return errorResponse(error.message, error.status, error.code);
+      if (error instanceof UpstreamError) {
+        // Some third-party providers may reject or throttle requests originating at edge runtimes.
+        // Redirecting only to the already validated provider URL lets the browser reuse the public
+        // CORS-enabled API instead of leaving discovery unusable with a permanent 503.
+        return browserProviderFallback(operation.url, error);
+      }
       throw error;
     }
   } catch (error) {
@@ -157,7 +162,11 @@ async function fetchFromJikan(url, attempt = 0) {
   try {
     const response = await fetch(url.toString(), {
       method: "GET",
-      headers: { Accept: "application/json" },
+      headers: {
+        Accept: "application/json",
+        "Accept-Language": "pt-BR,pt;q=0.9,en;q=0.7",
+        "User-Agent": "RyuzenAnimeHub/1.0 (+https://anime.ryuzen.ink)",
+      },
       signal: controller.signal,
     });
     if (response.ok) {
@@ -207,6 +216,19 @@ function copyPublicResponse(source, { cacheStatus, warning = "" } = {}) {
   if (cacheStatus) headers.set("X-Discovery-Cache", cacheStatus);
   if (warning) headers.set("Warning", warning);
   return new Response(source.body, { status: source.status, headers });
+}
+
+
+function browserProviderFallback(providerUrl, error) {
+  const headers = new Headers({
+    Location: providerUrl.toString(),
+    "Cache-Control": "no-store",
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "X-Discovery-Cache": "BROWSER-FALLBACK",
+    "X-Discovery-Fallback-Reason": error.code || "DISCOVERY_UPSTREAM_UNAVAILABLE",
+  });
+  return new Response(null, { status: 307, headers });
 }
 
 function jsonResponse(data, status = 200, extraHeaders = {}) {

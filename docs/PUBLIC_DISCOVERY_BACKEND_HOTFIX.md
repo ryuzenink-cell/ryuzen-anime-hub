@@ -1,140 +1,108 @@
-# Public Discovery Backend Hotfix — Pesquisa, Temporadas e Ranking
+# Public Discovery Hotfix v4 — conexão resiliente com a Jikan
 
-## Escopo
+## Incidente tratado
 
-Esta correção trata a indisponibilidade observada na área pública de descoberta de animes, incluindo pesquisa, ranking, temporada e página de detalhes.
+Após a implementação do proxy `/api/discovery`, a área pública passou a exibir estados de erro na Home, Pesquisa, Temporada e Ranking. No navegador em produção, a requisição a `/api/discovery?operation=top&page=1` retornou HTTP 503.
 
-## Causa identificada
+## Causa raiz
 
-A interface pública carregava `assets/js/api.js`, que fazia requisições diretamente do navegador do visitante para `https://api.jikan.moe/v4`. A busca pública, portanto, dependia de chamadas cross-origin sem qualquer camada controlada pelo Ryuzen para:
-
-- normalizar e limitar os parâmetros enviados ao provedor;
-- aplicar cache compartilhado no edge;
-- reaproveitar resultados recentes em falhas temporárias;
-- tratar timeout e indisponibilidade com mensagens estáveis;
-- reduzir inconsistências provocadas por versões antigas de assets mantidas em cache `immutable`.
-
-A captura recebida é compatível com esse fluxo falhando: o formulário funciona, mas a chamada externa retorna erro e a tela entra no estado “Algo saiu do roteiro”.
-
-## Solução implementada
-
-### API pública same-origin
-
-Foi criada a Function:
+A v3 removeu a consulta pública direta à Jikan e tornou toda a descoberta dependente do fluxo:
 
 ```text
-GET /api/discovery
+Navegador -> Cloudflare Pages Function /api/discovery -> api.jikan.moe
 ```
 
-Operações aceitas:
+A rota do site estava publicada, mas a chamada server-side da Pages Function ao provedor externo falhava no ambiente real. Sem cache anterior no edge, a Function devolvia 503 e todas as telas públicas que dependiam dela ficavam vazias.
 
-| Operação | Parâmetros | Uso público |
-| --- | --- | --- |
-| `search` | `q`, `page` | Pesquisa por título |
-| `top` | `page` | Ranking geral |
-| `popular` | `page` | Mais populares |
-| `movies` | `page` | Filmes no ranking |
-| `airing` | `page` | Em exibição |
-| `season_now` | `page` | Temporada atual |
-| `season_upcoming` | `page` | Próximas temporadas |
-| `upcoming` | `page` | Próximos animes |
-| `details` | `id` | Detalhes do anime |
+A Jikan continua sendo uma API pública sem autenticação, com limites oficiais de 3 requisições por segundo e 60 por minuto. Por isso, nenhuma solução baseada nela pode prometer disponibilidade absoluta; o código deve degradar de forma controlada.
 
-A Function aceita apenas essas operações e monta internamente as URLs permitidas do provedor. Não funciona como proxy aberto.
+## Correção aplicada
 
-### Resiliência
+### 1. Proxy sem ponto único de falha
 
-A API implementa:
+`functions/api/discovery.js` continua aceitando somente operações e parâmetros permitidos, tentando obter e cachear respostas no edge. Contudo, se a consulta server-side falhar e não houver cache stale utilizável, a Function responde com redirecionamento HTTP 307 somente para a URL Jikan montada e validada internamente. Assim, o navegador pode concluir a requisição pela API pública, em vez de receber um 503 definitivo.
 
-- validação de entrada e limites de página/termo;
-- timeout de chamadas externas;
-- uma nova tentativa controlada em erros temporários;
-- cache de resposta fresca por 5 minutos no data center que atendeu a chamada;
-- cache de contingência por até 24 horas, no mesmo cache edge disponível, para servir resposta anterior quando o provedor estiver temporariamente indisponível;
-- erros JSON seguros, sem detalhes internos.
+O endpoint não se tornou proxy aberto: as únicas rotas externas possíveis continuam sendo as operações whitelisted de anime, temporada, ranking e detalhes.
 
-Headers de diagnóstico em respostas de sucesso:
+### 2. Fallback adicional no cliente
+
+`assets/js/api.js` tenta primeiro `/api/discovery`. Caso uma versão antiga da Function ainda responda com falha temporária durante propagação de deploy/cache, o cliente executa um fallback direto controlado para a Jikan.
+
+Esse fallback:
+
+- constrói apenas URLs das operações permitidas;
+- valida termo, ID e página antes da chamada;
+- serializa consultas diretas com intervalo mínimo de 450 ms para respeitar o limite público;
+- usa timeout e mantém cache em memória durante a navegação;
+- não expõe tokens nem dados privados, pois a Jikan é usada apenas para leitura pública de catálogo.
+
+### 3. CSP e console limpo
+
+As páginas que podem consumir descoberta agora permitem `https://api.jikan.moe` em `connect-src`. Também foi autorizada a origem oficial `https://static.cloudflareinsights.com` para o beacon do Cloudflare Web Analytics, que aparecia bloqueado no console por CSP.
+
+### 4. Cache/versionamento
+
+Os assets públicos compartilhados foram atualizados para:
 
 ```text
-X-Discovery-Cache: MISS | HIT | STALE
+20260528-public-discovery-v2
 ```
 
-Quando uma resposta anterior é utilizada por indisponibilidade temporária, a resposta inclui também um header `Warning`.
-
-### Frontend
-
-`assets/js/api.js` deixou de acessar a Jikan diretamente. Todas as telas que exibem dados de anime agora chamam:
+E o service worker para:
 
 ```text
-/api/discovery
+v1.9.0-public-discovery-resilient
 ```
 
-O navegador passa a falar apenas com a origem do próprio site para esse recurso.
+Isso força a troca do JavaScript público que anteriormente mantinha o fluxo quebrado. Respostas de `/api/*` continuam fora do cache offline do service worker.
 
-### Cache e service worker
-
-Os assets públicos compartilhados foram unificados na versão:
+## Fluxo final
 
 ```text
-20260528-public-discovery-v1
+1. Interface solicita /api/discovery
+2. Function valida operação e tenta cache/consulta server-side
+3. Se funcionar: retorna JSON e alimenta cache edge
+4. Se a consulta server-side falhar e houver cache antigo: retorna cache stale
+5. Se falhar sem cache: redireciona para a URL Jikan validada
+6. Se uma Function antiga ainda responder 503: cliente tenta diretamente a URL Jikan validada
 ```
 
-O service worker foi elevado para:
+## Arquivos principais alterados
 
-```text
-v1.8.0-public-discovery-proxy
-```
+- `functions/api/discovery.js`
+- `assets/js/api.js`
+- `service-worker.js`
+- páginas públicas que carregam assets/CSP
+- `functions/_utils/article-template.js`
+- `scripts/validate-public-discovery.mjs`
+- `scripts/validate-store.mjs`
+- `scripts/package-clean.mjs`
 
-Além disso:
-
-- entradas públicas duplicadas ou sem versão foram removidas do pré-cache;
-- `/api/*` permanece fora do cache offline do service worker;
-- as CSPs públicas não precisam mais liberar conexão direta para `api.jikan.moe`;
-- banners laterais foram convertidos de PNG para WebP, reduzindo aproximadamente 4,1 MB para cerca de 442 KB;
-- imagens de marca usadas em cabeçalhos e ícones foram ajustadas para evitar downloads desproporcionais em telas públicas e administrativas.
-
-## Arquivos centrais alterados
-
-- `functions/api/discovery.js` — nova API pública intermediária.
-- `assets/js/api.js` — cliente same-origin com timeout e erro amigável.
-- `service-worker.js` — versão nova e pré-cache público coerente.
-- páginas HTML públicas e `functions/_utils/article-template.js` — versão comum/CSP.
-- `scripts/validate-public-discovery.mjs` — teste automático de regressão.
-- `package.json` — teste incluído no build e no precommit.
-
-## Validações automáticas
-
-Execute:
+## Como validar antes do deploy
 
 ```bash
+npm ci --registry=https://registry.npmjs.org/
 npm run test:public-discovery
+npm run validate:admin
 npm run build
 npm run functions:build
+npm run package:clean
 ```
 
-O teste de descoberta valida:
+## Como validar após deploy
 
-- o navegador não consulta a Jikan diretamente;
-- a nova Function retorna dados em consulta válida;
-- entradas inválidas não alcançam o provedor;
-- cache fresco evita chamada externa repetida;
-- resposta stale é utilizada em falha temporária do upstream;
-- os HTMLs públicos carregam assets compartilhados na versão única;
-- o service worker recebeu versão capaz de invalidar cache antigo;
-- banners e imagens de interface pesadas não voltam ao pacote por regressão.
+1. Atualize a página com `Ctrl + F5`.
+2. Em DevTools > Application > Service Workers, confirme a ativação da versão nova ou use “Update”.
+3. Abra a Home e confirme carregamento de Top agora e Animes em exibição.
+4. Abra `/ranking/` e teste Top Animes, Mais Populares, Filmes e Em Exibição.
+5. Pesquise `Kokoro` em `/search/`.
+6. Abra detalhes de um anime.
+7. Em Network, observe `/api/discovery`; sucesso poderá ser JSON direto, cache ou redirecionamento controlado para `api.jikan.moe`.
+8. Confirme que não há bloqueio CSP do `beacon.min.js` do Cloudflare Web Analytics.
+9. Teste Dashboard e Loja no admin para confirmar que não houve regressão.
 
-## Validação após deploy
+## Limitações conhecidas
 
-1. Abrir `/search/?q=Kokoro` em janela anônima.
-2. Confirmar que resultados aparecem.
-3. No DevTools, conferir requisição para `/api/discovery?operation=search...`, não para `api.jikan.moe`.
-4. Abrir Home, Temporada, Ranking, Detalhes e Guia de próximos animes.
-5. Fazer recarregamento forçado uma vez para permitir a ativação do service worker atualizado.
-6. Verificar no Network que a resposta da pesquisa possui `X-Discovery-Cache`.
-7. Confirmar que Blog, Loja e painel administrativo continuam funcionando.
-
-## Limitações honestas
-
-- A nova API torna o fluxo mais controlado e resiliente, mas ainda depende da disponibilidade da fonte externa para pesquisas inéditas que ainda não estejam no cache.
-- A disponibilidade real da Jikan a partir da rede Cloudflare somente pode ser comprovada após deploy de preview/produção.
-- Caso o serviço receba tráfego alto, recomenda-se configurar uma regra de rate limiting do Cloudflare para `/api/discovery`, preservando a experiência pública e o provedor externo.
+- A origem final de catálogo continua sendo a Jikan; indisponibilidade simultânea do provedor para edge e navegador não pode ser resolvida apenas pelo site.
+- O fallback direto é restrito à leitura pública de catálogo e não substitui uma futura base própria ou serviço contratado com SLA.
+- Para crescimento do produto, recomenda-se armazenar catálogo essencial próprio no D1 e atualizar dados externos de forma periódica, reduzindo a dependência de disponibilidade em tempo real.

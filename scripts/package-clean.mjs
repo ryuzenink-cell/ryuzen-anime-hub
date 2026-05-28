@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
-const root=process.cwd(); const outputDir=path.join(root,"dist"); const stage=path.join(outputDir,"ryuzen-anime-hub-clean"); const zipFile=path.join(outputDir,"ryuzen-anime-hub-public-discovery-hotfix-v3.zip");
+const root=process.cwd(); const outputDir=path.join(root,"dist"); const stage=path.join(outputDir,"ryuzen-anime-hub-clean"); const zipFile=path.join(outputDir,"ryuzen-anime-hub-jikan-resilient-hotfix-v4.zip");
 const excluded = new Set([".git","node_modules",".wrangler",".functions-dist","dist",".DS_Store"]);
 const forbiddenNames = [/^\.env(?:\..*)?$/i,/^\.dev\.vars$/i,/\.log$/i,/\.tmp$/i,/\.cache$/i,/^npm-debug\.log/i];
 fs.rmSync(stage,{recursive:true,force:true}); fs.mkdirSync(stage,{recursive:true}); fs.mkdirSync(outputDir,{recursive:true});
