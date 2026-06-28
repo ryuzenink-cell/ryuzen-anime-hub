@@ -147,7 +147,7 @@ function renderHeader() {
           <a data-route="store" href="${RYZEN_ROUTES.store}">Loja</a>
           <a data-route="mangaSales" href="${RYZEN_ROUTES.mangaSales}">Market Intel</a>
           <span class="nav-sep" aria-hidden="true"></span>
-          <a class="nav-external" href="https://readplus.ryuzen.ink" target="_blank" rel="noopener noreferrer">Read Plus<span aria-hidden="true"> ↗</span></a>
+          <a class="nav-external" href="https://www.yorokobistudio.com/" target="_blank" rel="noopener noreferrer">Yorokobi Studio<span aria-hidden="true"> ↗</span></a>
         </nav>
       </div>
     </header>
@@ -170,9 +170,9 @@ function renderHeader() {
           <a data-route="store" href="${RYZEN_ROUTES.store}">Loja Ryuzen</a>
           <a data-route="mangaSales" href="${RYZEN_ROUTES.mangaSales}">Market Intel</a>
         </div>
-        <p class="drawer-group-label" id="drawer-group-ryuzen">Ryuzen</p>
+        <p class="drawer-group-label" id="drawer-group-ryuzen">Ecossistema</p>
         <div class="drawer-group" role="group" aria-labelledby="drawer-group-ryuzen">
-          <a class="nav-external" href="https://readplus.ryuzen.ink" target="_blank" rel="noopener noreferrer">Read Plus<span aria-hidden="true"> ↗</span></a>
+          <a class="nav-external" href="https://www.yorokobistudio.com/" target="_blank" rel="noopener noreferrer">Yorokobi Studio<span aria-hidden="true"> ↗</span></a>
         </div>
       </nav>
     </aside>
@@ -183,6 +183,20 @@ function renderHeader() {
       <a data-route="myList" href="${RYZEN_ROUTES.myList}">${publicIcon("heart")}<span>Lista</span></a>
     </nav>`;
   setActiveNav();
+}
+
+// Mantém --ryuzen-header-h sincronizado com a altura real do header em camadas.
+// Os banners laterais fixos usam essa variável para nunca invadir a navbar.
+function syncHeaderHeight() {
+  const header = document.querySelector(".public-header");
+  if (!header) return;
+  const apply = () => {
+    const height = Math.round(header.getBoundingClientRect().height);
+    if (height > 0) document.documentElement.style.setProperty("--ryuzen-header-h", `${height}px`);
+  };
+  apply();
+  window.addEventListener("load", apply);
+  window.addEventListener("resize", () => window.requestAnimationFrame(apply), { passive: true });
 }
 
 function renderFooter() {
@@ -210,10 +224,10 @@ function renderFooter() {
             <a href="${RYZEN_ROUTES.store}">Loja</a>
             <a href="${RYZEN_ROUTES.mangaSales}">Market Intel</a>
           </nav>
-          <nav class="footer-links" aria-label="Ryuzen">
-            <h2>Ryuzen</h2>
+          <nav class="footer-links" aria-label="Ecossistema">
+            <h2>Ecossistema</h2>
             <a href="${RYZEN_ROUTES.home}">Início</a>
-            <a href="https://readplus.ryuzen.ink" target="_blank" rel="noopener noreferrer">Ryuzen Read Plus</a>
+            <a href="https://www.yorokobistudio.com/" target="_blank" rel="noopener noreferrer">Yorokobi Studio</a>
           </nav>
         </div>
         <div class="footer-bottom"><span>© 2026 Ryuzen Anime Hub. Todos os direitos reservados.</span><span>Dados de animes fornecidos pela Jikan API / MyAnimeList.</span></div>
@@ -499,7 +513,7 @@ function registerRyuzenServiceWorker() {
 }
 
 function setupInstallAppButton() {
-  const header = document.querySelector(".header-actions");
+  const header = document.querySelector(".masthead-actions");
   if (!header || isStandaloneApp()) return;
 
   let deferredInstallPrompt = null;
@@ -532,6 +546,7 @@ function setupInstallAppButton() {
 
 registerRyuzenServiceWorker();
 renderHeader();
+syncHeaderHeight();
 setupInstallAppButton();
 renderFooter();
 renderPromoSidebars();

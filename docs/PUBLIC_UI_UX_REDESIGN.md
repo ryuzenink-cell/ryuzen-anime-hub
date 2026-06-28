@@ -26,7 +26,7 @@ A camada `assets/css/public-ui.css` introduz a linguagem **Ryuzen Discovery**: s
 
 - Header público premium e sticky com navegação reduzida no desktop.
 - Drawer acessível e navegação inferior no mobile.
-- Footer institucional com rotas reais e ligação com Ryuzen Read Plus.
+- Footer institucional com rotas reais e ligação com a Yorokobi Studio.
 - Anime Card 2.0 com botão rápido para a lista, badge contextual e imagem dimensionada para card.
 - Skeletons, empty states, toasts e botões harmonizados.
 - Link “Pular para o conteúdo”, foco visível e suporte a `prefers-reduced-motion`.
@@ -35,7 +35,7 @@ A camada `assets/css/public-ui.css` introduz a linguagem **Ryuzen Discovery**: s
 
 - Hero com busca, CTAs prioritários, painel Top Agora e pílulas de proposta de valor.
 - Faixa de recursos e seções com hierarquia editorial mais clara.
-- CTA final para Minha Lista e bloco editorial com ligação ao Ryuzen Read Plus.
+- CTA final para Minha Lista e bloco editorial com ligação à Yorokobi Studio.
 
 ### Exploração
 

@@ -43,8 +43,13 @@ async function requestWithProviderFallback(operation, params) {
     return await fetchJson(proxyUrl, API_REQUEST_TIMEOUT_MS);
   } catch (error) {
     const responseAlreadyCameFromJikan = Boolean(error?.responseUrl) && new URL(error.responseUrl).origin === new URL(DIRECT_JIKAN_BASE_URL).origin;
-    if (!(error instanceof DiscoveryClientError) || responseAlreadyCameFromJikan || !RETRYABLE_PROXY_STATUSES.has(error.status)) throw error;
-    // Em produção, algumas respostas server-side do provedor podem falhar a partir da rede edge.
+    // Fallback quando: (a) o proxy edge teve falha transitória conhecida; ou
+    // (b) a rota same-origin /api/discovery não existe/não respondeu o JSON da descoberta
+    // (ex.: hospedagem estática ou servidor local sem Pages Functions). Sem isso, a descoberta
+    // ficaria quebrada fora do ambiente edge mesmo com a Jikan pública disponível.
+    const shouldFallback = error instanceof DiscoveryClientError
+      && (RETRYABLE_PROXY_STATUSES.has(error.status) || error.proxyUnavailable === true);
+    if (!shouldFallback || responseAlreadyCameFromJikan) throw error;
     // A Jikan é pública e já era consumida pelo navegador; o fallback restaura a descoberta sem abrir proxy livre.
     return enqueueDirectJikanRequest(operation, params);
   }
@@ -161,10 +166,14 @@ async function fetchJson(url, timeoutMs) {
       signal: controller.signal,
       cache: "no-store",
     });
-    const payload = await response.json().catch(() => ({}));
-    if (response.ok && payload && typeof payload === "object" && payload.data !== undefined) return payload;
+    let parsedJson = true;
+    const payload = await response.json().catch(() => { parsedJson = false; return {}; });
+    if (response.ok && parsedJson && payload && typeof payload === "object" && payload.data !== undefined) return payload;
     const responseError = new DiscoveryClientError(payload.error || getApiErrorMessage(response.status), response.status, payload.code || "DISCOVERY_PROVIDER_ERROR");
     responseError.responseUrl = response.url || url.toString();
+    // O proxy de descoberta sempre devolve JSON com `data` (sucesso) ou `code` (erro tratado).
+    // Uma resposta sem esse formato indica que a rota same-origin não está disponível.
+    responseError.proxyUnavailable = !parsedJson || (payload.code === undefined && payload.data === undefined);
     throw responseError;
   } catch (error) {
     if (error?.name === "AbortError") throw new DiscoveryClientError("A pesquisa demorou demais para responder. Tente novamente.", 504, "DISCOVERY_TIMEOUT");

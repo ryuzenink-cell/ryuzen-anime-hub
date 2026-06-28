@@ -490,6 +490,11 @@ body:not(.admin-page):has([data-header]) .container {
 
 /* Promos — rails stay outside the enlarged 1240px public container. */
 .public-site .promo-rail {
+  /* Os rails são fixos; alinhe o topo à altura real do header em camadas
+     (--ryuzen-header-h, medida via JS) para que nunca invadam a navbar.
+     O fallback 132px equivale ao masthead + faixa de navegação no desktop. */
+  top: calc(var(--ryuzen-header-h, 132px) + 22px);
+  max-height: calc(100vh - var(--ryuzen-header-h, 132px) - 44px);
   border-radius: 22px;
   opacity: .9;
   transition: transform var(--public-transition), opacity var(--public-transition), border-color var(--public-transition);
