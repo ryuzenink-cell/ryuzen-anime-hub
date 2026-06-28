@@ -117,39 +117,63 @@ function renderHeader() {
   if (!header) return;
   header.innerHTML = `
     <header class="site-header public-header">
-      <div class="container nav-wrap">
-        <a class="brand" href="${RYZEN_ROUTES.home}" aria-label="Ryuzen Anime Hub — Início">
-          <img src="${assetPath("icons/icon-192.png?v=20260528-public-discovery-v2")}" alt="" width="42" height="42">
-          <span class="brand-copy"><strong>Ryuzen <span>Anime Hub</span></strong><small>Discovery</small></span>
-        </a>
-        <nav class="main-nav" aria-label="Navegação principal">
-          <a data-route="home" href="${RYZEN_ROUTES.home}">Início</a>
-          <a data-route="season" href="${RYZEN_ROUTES.season}">Temporada</a>
-          <a data-route="ranking" href="${RYZEN_ROUTES.ranking}">Ranking</a>
-          <a data-route="blog" href="${RYZEN_ROUTES.blog}">Blog</a>
-          <a data-route="store" href="${RYZEN_ROUTES.store}">Loja</a>
-        </nav>
-        <div class="header-actions">
-          <a class="header-icon-link header-search-link" href="${RYZEN_ROUTES.search}" aria-label="Buscar animes">${publicIcon("search")}</a>
-          <a class="header-icon-link list-header-link" href="${RYZEN_ROUTES.myList}" aria-label="Abrir minha lista">${publicIcon("heart")}<span>Minha lista</span><span class="list-count" data-list-count hidden>0</span></a>
-          <button class="menu-toggle" data-menu-toggle type="button" aria-expanded="false" aria-controls="mobile-public-nav" aria-label="Abrir menu">${publicIcon("menu")}</button>
+      <div class="masthead">
+        <div class="container masthead-wrap">
+          <a class="brand" href="${RYZEN_ROUTES.home}" aria-label="Ryuzen Anime Hub — Início">
+            <img src="${assetPath("icons/icon-192.png?v=20260528-public-discovery-v2")}" alt="" width="42" height="42">
+            <span class="brand-copy"><strong>Ryuzen <span>Anime Hub</span></strong><small>Anime database · Rankings · Editorial</small></span>
+          </a>
+          <div class="masthead-actions">
+            <form class="header-search" data-search-form action="${RYZEN_ROUTES.search}" role="search" aria-label="Buscar animes">
+              <span class="header-search-icon" aria-hidden="true">${publicIcon("search")}</span>
+              <label class="sr-only" for="header-search-input">Buscar anime</label>
+              <input id="header-search-input" name="q" type="search" placeholder="Buscar anime" autocomplete="off">
+              <button class="header-search-submit" type="submit">Buscar</button>
+            </form>
+            <a class="header-icon-link list-header-link" href="${RYZEN_ROUTES.myList}" aria-label="Abrir minha lista">${publicIcon("heart")}<span>Minha lista</span><span class="list-count" data-list-count hidden>0</span></a>
+            <button class="menu-toggle" data-menu-toggle type="button" aria-expanded="false" aria-controls="mobile-public-nav" aria-label="Abrir menu">${publicIcon("menu")}</button>
+          </div>
         </div>
+      </div>
+      <div class="nav-strip">
+        <nav class="container main-nav" aria-label="Navegação principal">
+          <a data-route="home" href="${RYZEN_ROUTES.home}">Início</a>
+          <a data-route="search" href="${RYZEN_ROUTES.search}">Buscar Anime</a>
+          <a data-route="season" href="${RYZEN_ROUTES.season}">Temporada</a>
+          <a data-route="ranking" href="${RYZEN_ROUTES.ranking}">Rankings</a>
+          <a data-route="myList" href="${RYZEN_ROUTES.myList}">Minha Lista</a>
+          <span class="nav-sep" aria-hidden="true"></span>
+          <a data-route="blog" href="${RYZEN_ROUTES.blog}">Editorial</a>
+          <a data-route="store" href="${RYZEN_ROUTES.store}">Loja</a>
+          <a data-route="mangaSales" href="${RYZEN_ROUTES.mangaSales}">Market Intel</a>
+          <span class="nav-sep" aria-hidden="true"></span>
+          <a class="nav-external" href="https://readplus.ryuzen.ink" target="_blank" rel="noopener noreferrer">Read Plus<span aria-hidden="true"> ↗</span></a>
+        </nav>
       </div>
     </header>
     <div class="mobile-backdrop" data-menu-backdrop aria-hidden="true"></div>
     <aside class="mobile-drawer" id="mobile-public-nav" data-mobile-drawer aria-hidden="true" aria-label="Menu público">
       <div class="drawer-head"><strong>Ryuzen Anime Hub</strong><button class="menu-toggle" data-menu-close type="button" aria-label="Fechar menu">${publicIcon("close")}</button></div>
       <nav class="drawer-links" aria-label="Navegação mobile">
-        <a data-route="home" href="${RYZEN_ROUTES.home}">Início</a>
-        <a data-route="search" href="${RYZEN_ROUTES.search}">Buscar animes</a>
-        <a data-route="season" href="${RYZEN_ROUTES.season}">Temporada atual</a>
-        <a data-route="ranking" href="${RYZEN_ROUTES.ranking}">Rankings</a>
-        <a data-route="blog" href="${RYZEN_ROUTES.blog}">Blog Ryuzen</a>
-        <a data-route="store" href="${RYZEN_ROUTES.store}">Loja Ryuzen</a>
-        <a data-route="myList" href="${RYZEN_ROUTES.myList}">Minha lista</a>
-        <div class="drawer-divider"></div>
-        <a data-route="mangaSales" href="${RYZEN_ROUTES.mangaSales}">Mercado de Mangás</a>
-        <a data-route="guides" href="${RYZEN_ROUTES.guides}">Guias</a>
+        <p class="drawer-group-label" id="drawer-group-descobrir">Descobrir</p>
+        <div class="drawer-group" role="group" aria-labelledby="drawer-group-descobrir">
+          <a data-route="home" href="${RYZEN_ROUTES.home}">Início</a>
+          <a data-route="search" href="${RYZEN_ROUTES.search}">Buscar Anime</a>
+          <a data-route="season" href="${RYZEN_ROUTES.season}">Temporada</a>
+          <a data-route="ranking" href="${RYZEN_ROUTES.ranking}">Rankings</a>
+          <a data-route="myList" href="${RYZEN_ROUTES.myList}">Minha Lista</a>
+        </div>
+        <p class="drawer-group-label" id="drawer-group-editorial">Editorial</p>
+        <div class="drawer-group" role="group" aria-labelledby="drawer-group-editorial">
+          <a data-route="blog" href="${RYZEN_ROUTES.blog}">Blog / Editorial</a>
+          <a data-route="guides" href="${RYZEN_ROUTES.guides}">Guias</a>
+          <a data-route="store" href="${RYZEN_ROUTES.store}">Loja Ryuzen</a>
+          <a data-route="mangaSales" href="${RYZEN_ROUTES.mangaSales}">Market Intel</a>
+        </div>
+        <p class="drawer-group-label" id="drawer-group-ryuzen">Ryuzen</p>
+        <div class="drawer-group" role="group" aria-labelledby="drawer-group-ryuzen">
+          <a class="nav-external" href="https://readplus.ryuzen.ink" target="_blank" rel="noopener noreferrer">Read Plus<span aria-hidden="true"> ↗</span></a>
+        </div>
       </nav>
     </aside>
     <nav class="mobile-bottom-nav" aria-label="Atalhos principais">
@@ -172,19 +196,23 @@ function renderFooter() {
             <a class="brand" href="${RYZEN_ROUTES.home}"><img src="${assetPath("icons/icon-192.png?v=20260528-public-discovery-v2")}" alt="" width="42" height="42"><span class="brand-copy"><strong>Ryuzen <span>Anime Hub</span></strong><small>Discovery</small></span></a>
             <p>Descubra, acompanhe e organize seus animes favoritos em português.</p>
           </div>
-          <nav class="footer-links" aria-label="Explorar">
-            <h2>Explorar</h2>
-            <a href="${RYZEN_ROUTES.season}">Temporada atual</a>
+          <nav class="footer-links" aria-label="Descobrir">
+            <h2>Descobrir</h2>
+            <a href="${RYZEN_ROUTES.search}">Buscar Anime</a>
+            <a href="${RYZEN_ROUTES.season}">Temporada</a>
             <a href="${RYZEN_ROUTES.ranking}">Rankings</a>
-            <a href="${RYZEN_ROUTES.search}">Buscar anime</a>
-            <a href="${RYZEN_ROUTES.myList}">Minha lista</a>
+            <a href="${RYZEN_ROUTES.myList}">Minha Lista</a>
+          </nav>
+          <nav class="footer-links" aria-label="Editorial">
+            <h2>Editorial</h2>
+            <a href="${RYZEN_ROUTES.blog}">Blog</a>
+            <a href="${RYZEN_ROUTES.guides}">Guias</a>
             <a href="${RYZEN_ROUTES.store}">Loja</a>
+            <a href="${RYZEN_ROUTES.mangaSales}">Market Intel</a>
           </nav>
           <nav class="footer-links" aria-label="Ryuzen">
             <h2>Ryuzen</h2>
-            <a href="${RYZEN_ROUTES.blog}">Blog</a>
-            <a href="${RYZEN_ROUTES.guides}">Guias</a>
-            <a href="${RYZEN_ROUTES.mangaSales}">Mercado de Mangás</a>
+            <a href="${RYZEN_ROUTES.home}">Início</a>
             <a href="https://readplus.ryuzen.ink" target="_blank" rel="noopener noreferrer">Ryuzen Read Plus</a>
           </nav>
         </div>
