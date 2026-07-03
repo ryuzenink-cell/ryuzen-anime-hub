@@ -1364,7 +1364,8 @@ function openModal(modal, initialFocus, trigger) {
 function closeModal(modal, returnFocus) {
   modal.classList.add("hidden");
   if (editorState.openModal === modal) editorState.openModal = null;
-  if (![linkModal, imageModal, previewModal].some((item) => !item.classList.contains("hidden"))) {
+  const allModals = [linkModal, imageModal, tableModal, animeFactsModal, whereToWatchModal, noticeModal, relatedArticlesModal, previewModal];
+  if (!allModals.some((item) => !item.classList.contains("hidden"))) {
     document.body.classList.remove("editor-modal-open");
   }
   if (returnFocus && editorState.modalTrigger) editorState.modalTrigger.focus();
