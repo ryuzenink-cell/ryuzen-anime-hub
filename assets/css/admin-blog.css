@@ -49,6 +49,9 @@ main.admin-panel { padding: 34px 0 70px; }
 .draft-status.saving { color:#c7d5ff; background:rgba(91,124,250,.14); }
 .draft-status.saved { color:#b8ffe9; background:rgba(51,214,159,.12); }
 .draft-status.error { color:#ffd2d2; background:rgba(255,107,107,.12); }
+.draft-status.offline { color:#ffe4a4; background:rgba(255,204,102,.12); }
+.draft-status.retrying { color:#ffe4a4; background:rgba(255,204,102,.16); }
+.draft-status.conflict { color:#ffd2d2; background:rgba(255,107,107,.16); }
 .admin-editor-footer { display:flex; gap:10px; flex-wrap:wrap; margin-top:18px; }
 .admin-alert { padding:12px 14px; border-radius:var(--radius); border:1px solid var(--border); font-weight:700; }
 .admin-alert.success { color:#b8ffe9; background:rgba(51,214,159,.12); }

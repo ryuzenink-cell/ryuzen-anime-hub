@@ -13,13 +13,31 @@ async function adminFetch(url, options = {}) {
   const method = String(options.method || "GET").toUpperCase();
   const headers = { Accept: "application/json", ...(options.body ? { "Content-Type": "application/json" } : {}), ...(options.headers || {}) };
   if (["POST", "PUT", "PATCH", "DELETE"].includes(method)) headers["X-CSRF-Token"] = adminSessionState.csrfToken;
-  const response = await fetch(url, { ...options, method, headers, credentials: "same-origin" });
+  let response;
+  try {
+    response = await fetch(url, { ...options, method, headers, credentials: "same-origin" });
+  } catch (networkError) {
+    const error = new Error("Sua conexão foi interrompida. Verifique a internet e tente novamente.");
+    error.code = "NETWORK_ERROR";
+    error.cause = networkError;
+    throw error;
+  }
   const body = await response.json().catch(() => ({}));
   if (response.status === 401) {
     window.location.assign(`/admin/login/?next=${encodeURIComponent(location.pathname + location.search)}`);
-    throw new Error("Sua sessão expirou. Faça login novamente.");
+    const error = new Error(body.error || "Sua sessão expirou. Faça login novamente.");
+    error.code = body.code || "SESSION_EXPIRED";
+    error.status = 401;
+    throw error;
   }
-  if (!response.ok) throw new Error(body.error || "Falha na operação.");
+  if (!response.ok) {
+    const error = new Error(body.error || "Não foi possível concluir esta operação.");
+    error.code = body.code || null;
+    error.field = body.field || null;
+    error.errorId = body.errorId || null;
+    error.status = response.status;
+    throw error;
+  }
   return body;
 }
 async function logoutAdmin() {

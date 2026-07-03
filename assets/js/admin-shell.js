@@ -10,7 +10,7 @@
   ];
   const item = (key, href, label, icon) => `<a class="${section === key ? "active" : ""}" href="${href}" title="${label}"><span class="nav-icon" aria-hidden="true">${icon}</span><span class="nav-label">${label}</span></a>`;
   nav.className = "admin-sidebar";
-  nav.innerHTML = `<a class="admin-brand" href="/admin/" title="Ryuzen Admin"><img src="/assets/icons/icon-192.png?v=20260703-admin-v5" alt=""><div class="nav-label"><strong>RYUZEN ADMIN</strong><small>Central Operacional</small></div></a>
+  nav.innerHTML = `<a class="admin-brand" href="/admin/" title="Ryuzen Admin"><img src="/assets/icons/icon-192.png?v=20260703-admin-v6" alt=""><div class="nav-label"><strong>RYUZEN ADMIN</strong><small>Central Operacional</small></div></a>
     <button class="admin-collapse" type="button" data-admin-collapse aria-label="Recolher menu" aria-expanded="true">‹</button>
     <p class="admin-nav-section">Visão Geral</p><nav class="admin-nav">${item(...items[0])}</nav>
     <p class="admin-nav-section">Editorial</p><nav class="admin-nav">${item(...items[1])}${item(...items[2])}</nav>

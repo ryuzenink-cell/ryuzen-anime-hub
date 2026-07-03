@@ -62,7 +62,9 @@ export async function verifySecret(value, expectedHash, salt) {
 }
 export function requireAuthConfiguration(env) {
   const required = ["ADMIN_EMAIL", "ADMIN_PASSWORD_HASH", "ADMIN_PASSWORD_SALT", "BLOG_ADMIN_TOKEN_HASH", "BLOG_ADMIN_TOKEN_SALT", "SESSION_SECRET"];
-  if (required.some((key) => !String(env?.[key] || "").trim())) throw new RequestError("Autenticação administrativa indisponível.", 503);
+  if (required.some((key) => !String(env?.[key] || "").trim())) {
+    throw new RequestError("A autenticação administrativa está indisponível neste ambiente.", 503, { code: "AUTH_UNAVAILABLE" });
+  }
 }
 export async function requestFingerprint(request, env) {
   const ip = request.headers.get("CF-Connecting-IP") || "local";
@@ -127,10 +129,14 @@ export async function revokeSession(session, env) {
 export async function validateCsrf(request, session, env) {
   if (!["POST", "PUT", "PATCH", "DELETE"].includes(request.method.toUpperCase())) return;
   const origin = request.headers.get("Origin");
-  if (origin && origin !== new URL(request.url).origin) throw new RequestError("Solicitação não autorizada.", 403);
+  if (origin && origin !== new URL(request.url).origin) {
+    throw new RequestError("Solicitação não autorizada (origem inválida).", 403, { code: "FORBIDDEN" });
+  }
   const token = request.headers.get("X-CSRF-Token") || "";
   const tokenHash = token ? await keyedHash(token, env.SESSION_SECRET) : "";
-  if (!token || !constantTimeEqual(tokenHash, session.csrf_token_hash)) throw new RequestError("Solicitação não autorizada.", 403);
+  if (!token || !constantTimeEqual(tokenHash, session.csrf_token_hash)) {
+    throw new RequestError("Sua sessão expirou ou o token de segurança é inválido. Recarregue a página e tente novamente.", 403, { code: "FORBIDDEN" });
+  }
 }
 
 export async function writeAudit(db, request, env, action, resourceType = null, resourceId = null, metadata = null) {

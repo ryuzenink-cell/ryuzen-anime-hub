@@ -1,5 +1,5 @@
 import { json, handleError, parseInteger, readJson, requireDatabase } from "../../../_utils/http.js";
-import { replaceImages, replaceTags, validatePostPayload } from "../../../_utils/posts.js";
+import { getPostCapabilities, replaceImages, replaceTags, validatePostPayload } from "../../../_utils/posts.js";
 import { writeAudit } from "../../../_utils/auth.js";
 export async function onRequestGet({ request, env }) {
   try {
@@ -21,6 +21,28 @@ export async function onRequestGet({ request, env }) {
   } catch(error){ return handleError(error); }
 }
 export async function onRequestPost({ request, env }) {
-  try { const db=requireDatabase(env); const payload=validatePostPayload(await readJson(request)); const result=await db.prepare(`INSERT INTO posts (title,slug,excerpt,content_markdown,content_html,status,author_name,category_id,cover_image_url,cover_alt,cover_credit,cover_source_url,social_image_url,seo_title,seo_description,canonical_url,featured,created_at,updated_at) VALUES (?,?,?,?,?,'draft',?,?,?,?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP) RETURNING id`).bind(payload.title,payload.slug,payload.excerpt,payload.content_markdown,payload.content_html,payload.author_name,payload.category_id,payload.cover_image_url,payload.cover_alt,payload.cover_credit,payload.cover_source_url,payload.social_image_url,payload.seo_title,payload.seo_description,payload.canonical_url,0).first(); await replaceTags(db,result.id,payload.tags); await replaceImages(db,result.id,payload.images); await writeAudit(db,request,env,"post.create_draft","post",result.id,{slug:payload.slug}); return json({id:result.id,status:"draft",message:"Rascunho salvo com sucesso."},201); }
-  catch(error){ return handleError(error); }
+  try {
+    const db = requireDatabase(env);
+    const capabilities = await getPostCapabilities(db);
+    const payload = validatePostPayload(await readJson(request));
+    const versionColumn = capabilities.versioning ? ", version" : "";
+    const versionPlaceholder = capabilities.versioning ? ", 1" : "";
+    const versionReturning = capabilities.versioning ? ", version" : "";
+    const result = await db.prepare(`INSERT INTO posts
+      (title,slug,excerpt,content_markdown,content_html,status,author_name,category_id,cover_image_url,cover_alt,cover_credit,cover_source_url,social_image_url,seo_title,seo_description,canonical_url,featured,created_at,updated_at${versionColumn})
+      VALUES (?,?,?,?,?,'draft',?,?,?,?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP${versionPlaceholder})
+      RETURNING id, updated_at${versionReturning}`)
+      .bind(payload.title, payload.slug, payload.excerpt, payload.content_markdown, payload.content_html, payload.author_name, payload.category_id, payload.cover_image_url, payload.cover_alt, payload.cover_credit, payload.cover_source_url, payload.social_image_url, payload.seo_title, payload.seo_description, payload.canonical_url, 0)
+      .first();
+    await replaceTags(db, result.id, payload.tags);
+    await replaceImages(db, result.id, payload.images);
+    await writeAudit(db, request, env, "post.create_draft", "post", result.id, { slug: payload.slug });
+    return json({
+      id: result.id,
+      status: "draft",
+      version: capabilities.versioning ? result.version : null,
+      updated_at: result.updated_at,
+      message: "Rascunho salvo com sucesso.",
+    }, 201);
+  } catch (error) { return handleError(error); }
 }

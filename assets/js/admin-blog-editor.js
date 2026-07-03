@@ -8,7 +8,16 @@ const editorState = {
   modalTrigger: null,
   focusMode: false,
   status: "draft",
-  featured: false
+  featured: false,
+  // Autosave / concorrência otimista.
+  version: null,
+  saving: false,
+  offline: false,
+  retryCount: 0,
+  lastSavedSnapshot: null,
+  lastSavedAt: null,
+  autosaveTimer: null,
+  retryTimer: null
 };
 
 const form = document.getElementById("postEditorForm");
@@ -45,6 +54,10 @@ let relatedSelected = new Map();
 let relatedCurrentResults = [];
 let relatedSearchTimer = null;
 
+const AUTOSAVE_DEBOUNCE_MS = 2000;
+const AUTOSAVE_RETRY_DELAYS_MS = [3000, 8000, 20000];
+let saveChain = Promise.resolve(null);
+
 requireAdminSession(initEditor);
 
 async function initEditor() {
@@ -54,6 +67,22 @@ async function initEditor() {
   syncSeoPreview();
   await loadCategories();
   if (editorState.id) await loadPost(editorState.id);
+  editorState.lastSavedSnapshot = JSON.stringify(payload());
+  await offerLocalDraftRecovery();
+  editorState.offline = !navigator.onLine;
+  if (editorState.offline) setDraftStatus("offline");
+  window.addEventListener("online", handleConnectionRestored);
+  window.addEventListener("offline", handleConnectionLost);
+}
+
+function handleConnectionLost() {
+  editorState.offline = true;
+  if (editorState.dirty) setDraftStatus("offline");
+}
+
+function handleConnectionRestored() {
+  editorState.offline = false;
+  if (editorState.dirty) queueSave({ manual: false });
 }
 
 function bindEditor() {
@@ -242,6 +271,7 @@ async function loadPost(id) {
     canonical.value = post.canonical_url || dynamicUrl(post.slug);
     editor.innerHTML = post.content_html || "";
     editorState.status = post.status || "draft"; editorState.featured = Boolean(post.featured);
+    editorState.version = Number.isInteger(post.version) ? post.version : null;
     updateFeaturedControl(); await loadRevisions();
     editorState.slugTouched = true;
     editorState.dirty = false;
@@ -252,6 +282,27 @@ async function loadPost(id) {
   } catch (error) {
     showFeedback(error.message, "error");
   }
+}
+
+function applyPayloadToForm(data) {
+  title.value = data.title || "";
+  slug.value = data.slug || "";
+  val("excerpt", data.excerpt);
+  val("categoryId", data.category_id || "");
+  val("tags", (data.tags || []).join(", "));
+  val("coverImageUrl", data.cover_image_url);
+  val("coverAlt", data.cover_alt);
+  val("coverCredit", data.cover_credit);
+  val("coverSourceUrl", data.cover_source_url);
+  val("socialImageUrl", data.social_image_url);
+  val("seoTitle", data.seo_title);
+  val("seoDescription", data.seo_description);
+  canonical.value = data.canonical_url || dynamicUrl(slug.value);
+  editor.innerHTML = data.content_html || "";
+  editorState.slugTouched = true;
+  updateWritingStats();
+  syncSeoPreview();
+  updateLinkToolState();
 }
 
 function val(id, value) {
@@ -1186,27 +1237,184 @@ function payload() {
   };
 }
 
-async function savePost() {
-  setDraftStatus("saving");
+/* ---------------------------------------------------------------------- */
+/* Salvamento automático, fila serializada e concorrência otimista        */
+/* ---------------------------------------------------------------------- */
+
+/* ---------------------------------------------------------------------- */
+/* Camada de segurança local (localStorage) contra perda de conteúdo      */
+/* O D1 continua sendo a fonte oficial; o localStorage só existe para     */
+/* recuperar texto que ainda não chegou a ser confirmado pelo servidor.   */
+/* ---------------------------------------------------------------------- */
+
+const LOCAL_DRAFT_SCHEMA_VERSION = 1;
+
+function localDraftKey() {
+  return editorState.id ? `ryuzen_admin_draft_${editorState.id}` : "ryuzen_admin_draft_new";
+}
+
+function persistLocalDraft() {
   try {
-    const body = payload();
+    const snapshot = { schemaVersion: LOCAL_DRAFT_SCHEMA_VERSION, payload: payload(), version: editorState.version, savedAt: Date.now() };
+    window.localStorage.setItem(localDraftKey(), JSON.stringify(snapshot));
+  } catch {
+    // localStorage indisponível (modo privado, quota excedida etc.) — o autosave remoto continua sendo a proteção principal.
+  }
+}
+
+function clearLocalDraft() {
+  try { window.localStorage.removeItem(localDraftKey()); } catch { /* ignore */ }
+}
+
+function readLocalDraft() {
+  try {
+    const raw = window.localStorage.getItem(localDraftKey());
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    if (!data || data.schemaVersion !== LOCAL_DRAFT_SCHEMA_VERSION || !data.payload) return null;
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+async function offerLocalDraftRecovery() {
+  const local = readLocalDraft();
+  if (!local) return;
+  const localSnapshot = JSON.stringify(local.payload);
+  if (localSnapshot === editorState.lastSavedSnapshot) {
+    clearLocalDraft();
+    return;
+  }
+  const restore = window.AdminUI
+    ? await window.AdminUI.confirm("Encontramos, neste dispositivo, um rascunho com alterações que não chegaram a ser confirmadas pelo servidor. Deseja restaurá-lo?", { confirmText: "Restaurar rascunho local", variant: "primary" })
+    : window.confirm("Encontramos um rascunho local não confirmado pelo servidor. Restaurar?");
+  if (!restore) {
+    clearLocalDraft();
+    return;
+  }
+  applyPayloadToForm(local.payload);
+  markDirty();
+  showFeedback("Rascunho local restaurado. Ele será salvo automaticamente em instantes.", "success");
+}
+
+function scheduleAutosave() {
+  window.clearTimeout(editorState.autosaveTimer);
+  if (editorState.offline) return;
+  editorState.autosaveTimer = window.setTimeout(() => queueSave({ manual: false }), AUTOSAVE_DEBOUNCE_MS);
+}
+
+function stopAutosaveTimers() {
+  window.clearTimeout(editorState.autosaveTimer);
+  window.clearTimeout(editorState.retryTimer);
+}
+
+/**
+ * Serializa TODAS as tentativas de salvar (autosave, botão manual e publicação)
+ * numa única corrente de promises. Isso impede que duas requisições de criação
+ * concorrentes gerem dois rascunhos: a segunda chamada só executa depois que a
+ * primeira já concluiu e `editorState.id` já foi preenchido, então ela vira um
+ * PUT em vez de um novo POST.
+ */
+function queueSave(options = {}) {
+  saveChain = saveChain.then(() => runSave(options)).catch((error) => {
+    console.error("Falha inesperada na fila de salvamento:", error);
+    return editorState.id ? Number(editorState.id) : null;
+  });
+  return saveChain;
+}
+
+function isNetworkError(error) {
+  return !navigator.onLine || error?.code === "NETWORK_ERROR" || error?.status === undefined;
+}
+
+async function runSave({ manual = false, publishing = false } = {}) {
+  if (editorState.offline) {
+    setDraftStatus("offline");
+    return editorState.id ? Number(editorState.id) : null;
+  }
+  const currentPayload = payload();
+  const snapshot = JSON.stringify(currentPayload);
+  if (!manual && !publishing && snapshot === editorState.lastSavedSnapshot) {
+    return editorState.id ? Number(editorState.id) : null;
+  }
+
+  editorState.saving = true;
+  setDraftStatus("saving");
+  updateSaveControlsDisabled();
+  try {
     const method = editorState.id ? "PUT" : "POST";
     const url = editorState.id ? `/api/admin/posts/${editorState.id}` : "/api/admin/posts";
-    const result = await adminFetch(url, { method, body: JSON.stringify(body) });
+    const requestBody = editorState.id ? { ...currentPayload, version: editorState.version } : currentPayload;
+    const result = await adminFetch(url, { method, body: JSON.stringify(requestBody), keepalive: true });
     if (!editorState.id) {
       editorState.id = result.id;
       history.replaceState({}, "", `/admin/blog/editar/?id=${result.id}`);
     }
+    if (typeof result.version === "number") editorState.version = result.version;
+    editorState.lastSavedSnapshot = snapshot;
     editorState.dirty = false;
-    setDraftStatus("saved");
-    showFeedback("Rascunho salvo com sucesso.", "success");
+    editorState.retryCount = 0;
+    editorState.lastSavedAt = new Date();
+    clearLocalDraft();
+    setDraftStatus("saved", editorState.lastSavedAt);
+    if (manual) showFeedback("Rascunho salvo com sucesso.", "success");
     if (editorState.id) await loadRevisions();
     return editorState.id;
   } catch (error) {
-    setDraftStatus("error");
-    showFeedback(error.message, "error");
-    return null;
+    return handleSaveFailure(error, manual);
+  } finally {
+    editorState.saving = false;
+    updateSaveControlsDisabled();
   }
+}
+
+function handleSaveFailure(error, manual) {
+  persistLocalDraft();
+  if (error.code === "VERSION_CONFLICT") {
+    stopAutosaveTimers();
+    setDraftStatus("conflict");
+    showFeedback(error.message, "error");
+    return editorState.id ? Number(editorState.id) : null;
+  }
+  if (error.code === "SESSION_EXPIRED") {
+    // adminFetch já redireciona para o login; nada mais a fazer aqui além de preservar o rascunho local (já feito acima).
+    return editorState.id ? Number(editorState.id) : null;
+  }
+  if (isNetworkError(error)) {
+    setDraftStatus(editorState.offline ? "offline" : "retrying");
+    scheduleRetry();
+    if (manual) showFeedback("Sua conexão foi interrompida. As alterações continuam neste dispositivo e serão salvas quando a conexão retornar.", "error");
+    return editorState.id ? Number(editorState.id) : null;
+  }
+  setDraftStatus("error");
+  showFeedback(buildErrorMessage(error), "error");
+  return null;
+}
+
+function buildErrorMessage(error) {
+  const suffix = error.errorId ? ` (código ${error.code || "SAVE_FAILED"}-${error.errorId})` : "";
+  return `${error.message}${suffix}`;
+}
+
+function scheduleRetry() {
+  window.clearTimeout(editorState.retryTimer);
+  const delay = AUTOSAVE_RETRY_DELAYS_MS[Math.min(editorState.retryCount, AUTOSAVE_RETRY_DELAYS_MS.length - 1)];
+  editorState.retryCount += 1;
+  editorState.retryTimer = window.setTimeout(() => {
+    if (!editorState.offline && editorState.dirty) queueSave({ manual: false });
+  }, delay);
+}
+
+function updateSaveControlsDisabled() {
+  const saveButton = document.getElementById("saveDraft");
+  const publishButton = document.getElementById("publishPost");
+  if (saveButton) saveButton.disabled = editorState.saving;
+  if (publishButton) publishButton.disabled = editorState.saving;
+}
+
+async function savePost() {
+  return queueSave({ manual: true });
 }
 
 async function publishPost() {
@@ -1215,21 +1423,28 @@ async function publishPost() {
     showFeedback(`Corrija antes de publicar: ${blocking.map((item) => item.label).join("; ")}.`, "error");
     return;
   }
-  const id = await savePost();
-  const confirmed = id && (window.AdminUI
-    ? await window.AdminUI.confirm("Publicar o artigo agora?", { confirmText: "Publicar", variant: "primary" })
-    : window.confirm("Publicar o artigo agora?"));
-  if (confirmed) {
-    try {
-      const result = await adminFetch(`/api/admin/posts/${id}/publish`, { method: "POST" });
-      editorState.dirty = false;
-      setDraftStatus("saved");
-      editorState.status = "published"; updateFeaturedControl();
-      showFeedback(`Artigo publicado. URL: ${result.url}`, "success");
-    } catch (error) {
-      setDraftStatus("error");
-      showFeedback(error.message, "error");
-    }
+  const publishButton = document.getElementById("publishPost");
+  if (publishButton?.disabled) return; // clique duplo enquanto a publicação já está em andamento
+  if (publishButton) publishButton.disabled = true;
+  try {
+    // Aguarda qualquer salvamento automático pendente e força uma última gravação com o conteúdo mais recente.
+    const id = await queueSave({ manual: true, publishing: true });
+    if (!id) return;
+    const confirmed = window.AdminUI
+      ? await window.AdminUI.confirm("Publicar o artigo agora?", { confirmText: "Publicar", variant: "primary" })
+      : window.confirm("Publicar o artigo agora?");
+    if (!confirmed) return;
+    if (publishButton) publishButton.disabled = true;
+    const result = await adminFetch(`/api/admin/posts/${id}/publish`, { method: "POST" });
+    editorState.dirty = false;
+    setDraftStatus("saved", new Date());
+    editorState.status = "published"; updateFeaturedControl();
+    showFeedback(`Artigo publicado. URL: ${result.url}`, "success");
+  } catch (error) {
+    setDraftStatus("error");
+    showFeedback(buildErrorMessage(error), "error");
+  } finally {
+    if (publishButton) publishButton.disabled = editorState.saving;
   }
 }
 
@@ -1326,18 +1541,27 @@ function updateWritingStats() {
 
 function markDirty() {
   editorState.dirty = true;
-  setDraftStatus("dirty");
+  setDraftStatus(editorState.offline ? "offline" : "dirty");
   updateWritingStats();
   syncSeoPreview();
+  persistLocalDraft();
+  scheduleAutosave();
 }
 
-function setDraftStatus(status) {
+function formatTime(date) {
+  return new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit" }).format(date);
+}
+
+function setDraftStatus(status, timestamp) {
   const statusElement = document.getElementById("draftStatus");
   const labels = {
     clean: "Sem alterações pendentes",
     dirty: "Alterações não salvas",
-    saving: "Salvando rascunho…",
-    saved: "Rascunho salvo",
+    saving: "Salvando…",
+    saved: timestamp ? `Salvo às ${formatTime(timestamp)}` : "Rascunho salvo",
+    offline: "Sem conexão — as alterações continuam salvas neste dispositivo",
+    retrying: "Sem conexão — tentando salvar novamente…",
+    conflict: "Versão desatualizada — recarregue a página para continuar",
     error: "Erro ao salvar"
   };
   statusElement.className = `draft-status ${status}`;

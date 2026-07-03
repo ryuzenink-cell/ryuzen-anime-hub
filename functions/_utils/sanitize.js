@@ -23,7 +23,7 @@ function normalizeTagName(original) {
   return original;
 }
 
-export function safeWebUrl(value = "", required = false) {
+export function safeWebUrl(value = "", required = false, label = "URL", field = null) {
   const input = String(value || "").trim();
   if (!input && !required) return "";
   try {
@@ -31,7 +31,8 @@ export function safeWebUrl(value = "", required = false) {
     if (!["http:", "https:"].includes(parsed.protocol)) throw new Error();
     return parsed.href;
   } catch {
-    throw new RequestError("Use somente URLs válidas iniciadas em http:// ou https://.", 400);
+    const preview = input.length > 120 ? `${input.slice(0, 120)}…` : input;
+    throw new RequestError(`${label} inválida: "${preview}". Use uma URL completa iniciada por http:// ou https://.`, 400, { code: "VALIDATION_ERROR", field });
   }
 }
 
@@ -137,7 +138,7 @@ function escapeAttribute(value = "") {
 }
 
 export function normalizeImage(image = {}, index = 0) {
-  const imageUrl = safeWebUrl(image.image_url || image.imageUrl || image.url, true);
+  const imageUrl = safeWebUrl(image.image_url || image.imageUrl || image.url, true, "URL da imagem");
   const altText = String(image.alt_text || image.altText || "").trim().slice(0, 240);
   if (!altText) throw new RequestError("Toda imagem interna precisa de texto alternativo.", 400);
   return {
@@ -145,7 +146,7 @@ export function normalizeImage(image = {}, index = 0) {
     alt_text: altText,
     caption: String(image.caption || "").trim().slice(0, 400),
     credit_text: String(image.credit_text || image.creditText || "").trim().slice(0, 240),
-    source_url: safeWebUrl(image.source_url || image.sourceUrl || ""),
+    source_url: safeWebUrl(image.source_url || image.sourceUrl || "", false, "URL da fonte da imagem"),
     placement: ["inline", "gallery", "highlight"].includes(image.placement) ? image.placement : "inline",
     position_order: Number.isInteger(Number(image.position_order ?? image.positionOrder)) ? Number(image.position_order ?? image.positionOrder) : index,
   };
