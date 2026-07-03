@@ -10,7 +10,19 @@ const BLOCKED_TAGS = new Set(["script", "style", "iframe", "object", "embed", "s
 const VOID_TAGS = new Set(["img", "hr", "br"]);
 const ALIGN_CLASSES = new Set(["align-center", "align-right"]);
 const BLOCKQUOTE_CLASSES = new Set(["callout-notice"]);
+const FIGURE_CLASSES = new Set(["article-figure"]);
+const FIGCAPTION_CLASSES = new Set(["article-caption"]);
+const SPAN_CLASSES = new Set(["caption", "credit", "related-article-category", "related-article-description"]);
+const LI_CLASSES = new Set(["related-article-card"]);
+const UL_CLASSES = new Set(["related-articles-grid"]);
 const SITE_HOSTNAME = "anime.ryuzen.ink";
+
+// Filtra o atributo class de um elemento para somente os valores explicitamente permitidos,
+// preservando múltiplas classes válidas simultaneamente (ex.: "badge warn").
+function classAttr(attrs, allowed) {
+  const classes = String(attrs.class || "").split(/\s+/).filter((value) => allowed.has(value));
+  return classes.length ? ` class="${escapeAttribute(classes.join(" "))}"` : "";
+}
 
 function isInternalHref(href) {
   try { return new URL(href).hostname === SITE_HOSTNAME; } catch { return false; }
@@ -111,21 +123,16 @@ function serializeAllowedTag(tag, attrs) {
     if (!alt) throw new RequestError("Toda imagem interna precisa de URL e texto alternativo.", 400);
     return `<img src="${escapeAttribute(src)}" alt="${escapeAttribute(alt)}" loading="lazy" decoding="async">`;
   }
-  if (tag === "blockquote") {
-    const cssClass = BLOCKQUOTE_CLASSES.has(attrs.class) ? ` class="${escapeAttribute(attrs.class)}"` : "";
-    return `<blockquote${cssClass}>`;
-  }
-  if (tag === "figure") return attrs.class === "article-figure" ? '<figure class="article-figure">' : "<figure>";
-  if (tag === "figcaption") return attrs.class === "article-caption" ? '<figcaption class="article-caption">' : "<figcaption>";
-  if (tag === "span") {
-    const cssClass = ["caption", "credit"].includes(attrs.class) ? ` class="${attrs.class}"` : "";
-    return `<span${cssClass}>`;
-  }
+  if (tag === "blockquote") return `<blockquote${classAttr(attrs, BLOCKQUOTE_CLASSES)}>`;
+  if (tag === "figure") return `<figure${classAttr(attrs, FIGURE_CLASSES)}>`;
+  if (tag === "figcaption") return `<figcaption${classAttr(attrs, FIGCAPTION_CLASSES)}>`;
+  if (tag === "span") return `<span${classAttr(attrs, SPAN_CLASSES)}>`;
+  if (tag === "li") return `<li${classAttr(attrs, LI_CLASSES)}>`;
+  if (tag === "ul") return `<ul${classAttr(attrs, UL_CLASSES)}>`;
   if (tag === "table") return '<table class="article-table">';
   if (tag === "th" || tag === "td") {
     const scope = tag === "th" && ["col", "row"].includes(attrs.scope) ? ` scope="${attrs.scope}"` : "";
-    const cellClass = ALIGN_CLASSES.has(attrs.class) ? ` class="${escapeAttribute(attrs.class)}"` : "";
-    return `<${tag}${scope}${cellClass}>`;
+    return `<${tag}${scope}${classAttr(attrs, ALIGN_CLASSES)}>`;
   }
   return `<${tag}>`;
 }

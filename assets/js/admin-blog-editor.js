@@ -1199,6 +1199,23 @@ function renderRelatedSelected() {
   });
 }
 
+function truncateText(value, max) {
+  const text = String(value || "").trim();
+  if (text.length <= max) return text;
+  return `${text.slice(0, max - 1).trim()}…`;
+}
+
+function buildRelatedArticleCard(post) {
+  const href = dynamicUrl(post.slug);
+  const cover = post.cover_image_url ? normalizeHttpUrl(post.cover_image_url) : "";
+  const coverHtml = cover
+    ? `<img src="${escapeAttr(cover)}" alt="${escapeAttr(post.cover_alt || post.title)}" loading="lazy" decoding="async">`
+    : "";
+  const category = post.category_name || "Editorial";
+  const description = truncateText(post.excerpt, 140);
+  return `<li class="related-article-card"><a href="${escapeAttr(href)}">${coverHtml}<span class="related-article-category">${escapeText(category)}</span><strong>${escapeText(post.title)}</strong>${description ? `<span class="related-article-description">${escapeText(description)}</span>` : ""}</a></li>`;
+}
+
 function insertRelatedArticles() {
   clearModalError("relatedArticlesFormError");
   if (!relatedSelected.size) {
@@ -1206,10 +1223,8 @@ function insertRelatedArticles() {
     return;
   }
   const label = document.getElementById("relatedLabel").value || "Leia também";
-  const items = [...relatedSelected.values()]
-    .map((post) => `<li><a href="${escapeAttr(dynamicUrl(post.slug))}">${escapeText(post.title)}</a></li>`)
-    .join("");
-  const html = `<p><strong>${escapeText(label)}:</strong></p><ul>${items}</ul><p><br></p>`;
+  const items = [...relatedSelected.values()].map((post) => buildRelatedArticleCard(post)).join("");
+  const html = `<p><strong>${escapeText(label)}:</strong></p><ul class="related-articles-grid">${items}</ul><p><br></p>`;
   insertBlockAtSelection(html);
   closeRelatedArticlesModal(false);
   markDirty();
