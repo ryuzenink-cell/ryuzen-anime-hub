@@ -128,6 +128,7 @@ export function renderDynamicArticlePage({ post, tags = [], contentHtml = "", he
   <link rel="stylesheet" href="/assets/css/pages.css?v=${ASSET_VERSION}">
   <link rel="stylesheet" href="/assets/css/responsive.css?v=${ASSET_VERSION}">
   <link rel="stylesheet" href="/assets/css/public-ui.css?v=${ASSET_VERSION}">
+  <link rel="stylesheet" href="/assets/css/article-tables.css?v=20260703-tables-v1">
 </head>
 <body class="public-site" data-blog-prerendered="true">
   <div data-header></div>

@@ -3,10 +3,19 @@ import { RequestError } from "./http.js";
 
 const ALLOWED_TAGS = new Set([
   "p", "h2", "h3", "strong", "em", "ul", "ol", "li", "a", "blockquote",
-  "hr", "figure", "img", "figcaption", "span", "br"
+  "hr", "figure", "img", "figcaption", "span", "br",
+  "table", "caption", "thead", "tbody", "tr", "th", "td"
 ]);
 const BLOCKED_TAGS = new Set(["script", "style", "iframe", "object", "embed", "svg", "math", "template"]);
 const VOID_TAGS = new Set(["img", "hr", "br"]);
+const ALIGN_CLASSES = new Set(["align-center", "align-right"]);
+
+function normalizeTagName(original) {
+  if (original === "h1") return "h2";
+  if (original === "b") return "strong";
+  if (original === "i") return "em";
+  return original;
+}
 
 export function safeWebUrl(value = "", required = false) {
   const input = String(value || "").trim();
@@ -24,6 +33,7 @@ export function sanitizeArticleHtml(value = "") {
   const input = String(value || "").slice(0, 500000);
   let output = "";
   let blockedDepth = 0;
+  let tableDepth = 0;
   const stack = [];
 
   const parser = new Parser({
@@ -31,21 +41,33 @@ export function sanitizeArticleHtml(value = "") {
       const original = String(name || "").toLowerCase();
       if (blockedDepth || BLOCKED_TAGS.has(original)) {
         blockedDepth += 1;
-        stack.push({ blocked: true, outputTag: "" });
+        stack.push({ blocked: true, close: "" });
         return;
       }
-      const tag = original === "h1" ? "h2" : original;
+      if (original === "table" && tableDepth > 0) {
+        // Nested tables have no valid semantic structure here and could break layout, so drop them entirely.
+        blockedDepth += 1;
+        stack.push({ blocked: true, close: "" });
+        return;
+      }
+      const tag = normalizeTagName(original);
       if (!ALLOWED_TAGS.has(tag)) {
-        stack.push({ blocked: false, outputTag: "" });
+        stack.push({ blocked: false, close: "" });
         return;
       }
       const serialized = serializeAllowedTag(tag, attributes || {});
       if (!serialized) {
-        stack.push({ blocked: false, outputTag: "" });
+        stack.push({ blocked: false, close: "" });
+        return;
+      }
+      if (tag === "table") {
+        tableDepth += 1;
+        output += `<div class="article-table-wrapper">${serialized}`;
+        stack.push({ blocked: false, close: "</table></div>", isTableRoot: true });
         return;
       }
       output += serialized;
-      stack.push({ blocked: false, outputTag: VOID_TAGS.has(tag) ? "" : tag });
+      stack.push({ blocked: false, close: VOID_TAGS.has(tag) ? "" : `</${tag}>` });
     },
     ontext(text) {
       if (!blockedDepth) output += escapeText(text);
@@ -57,7 +79,8 @@ export function sanitizeArticleHtml(value = "") {
         blockedDepth = Math.max(0, blockedDepth - 1);
         return;
       }
-      if (!blockedDepth && item.outputTag) output += `</${item.outputTag}>`;
+      if (!blockedDepth) output += item.close;
+      if (item.isTableRoot) tableDepth = Math.max(0, tableDepth - 1);
     },
   }, { decodeEntities: true, lowerCaseTags: true });
 
@@ -84,6 +107,12 @@ function serializeAllowedTag(tag, attrs) {
   if (tag === "span") {
     const cssClass = ["caption", "credit"].includes(attrs.class) ? ` class="${attrs.class}"` : "";
     return `<span${cssClass}>`;
+  }
+  if (tag === "table") return '<table class="article-table">';
+  if (tag === "th" || tag === "td") {
+    const scope = tag === "th" && ["col", "row"].includes(attrs.scope) ? ` scope="${attrs.scope}"` : "";
+    const cellClass = ALIGN_CLASSES.has(attrs.class) ? ` class="${escapeAttribute(attrs.class)}"` : "";
+    return `<${tag}${scope}${cellClass}>`;
   }
   return `<${tag}>`;
 }

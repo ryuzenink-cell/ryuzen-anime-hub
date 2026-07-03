@@ -19,8 +19,15 @@ const canonical = document.getElementById("canonicalUrl");
 const feedback = document.getElementById("editorFeedback");
 const linkModal = document.getElementById("linkModal");
 const imageModal = document.getElementById("imageModal");
+const tableModal = document.getElementById("tableModal");
 const previewModal = document.getElementById("previewModal");
 const removeLinkButton = document.getElementById("removeLink");
+const tableContextToolbar = document.getElementById("tableContextToolbar");
+
+const TABLE_MIN_ROWS = 1;
+const TABLE_MAX_ROWS = 20;
+const TABLE_MIN_COLS = 1;
+const TABLE_MAX_COLS = 10;
 
 requireAdminSession(initEditor);
 
@@ -56,6 +63,7 @@ function bindEditor() {
   document.getElementById("openLinkModal").addEventListener("click", (event) => openLinkModal(event.currentTarget));
   removeLinkButton.addEventListener("click", removeSelectedLink);
   document.getElementById("openImageModal").addEventListener("click", (event) => openImageModal(event.currentTarget));
+  document.getElementById("openTableModal").addEventListener("click", (event) => openTableModal(event.currentTarget));
   document.getElementById("toggleFocusMode").addEventListener("click", toggleFocusMode);
 
   document.getElementById("cancelLink").addEventListener("click", () => closeLinkModal(true));
@@ -71,6 +79,17 @@ function bindEditor() {
     insertImage();
   });
 
+  document.getElementById("cancelTable").addEventListener("click", () => closeTableModal(true));
+  document.getElementById("tableForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    insertTable();
+  });
+  tableContextToolbar.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-table-action]");
+    if (!button || button.disabled) return;
+    handleTableAction(button.dataset.tableAction);
+  });
+
   document.getElementById("saveDraft").addEventListener("click", () => savePost());
   document.getElementById("publishPost").addEventListener("click", publishPost);
   document.getElementById("previewPost").addEventListener("click", (event) => showPreview(event.currentTarget));
@@ -80,6 +99,7 @@ function bindEditor() {
   editor.addEventListener("input", () => {
     captureEditorSelection();
     updateLinkToolState();
+    updateTableToolState();
   });
   editor.addEventListener("paste", (event) => {
     event.preventDefault();
@@ -93,26 +113,31 @@ function bindEditor() {
   editor.addEventListener("mouseup", () => {
     captureEditorSelection();
     updateLinkToolState();
+    updateTableToolState();
   });
   editor.addEventListener("keyup", () => {
     captureEditorSelection();
     updateLinkToolState();
+    updateTableToolState();
   });
+  editor.addEventListener("keydown", handleTableKeydown);
 
   document.addEventListener("selectionchange", () => {
     if (hasActiveEditorSelection()) {
       captureEditorSelection();
       updateLinkToolState();
+      updateTableToolState();
     }
   });
   document.addEventListener("keydown", handleKeyboardShortcuts);
 
-  [linkModal, imageModal, previewModal].forEach((modal) => {
+  [linkModal, imageModal, tableModal, previewModal].forEach((modal) => {
     modal.addEventListener("keydown", trapModalFocus);
     modal.addEventListener("mousedown", (event) => {
       if (event.target !== modal) return;
       if (modal === linkModal) closeLinkModal(true);
       if (modal === imageModal) closeImageModal(true);
+      if (modal === tableModal) closeTableModal(true);
       if (modal === previewModal) closePreview(true);
     });
   });
@@ -422,6 +447,370 @@ function collectImages() {
   }));
 }
 
+/* ---------------------------------------------------------------------- */
+/* Tabelas editoriais                                                     */
+/* ---------------------------------------------------------------------- */
+
+function clampInt(value, min, max, fallback) {
+  const number = parseInt(value, 10);
+  if (!Number.isFinite(number)) return fallback;
+  return Math.min(max, Math.max(min, number));
+}
+
+function openTableModal(trigger = document.getElementById("openTableModal")) {
+  if (hasActiveEditorSelection()) captureEditorSelection();
+  document.getElementById("tableRows").value = "3";
+  document.getElementById("tableCols").value = "3";
+  document.getElementById("tableHeaderRow").checked = true;
+  document.getElementById("tableHeaderCol").checked = false;
+  document.getElementById("tableCaption").value = "";
+  document.getElementById("tableAlign").value = "left";
+  clearModalError("tableFormError");
+  openModal(tableModal, document.getElementById("tableRows"), trigger);
+}
+
+function closeTableModal(returnFocus = true) {
+  closeModal(tableModal, returnFocus);
+  document.getElementById("tableForm").reset();
+  clearModalError("tableFormError");
+}
+
+function alignClassFor(align) {
+  if (align === "center") return "align-center";
+  if (align === "right") return "align-right";
+  return "";
+}
+
+function buildTableHtml({ rows, cols, headerRow, headerCol, caption, alignClass }) {
+  const cellClass = alignClass ? ` class="${alignClass}"` : "";
+  const bodyRowCount = headerRow ? Math.max(rows - 1, 0) : rows;
+  let html = '<div class="article-table-wrapper"><table class="article-table">';
+  if (caption) html += `<caption>${escapeText(caption)}</caption>`;
+  if (headerRow) {
+    html += "<thead><tr>";
+    for (let c = 0; c < cols; c += 1) html += `<th scope="col"${cellClass}>Coluna ${c + 1}</th>`;
+    html += "</tr></thead>";
+  }
+  if (bodyRowCount > 0) {
+    html += "<tbody>";
+    for (let r = 0; r < bodyRowCount; r += 1) {
+      html += "<tr>";
+      for (let c = 0; c < cols; c += 1) {
+        html += headerCol && c === 0 ? `<th scope="row"${cellClass}></th>` : `<td${cellClass}></td>`;
+      }
+      html += "</tr>";
+    }
+    html += "</tbody>";
+  }
+  html += "</table></div><p><br></p>";
+  return html;
+}
+
+function insertTable() {
+  clearModalError("tableFormError");
+  const rows = clampInt(document.getElementById("tableRows").value, TABLE_MIN_ROWS, TABLE_MAX_ROWS, 3);
+  const cols = clampInt(document.getElementById("tableCols").value, TABLE_MIN_COLS, TABLE_MAX_COLS, 3);
+  const headerRow = document.getElementById("tableHeaderRow").checked;
+  const headerCol = document.getElementById("tableHeaderCol").checked;
+  const caption = valGet("tableCaption");
+  const alignClass = alignClassFor(document.getElementById("tableAlign").value);
+
+  restoreOrCreateEditorSelection();
+  editor.focus();
+  document.execCommand("insertHTML", false, buildTableHtml({ rows, cols, headerRow, headerCol, caption, alignClass }));
+  closeTableModal(false);
+  captureEditorSelection();
+  markDirty();
+  updateTableToolState();
+}
+
+function findTableCell(range = editorState.selection) {
+  if (!range || !rangeBelongsToEditor(range)) return null;
+  const node = elementFromNode(range.startContainer);
+  const cell = node?.closest ? node.closest("td,th") : null;
+  return cell && editor.contains(cell) ? cell : null;
+}
+
+function findTable(cell) {
+  return cell ? cell.closest("table") : null;
+}
+
+function allRows(table) {
+  return [...table.querySelectorAll(":scope > thead > tr, :scope > tbody > tr")];
+}
+
+function columnAlignClass(table, colIndex) {
+  for (const row of allRows(table)) {
+    const cell = row.cells[colIndex];
+    if (cell?.classList.contains("align-center")) return "align-center";
+    if (cell?.classList.contains("align-right")) return "align-right";
+  }
+  return "";
+}
+
+function hasHeaderColumn(table) {
+  const firstRow = table.querySelector(":scope > tbody > tr") || table.querySelector(":scope > thead > tr");
+  const firstCell = firstRow?.cells[0];
+  return !!(firstCell && firstCell.tagName === "TH" && firstCell.getAttribute("scope") === "row");
+}
+
+function replaceCellTag(cell, tagName, scope) {
+  if (cell.tagName.toLowerCase() === tagName) {
+    if (scope) cell.setAttribute("scope", scope); else cell.removeAttribute("scope");
+    return cell;
+  }
+  const replacement = document.createElement(tagName);
+  if (cell.className) replacement.className = cell.className;
+  if (scope) replacement.setAttribute("scope", scope);
+  while (cell.firstChild) replacement.appendChild(cell.firstChild);
+  cell.replaceWith(replacement);
+  return replacement;
+}
+
+function applyHeaderColumn(table, enabled) {
+  allRows(table).forEach((row) => {
+    if (row.parentElement.tagName === "THEAD") return;
+    const cell = row.cells[0];
+    if (!cell) return;
+    replaceCellTag(cell, enabled ? "th" : "td", enabled ? "row" : null);
+  });
+}
+
+function placeCaretInCell(cell, selectAll = false) {
+  if (!cell) return;
+  editor.focus();
+  const range = document.createRange();
+  range.selectNodeContents(cell);
+  if (!selectAll) range.collapse(true);
+  const selection = window.getSelection();
+  selection.removeAllRanges();
+  selection.addRange(range);
+  editorState.selection = range.cloneRange();
+  updateTableToolState();
+}
+
+function addTableRow(table, referenceRow, position) {
+  if (referenceRow.parentElement.tagName === "THEAD") return;
+  if (allRows(table).length >= TABLE_MAX_ROWS) {
+    showFeedback(`Uma tabela pode ter no máximo ${TABLE_MAX_ROWS} linhas.`, "error");
+    return;
+  }
+  const cols = referenceRow.cells.length;
+  const headerColEnabled = hasHeaderColumn(table);
+  const newRow = document.createElement("tr");
+  for (let c = 0; c < cols; c += 1) {
+    const cell = document.createElement("td");
+    const align = columnAlignClass(table, c);
+    if (align) cell.classList.add(align);
+    newRow.appendChild(cell);
+  }
+  referenceRow.parentElement.insertBefore(newRow, position === "before" ? referenceRow : referenceRow.nextSibling);
+  applyHeaderColumn(table, headerColEnabled);
+  placeCaretInCell(newRow.cells[0]);
+}
+
+function deleteTableRow(table, row) {
+  if (row.parentElement.tagName === "THEAD") return;
+  if (allRows(table).length <= 1) {
+    showFeedback("A tabela precisa manter ao menos uma linha.", "error");
+    return;
+  }
+  const tbody = row.parentElement;
+  const nextFocusRow = row.nextElementSibling || row.previousElementSibling || table.querySelector(":scope > thead > tr");
+  row.remove();
+  if (tbody.tagName === "TBODY" && !tbody.children.length) tbody.remove();
+  if (nextFocusRow) placeCaretInCell(nextFocusRow.cells[0]); else editor.focus();
+}
+
+function addTableColumn(table, colIndex, position) {
+  const rows = allRows(table);
+  const currentCols = rows[0]?.cells.length || 0;
+  if (currentCols >= TABLE_MAX_COLS) {
+    showFeedback(`Uma tabela pode ter no máximo ${TABLE_MAX_COLS} colunas.`, "error");
+    return;
+  }
+  const insertIndex = position === "before" ? colIndex : colIndex + 1;
+  const headerColEnabled = hasHeaderColumn(table);
+  rows.forEach((row) => {
+    const isHead = row.parentElement.tagName === "THEAD";
+    const cell = document.createElement(isHead ? "th" : "td");
+    if (isHead) cell.setAttribute("scope", "col");
+    row.insertBefore(cell, row.cells[insertIndex] || null);
+  });
+  applyHeaderColumn(table, headerColEnabled);
+}
+
+function deleteTableColumn(table, colIndex) {
+  const rows = allRows(table);
+  const currentCols = rows[0]?.cells.length || 0;
+  if (currentCols <= 1) {
+    showFeedback("A tabela precisa manter ao menos uma coluna.", "error");
+    return;
+  }
+  const headerColEnabled = hasHeaderColumn(table);
+  rows.forEach((row) => row.cells[colIndex]?.remove());
+  applyHeaderColumn(table, headerColEnabled);
+}
+
+function toggleHeaderRow(table) {
+  const thead = table.querySelector(":scope > thead");
+  if (thead) {
+    const theadRow = thead.querySelector("tr");
+    let tbody = table.querySelector(":scope > tbody");
+    if (!tbody) {
+      tbody = document.createElement("tbody");
+      table.appendChild(tbody);
+    }
+    if (theadRow) {
+      [...theadRow.cells].forEach((cell) => replaceCellTag(cell, "td", null));
+      tbody.insertBefore(theadRow, tbody.firstChild);
+    }
+    thead.remove();
+  } else {
+    const firstRow = table.querySelector(":scope > tbody > tr");
+    if (!firstRow) return;
+    const newThead = document.createElement("thead");
+    [...firstRow.cells].forEach((cell) => replaceCellTag(cell, "th", "col"));
+    newThead.appendChild(firstRow);
+    const caption = table.querySelector(":scope > caption");
+    table.insertBefore(newThead, caption ? caption.nextSibling : table.firstChild);
+    const tbody = table.querySelector(":scope > tbody");
+    if (tbody && !tbody.children.length) tbody.remove();
+  }
+  applyHeaderColumn(table, hasHeaderColumn(table));
+}
+
+function toggleHeaderColumn(table) {
+  applyHeaderColumn(table, !hasHeaderColumn(table));
+}
+
+function setColumnAlign(table, colIndex, align) {
+  allRows(table).forEach((row) => {
+    const cell = row.cells[colIndex];
+    if (!cell) return;
+    cell.classList.remove("align-center", "align-right");
+    const cls = alignClassFor(align);
+    if (cls) cell.classList.add(cls);
+  });
+}
+
+function toggleTableCaption(table) {
+  const existing = table.querySelector(":scope > caption");
+  if (existing) {
+    existing.remove();
+    return;
+  }
+  const caption = document.createElement("caption");
+  caption.textContent = "Legenda da tabela";
+  table.insertBefore(caption, table.firstChild);
+  placeCaretInCell(caption, true);
+}
+
+async function deleteTable(wrapper) {
+  const confirmed = window.AdminUI
+    ? await window.AdminUI.confirm("Remover esta tabela do artigo? Essa ação não pode ser desfeita.", { confirmText: "Remover tabela" })
+    : window.confirm("Remover esta tabela?");
+  if (!confirmed) return;
+  wrapper.remove();
+  editor.focus();
+  markDirty();
+  updateTableToolState();
+}
+
+function setButtonDisabled(action, disabled) {
+  const button = tableContextToolbar.querySelector(`[data-table-action="${action}"]`);
+  if (button) button.disabled = disabled;
+}
+
+function togglePressed(action, pressed) {
+  const button = tableContextToolbar.querySelector(`[data-table-action="${action}"]`);
+  if (button) button.setAttribute("aria-pressed", String(pressed));
+}
+
+function updateTableToolState() {
+  const cell = findTableCell();
+  const table = findTable(cell);
+  if (!table || !cell) {
+    tableContextToolbar.classList.add("hidden");
+    return;
+  }
+  tableContextToolbar.classList.remove("hidden");
+
+  const row = cell.closest("tr");
+  const inHead = row.parentElement.tagName === "THEAD";
+  const totalRows = allRows(table).length;
+  const totalCols = row.cells.length;
+
+  setButtonDisabled("addRowAbove", inHead);
+  setButtonDisabled("addRowBelow", inHead);
+  setButtonDisabled("deleteRow", inHead || totalRows <= 1);
+  setButtonDisabled("deleteColumn", totalCols <= 1);
+
+  togglePressed("toggleHeaderRow", !!table.querySelector(":scope > thead"));
+  togglePressed("toggleHeaderColumn", hasHeaderColumn(table));
+
+  const currentAlign = cell.classList.contains("align-center") ? "center" : cell.classList.contains("align-right") ? "right" : "left";
+  togglePressed("alignLeft", currentAlign === "left");
+  togglePressed("alignCenter", currentAlign === "center");
+  togglePressed("alignRight", currentAlign === "right");
+  togglePressed("toggleCaption", !!table.querySelector(":scope > caption"));
+}
+
+function handleTableAction(action) {
+  const cell = findTableCell();
+  const table = findTable(cell);
+  if (!table || !cell) return;
+  const wrapper = table.closest(".article-table-wrapper") || table;
+  const row = cell.closest("tr");
+  const colIndex = [...row.cells].indexOf(cell);
+
+  if (action === "deleteTable") {
+    deleteTable(wrapper);
+    return;
+  }
+
+  switch (action) {
+    case "addRowAbove": addTableRow(table, row, "before"); break;
+    case "addRowBelow": addTableRow(table, row, "after"); break;
+    case "deleteRow": deleteTableRow(table, row); break;
+    case "addColumnLeft": addTableColumn(table, colIndex, "before"); break;
+    case "addColumnRight": addTableColumn(table, colIndex, "after"); break;
+    case "deleteColumn": deleteTableColumn(table, colIndex); break;
+    case "toggleHeaderRow": toggleHeaderRow(table); break;
+    case "toggleHeaderColumn": toggleHeaderColumn(table); break;
+    case "alignLeft": setColumnAlign(table, colIndex, "left"); break;
+    case "alignCenter": setColumnAlign(table, colIndex, "center"); break;
+    case "alignRight": setColumnAlign(table, colIndex, "right"); break;
+    case "toggleCaption": toggleTableCaption(table); break;
+    default: return;
+  }
+  markDirty();
+  updateTableToolState();
+}
+
+function handleTableKeydown(event) {
+  if (event.key !== "Tab") return;
+  const cell = findTableCell();
+  if (!cell) return;
+  event.preventDefault();
+  const table = findTable(cell);
+  const cells = [...table.querySelectorAll("th,td")];
+  const index = cells.indexOf(cell);
+
+  if (event.shiftKey) {
+    if (index > 0) placeCaretInCell(cells[index - 1], true);
+    return;
+  }
+  if (index < cells.length - 1) {
+    placeCaretInCell(cells[index + 1], true);
+    return;
+  }
+  const rows = allRows(table);
+  if (rows.length >= TABLE_MAX_ROWS) return;
+  addTableRow(table, rows[rows.length - 1], "after");
+  markDirty();
+}
+
 function payload() {
   return {
     title: title.value.trim(),
@@ -533,11 +922,12 @@ function getSeoChecks() {
   const badLink = links.some((link) => !isHttpUrl(link.href));
   const images = collectImages();
   const badImg = images.some((image) => !image.alt_text);
+  const hasTable = !!editor.querySelector("table");
   return [
     { label: "Título preenchido", ok: !!body.title, level: !body.title ? "block" : "ok" },
     { label: "Slug válido", ok: !!body.slug, level: !body.slug ? "block" : "ok" },
     { label: "Resumo preenchido", ok: !!body.excerpt, level: !body.excerpt ? "block" : "ok" },
-    { label: "Conteúdo preenchido", ok: !!plain || images.length > 0, level: (!plain && !images.length) ? "block" : "ok" },
+    { label: "Conteúdo preenchido", ok: !!plain || images.length > 0 || hasTable, level: (!plain && !images.length && !hasTable) ? "block" : "ok" },
     { label: "Categoria selecionada", ok: !!body.category_id, level: body.category_id ? "ok" : "warn" },
     { label: "Título SEO preenchido", ok: !!body.seo_title, level: body.seo_title ? "ok" : "warn" },
     { label: "Título SEO recomendado (30–65 caracteres)", ok: body.seo_title.length >= 30 && body.seo_title.length <= 65, level: "warn" },
@@ -646,6 +1036,7 @@ function handleKeyboardShortcuts(event) {
     event.preventDefault();
     if (editorState.openModal === linkModal) closeLinkModal(true);
     if (editorState.openModal === imageModal) closeImageModal(true);
+    if (editorState.openModal === tableModal) closeTableModal(true);
     if (editorState.openModal === previewModal) closePreview(true);
     return;
   }

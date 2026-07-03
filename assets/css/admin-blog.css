@@ -246,9 +246,14 @@ body.editor-modal-open { overflow:hidden; }
   scroll-margin-top: 70px;
 }
 
+.table-context-toolbar { top:62px; z-index:24; flex-wrap:wrap; border-top:0; border-bottom:0; border-radius:0; }
+.editor-tool.danger { border-color:rgba(255,107,107,.32); background:rgba(255,107,107,.12); color:#ffd2d2; }
+.editor-tool.danger:hover:not(:disabled) { border-color:rgba(255,107,107,.5); background:rgba(255,107,107,.22); }
+
 @media (max-width:620px) {
   .admin-editor-card { padding:12px; }
   .editor-toolbar { top:8px; padding:8px; gap:5px; }
+  .table-context-toolbar { top:58px; }
   .editor-tool { min-height:36px; }
   .editor-tool-divider { height:23px; }
   .editor-writing-meta { align-items:flex-start; flex-direction:column; }

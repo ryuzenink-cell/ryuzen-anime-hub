@@ -14,7 +14,7 @@ export function validatePostPayload(payload = {}, { publishing = false } = {}) {
   const excerpt = text(payload.excerpt, 320);
   const contentHtml = sanitizeArticleHtml(payload.content_html || payload.contentHtml || "");
   if (!title || !slug || !excerpt) throw new RequestError("Preencha título, slug e resumo do artigo.", 400);
-  if (publishing && !contentHtml.replace(/<[^>]+>/g, "").trim() && !contentHtml.includes("<img")) {
+  if (publishing && !contentHtml.replace(/<[^>]+>/g, "").trim() && !contentHtml.includes("<img") && !contentHtml.includes("<table")) {
     throw new RequestError("Não é possível publicar um artigo sem conteúdo.", 400);
   }
   const cover = safeWebUrl(payload.cover_image_url || payload.coverImageUrl || "");
