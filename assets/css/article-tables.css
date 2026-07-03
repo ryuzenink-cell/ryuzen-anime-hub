@@ -77,3 +77,18 @@
     padding: 9px 11px;
   }
 }
+
+/* Caixa de aviso editorial (informação não confirmada, rumor, sujeita a alteração, atualização recente). */
+.blog-content blockquote.callout-notice {
+  border-left-color: var(--warning);
+  background: rgba(255, 204, 102, 0.1);
+}
+
+.blog-content blockquote.callout-notice p {
+  margin: 0;
+  color: var(--text);
+}
+
+.blog-content blockquote.callout-notice strong {
+  color: var(--warning);
+}

@@ -20,6 +20,10 @@ const feedback = document.getElementById("editorFeedback");
 const linkModal = document.getElementById("linkModal");
 const imageModal = document.getElementById("imageModal");
 const tableModal = document.getElementById("tableModal");
+const animeFactsModal = document.getElementById("animeFactsModal");
+const whereToWatchModal = document.getElementById("whereToWatchModal");
+const noticeModal = document.getElementById("noticeModal");
+const relatedArticlesModal = document.getElementById("relatedArticlesModal");
 const previewModal = document.getElementById("previewModal");
 const removeLinkButton = document.getElementById("removeLink");
 const tableContextToolbar = document.getElementById("tableContextToolbar");
@@ -28,6 +32,18 @@ const TABLE_MIN_ROWS = 1;
 const TABLE_MAX_ROWS = 20;
 const TABLE_MIN_COLS = 1;
 const TABLE_MAX_COLS = 10;
+const SITE_HOSTNAME = "anime.ryuzen.ink";
+const RELATED_MAX = 8;
+const NOTICE_DEFAULTS = {
+  unconfirmed: { label: "Informação não confirmada", message: "Esta informação ainda não foi anunciada oficialmente e pode mudar." },
+  rumor: { label: "Baseado em rumor", message: "Este trecho é baseado em rumores e ainda não foi confirmado pelos produtores." },
+  subject_to_change: { label: "Sujeito a alteração", message: "Estes detalhes podem ser alterados conforme novas informações forem divulgadas." },
+  recently_updated: { label: "Atualizado recentemente", message: "Esta seção foi atualizada recentemente com novas informações." }
+};
+
+let relatedSelected = new Map();
+let relatedCurrentResults = [];
+let relatedSearchTimer = null;
 
 requireAdminSession(initEditor);
 
@@ -64,6 +80,10 @@ function bindEditor() {
   removeLinkButton.addEventListener("click", removeSelectedLink);
   document.getElementById("openImageModal").addEventListener("click", (event) => openImageModal(event.currentTarget));
   document.getElementById("openTableModal").addEventListener("click", (event) => openTableModal(event.currentTarget));
+  document.getElementById("openAnimeFactsModal").addEventListener("click", (event) => openAnimeFactsModal(event.currentTarget));
+  document.getElementById("openWhereToWatchModal").addEventListener("click", (event) => openWhereToWatchModal(event.currentTarget));
+  document.getElementById("openNoticeModal").addEventListener("click", (event) => openNoticeModal(event.currentTarget));
+  document.getElementById("openRelatedArticlesModal").addEventListener("click", (event) => openRelatedArticlesModal(event.currentTarget));
   document.getElementById("toggleFocusMode").addEventListener("click", toggleFocusMode);
 
   document.getElementById("cancelLink").addEventListener("click", () => closeLinkModal(true));
@@ -88,6 +108,44 @@ function bindEditor() {
     const button = event.target.closest("[data-table-action]");
     if (!button || button.disabled) return;
     handleTableAction(button.dataset.tableAction);
+  });
+
+  document.getElementById("cancelAnimeFacts").addEventListener("click", () => closeAnimeFactsModal(true));
+  document.getElementById("animeFactsForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    insertAnimeFacts();
+  });
+
+  document.getElementById("cancelWhereToWatch").addEventListener("click", () => closeWhereToWatchModal(true));
+  document.getElementById("whereToWatchForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    insertWhereToWatch();
+  });
+
+  document.getElementById("cancelNotice").addEventListener("click", () => closeNoticeModal(true));
+  document.getElementById("noticeForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    insertNotice();
+  });
+  document.getElementById("noticeType").addEventListener("change", (event) => {
+    const textarea = document.getElementById("noticeMessage");
+    const isCurrentlyADefault = Object.values(NOTICE_DEFAULTS).some((item) => item.message === textarea.value.trim());
+    if (!textarea.value.trim() || isCurrentlyADefault) {
+      textarea.value = (NOTICE_DEFAULTS[event.target.value] || NOTICE_DEFAULTS.unconfirmed).message;
+    }
+  });
+
+  document.getElementById("cancelRelatedArticles").addEventListener("click", () => closeRelatedArticlesModal(true));
+  document.getElementById("clearRelatedSelection").addEventListener("click", () => {
+    relatedSelected = new Map();
+    renderRelatedResults(relatedCurrentResults);
+    renderRelatedSelected();
+  });
+  document.getElementById("submitRelatedArticles").addEventListener("click", insertRelatedArticles);
+  document.getElementById("relatedSearch").addEventListener("input", (event) => {
+    window.clearTimeout(relatedSearchTimer);
+    const term = event.target.value.trim();
+    relatedSearchTimer = window.setTimeout(() => searchRelatedArticles(term), 300);
   });
 
   document.getElementById("saveDraft").addEventListener("click", () => savePost());
@@ -131,13 +189,17 @@ function bindEditor() {
   });
   document.addEventListener("keydown", handleKeyboardShortcuts);
 
-  [linkModal, imageModal, tableModal, previewModal].forEach((modal) => {
+  [linkModal, imageModal, tableModal, animeFactsModal, whereToWatchModal, noticeModal, relatedArticlesModal, previewModal].forEach((modal) => {
     modal.addEventListener("keydown", trapModalFocus);
     modal.addEventListener("mousedown", (event) => {
       if (event.target !== modal) return;
       if (modal === linkModal) closeLinkModal(true);
       if (modal === imageModal) closeImageModal(true);
       if (modal === tableModal) closeTableModal(true);
+      if (modal === animeFactsModal) closeAnimeFactsModal(true);
+      if (modal === whereToWatchModal) closeWhereToWatchModal(true);
+      if (modal === noticeModal) closeNoticeModal(true);
+      if (modal === relatedArticlesModal) closeRelatedArticlesModal(true);
       if (modal === previewModal) closePreview(true);
     });
   });
@@ -359,12 +421,21 @@ function createLinkElement(text, href, linkTitle) {
   return link;
 }
 
+function isInternalUrl(href) {
+  try { return new URL(href).hostname === SITE_HOSTNAME; } catch { return false; }
+}
+
 function setLinkAttributes(link, href, linkTitle) {
   link.setAttribute("href", href);
   if (linkTitle) link.setAttribute("title", linkTitle);
   else link.removeAttribute("title");
-  link.setAttribute("target", "_blank");
-  link.setAttribute("rel", "noopener noreferrer nofollow");
+  if (isInternalUrl(href)) {
+    link.removeAttribute("target");
+    link.removeAttribute("rel");
+  } else {
+    link.setAttribute("target", "_blank");
+    link.setAttribute("rel", "noopener noreferrer nofollow");
+  }
 }
 
 function linksIntersectingRange(range) {
@@ -392,6 +463,46 @@ function removeSelectedLink(fromModal = false) {
   captureEditorSelection();
   markDirty();
   updateLinkToolState();
+}
+
+function isEmptyBlock(element) {
+  return element.textContent.trim() === "" && !element.querySelector("img,table,a");
+}
+
+/**
+ * Inserts block-level HTML (figures, tables, lists...) relative to the current caret.
+ * execCommand("insertHTML") splits/nests unpredictably when the caret sits inside an
+ * existing (possibly empty) paragraph, so block content is positioned explicitly instead:
+ * a trailing empty placeholder paragraph is replaced outright, real content gets the new
+ * block appended right after it, and a caret inside a table is anchored past the whole table.
+ */
+function insertBlockAtSelection(html) {
+  const range = restoreOrCreateEditorSelection();
+  const template = document.createElement("template");
+  template.innerHTML = html;
+  const fragment = template.content;
+  const lastNode = fragment.lastElementChild;
+  const container = elementFromNode(range.startContainer);
+
+  const enclosingTable = container?.closest("table");
+  if (enclosingTable && editor.contains(enclosingTable)) {
+    const anchor = enclosingTable.closest(".article-table-wrapper") || enclosingTable;
+    anchor.after(fragment);
+  } else {
+    const block = container?.closest("p,li,h2,h3,blockquote");
+    if (!block || !editor.contains(block) || block === editor) {
+      range.deleteContents();
+      range.insertNode(fragment);
+    } else if (isEmptyBlock(block)) {
+      block.replaceWith(fragment);
+    } else {
+      block.after(fragment);
+    }
+  }
+
+  editor.focus();
+  if (lastNode && editor.contains(lastNode)) placeCaretInCell(lastNode);
+  else captureEditorSelection();
 }
 
 function openImageModal(trigger = document.getElementById("openImageModal")) {
@@ -426,10 +537,8 @@ function insertImage() {
     return;
   }
 
-  restoreOrCreateEditorSelection();
   const figure = `<figure class="article-figure"><img src="${escapeAttr(url)}" alt="${escapeAttr(alt)}" loading="lazy" decoding="async"><figcaption class="article-caption">${caption ? `<span class="caption">${escapeText(caption)}</span>` : ""}${credit ? `<span class="credit">Crédito: ${escapeText(credit)}</span>` : ""}${source ? `<a href="${escapeAttr(source)}" target="_blank" rel="noopener noreferrer nofollow">Fonte oficial</a>` : ""}</figcaption></figure><p><br></p>`;
-  editor.focus();
-  document.execCommand("insertHTML", false, figure);
+  insertBlockAtSelection(figure);
   closeImageModal(false);
   captureEditorSelection();
   markDirty();
@@ -515,9 +624,7 @@ function insertTable() {
   const caption = valGet("tableCaption");
   const alignClass = alignClassFor(document.getElementById("tableAlign").value);
 
-  restoreOrCreateEditorSelection();
-  editor.focus();
-  document.execCommand("insertHTML", false, buildTableHtml({ rows, cols, headerRow, headerCol, caption, alignClass }));
+  insertBlockAtSelection(buildTableHtml({ rows, cols, headerRow, headerCol, caption, alignClass }));
   closeTableModal(false);
   captureEditorSelection();
   markDirty();
@@ -811,6 +918,254 @@ function handleTableKeydown(event) {
   markDirty();
 }
 
+/* ---------------------------------------------------------------------- */
+/* Blocos editoriais do RAH (ficha do anime, onde assistir, aviso)         */
+/* ---------------------------------------------------------------------- */
+
+function buildFactRows(pairs) {
+  return pairs
+    .filter(([, value]) => !!String(value || "").trim())
+    .map(([label, value]) => `<tr><th scope="row">${escapeText(label)}</th><td>${escapeText(value)}</td></tr>`)
+    .join("");
+}
+
+function buildFactTableHtml(caption, rowsHtml) {
+  const captionHtml = caption ? `<caption>${escapeText(caption)}</caption>` : "";
+  return `<div class="article-table-wrapper"><table class="article-table">${captionHtml}<tbody>${rowsHtml}</tbody></table></div><p><br></p>`;
+}
+
+function openAnimeFactsModal(trigger = document.getElementById("openAnimeFactsModal")) {
+  if (hasActiveEditorSelection()) captureEditorSelection();
+  document.getElementById("animeFactsForm").reset();
+  document.getElementById("factCaption").value = "Ficha rápida do anime";
+  clearModalError("animeFactsFormError");
+  openModal(animeFactsModal, document.getElementById("factTitle"), trigger);
+}
+
+function closeAnimeFactsModal(returnFocus = true) {
+  closeModal(animeFactsModal, returnFocus);
+  clearModalError("animeFactsFormError");
+}
+
+function insertAnimeFacts() {
+  clearModalError("animeFactsFormError");
+  const rows = buildFactRows([
+    ["Título", valGet("factTitle")],
+    ["Título japonês", valGet("factTitleJp")],
+    ["Estúdio", valGet("factStudio")],
+    ["Diretor", valGet("factDirector")],
+    ["Obra original", valGet("factSource")],
+    ["Gênero", valGet("factGenre")],
+    ["Nº de episódios", valGet("factEpisodes")],
+    ["Temporada", valGet("factSeason")],
+    ["Ano", valGet("factYear")],
+    ["Plataforma", valGet("factPlatform")],
+    ["Status", valGet("factStatus")],
+    ["Data de estreia", valGet("factPremiere")]
+  ]);
+  if (!rows) {
+    showModalError("animeFactsFormError", "Preencha ao menos um campo da ficha.");
+    return;
+  }
+  insertBlockAtSelection(buildFactTableHtml(valGet("factCaption") || "Ficha rápida do anime", rows));
+  closeAnimeFactsModal(false);
+  markDirty();
+}
+
+function openWhereToWatchModal(trigger = document.getElementById("openWhereToWatchModal")) {
+  if (hasActiveEditorSelection()) captureEditorSelection();
+  document.getElementById("whereToWatchForm").reset();
+  document.getElementById("watchCaption").value = "Onde assistir";
+  clearModalError("whereToWatchFormError");
+  openModal(whereToWatchModal, document.getElementById("watchPlatform"), trigger);
+}
+
+function closeWhereToWatchModal(returnFocus = true) {
+  closeModal(whereToWatchModal, returnFocus);
+  clearModalError("whereToWatchFormError");
+}
+
+function insertWhereToWatch() {
+  clearModalError("whereToWatchFormError");
+  const linkValue = valGet("watchLink");
+  let linkCellHtml = "";
+  if (linkValue) {
+    const href = normalizeHttpUrl(linkValue);
+    if (!href) {
+      showModalError("whereToWatchFormError", "O link oficial precisa ser uma URL válida iniciada por http:// ou https://.");
+      document.getElementById("watchLink").focus();
+      return;
+    }
+    linkCellHtml = `<tr><th scope="row">Link oficial</th><td><a href="${escapeAttr(href)}" target="_blank" rel="noopener noreferrer nofollow">Assistir aqui</a></td></tr>`;
+  }
+  const rows = buildFactRows([
+    ["Plataforma", valGet("watchPlatform")],
+    ["Disponibilidade no Brasil", valGet("watchAvailability")],
+    ["Dublagem", valGet("watchDub")],
+    ["Legendas", valGet("watchSubs")],
+    ["Situação atual", valGet("watchStatus")]
+  ]) + linkCellHtml;
+  if (!rows) {
+    showModalError("whereToWatchFormError", "Preencha ao menos um campo do bloco.");
+    return;
+  }
+  insertBlockAtSelection(buildFactTableHtml(valGet("watchCaption") || "Onde assistir", rows));
+  closeWhereToWatchModal(false);
+  markDirty();
+}
+
+function openNoticeModal(trigger = document.getElementById("openNoticeModal")) {
+  if (hasActiveEditorSelection()) captureEditorSelection();
+  document.getElementById("noticeForm").reset();
+  document.getElementById("noticeType").value = "unconfirmed";
+  document.getElementById("noticeMessage").value = NOTICE_DEFAULTS.unconfirmed.message;
+  clearModalError("noticeFormError");
+  openModal(noticeModal, document.getElementById("noticeType"), trigger);
+}
+
+function closeNoticeModal(returnFocus = true) {
+  closeModal(noticeModal, returnFocus);
+  clearModalError("noticeFormError");
+}
+
+function insertNotice() {
+  clearModalError("noticeFormError");
+  const type = document.getElementById("noticeType").value;
+  const label = (NOTICE_DEFAULTS[type] || NOTICE_DEFAULTS.unconfirmed).label;
+  const message = valGet("noticeMessage");
+  if (!message) {
+    showModalError("noticeFormError", "Escreva a mensagem do aviso.");
+    document.getElementById("noticeMessage").focus();
+    return;
+  }
+  const html = `<blockquote class="callout-notice"><p><strong>${escapeText(label)}:</strong> ${escapeText(message)}</p></blockquote><p><br></p>`;
+  insertBlockAtSelection(html);
+  closeNoticeModal(false);
+  markDirty();
+}
+
+/* ---------------------------------------------------------------------- */
+/* Artigos relacionados                                                   */
+/* ---------------------------------------------------------------------- */
+
+function openRelatedArticlesModal(trigger = document.getElementById("openRelatedArticlesModal")) {
+  if (hasActiveEditorSelection()) captureEditorSelection();
+  clearModalError("relatedArticlesFormError");
+  document.getElementById("relatedSearch").value = "";
+  openModal(relatedArticlesModal, document.getElementById("relatedSearch"), trigger);
+  loadRelatedSuggestions();
+  renderRelatedSelected();
+}
+
+function closeRelatedArticlesModal(returnFocus = true) {
+  closeModal(relatedArticlesModal, returnFocus);
+  clearModalError("relatedArticlesFormError");
+}
+
+async function loadRelatedSuggestions() {
+  const container = document.getElementById("relatedResults");
+  document.getElementById("relatedSuggestLabel").textContent = "Sugestões automáticas";
+  container.innerHTML = '<p class="muted">Carregando sugestões...</p>';
+  try {
+    const categoryId = valGet("categoryId");
+    const query = categoryId
+      ? `/api/admin/posts?status=published&category=${encodeURIComponent(categoryId)}&order=published_desc&limit=6`
+      : `/api/admin/posts?status=published&order=published_desc&limit=6`;
+    const data = await adminFetch(query);
+    renderRelatedResults(filterOutCurrentPost(data.posts || []));
+  } catch (error) {
+    container.innerHTML = `<p class="admin-alert error">${escapeText(error.message)}</p>`;
+  }
+}
+
+async function searchRelatedArticles(term) {
+  if (!term) {
+    loadRelatedSuggestions();
+    return;
+  }
+  const container = document.getElementById("relatedResults");
+  document.getElementById("relatedSuggestLabel").textContent = "Resultados da busca";
+  container.innerHTML = '<p class="muted">Buscando...</p>';
+  try {
+    const data = await adminFetch(`/api/admin/posts?status=published&q=${encodeURIComponent(term)}&limit=8`);
+    renderRelatedResults(filterOutCurrentPost(data.posts || []));
+  } catch (error) {
+    container.innerHTML = `<p class="admin-alert error">${escapeText(error.message)}</p>`;
+  }
+}
+
+function filterOutCurrentPost(posts) {
+  const currentId = editorState.id ? Number(editorState.id) : null;
+  return posts.filter((post) => post.id !== currentId);
+}
+
+function renderRelatedResults(posts) {
+  relatedCurrentResults = posts;
+  const container = document.getElementById("relatedResults");
+  if (!posts.length) {
+    container.innerHTML = '<p class="muted">Nenhum artigo encontrado.</p>';
+    return;
+  }
+  container.innerHTML = posts
+    .map((post) => `<button type="button" class="related-article-option" data-related-id="${post.id}" ${relatedSelected.has(post.id) ? "disabled" : ""}>${escapeText(post.title)}</button>`)
+    .join("");
+  container.querySelectorAll("[data-related-id]").forEach((button) => {
+    button.addEventListener("click", () => addRelatedSelection(Number(button.dataset.relatedId)));
+  });
+}
+
+function addRelatedSelection(id) {
+  const post = relatedCurrentResults.find((item) => item.id === id);
+  if (!post || relatedSelected.has(id)) return;
+  if (relatedSelected.size >= RELATED_MAX) {
+    showModalError("relatedArticlesFormError", `Selecione no máximo ${RELATED_MAX} artigos.`);
+    return;
+  }
+  clearModalError("relatedArticlesFormError");
+  relatedSelected.set(id, post);
+  renderRelatedResults(relatedCurrentResults);
+  renderRelatedSelected();
+}
+
+function removeRelatedSelection(id) {
+  relatedSelected.delete(id);
+  renderRelatedResults(relatedCurrentResults);
+  renderRelatedSelected();
+}
+
+function renderRelatedSelected() {
+  const container = document.getElementById("relatedSelected");
+  document.getElementById("relatedSelectedCount").textContent = String(relatedSelected.size);
+  if (!relatedSelected.size) {
+    container.innerHTML = '<p class="muted">Nenhum artigo selecionado ainda.</p>';
+    return;
+  }
+  container.innerHTML = [...relatedSelected.values()]
+    .map((post) => `<span class="related-article-chip">${escapeText(post.title)}<button type="button" class="related-article-remove" data-related-remove="${post.id}" aria-label="Remover ${escapeAttr(post.title)} da seleção">×</button></span>`)
+    .join("");
+  container.querySelectorAll("[data-related-remove]").forEach((button) => {
+    button.addEventListener("click", () => removeRelatedSelection(Number(button.dataset.relatedRemove)));
+  });
+}
+
+function insertRelatedArticles() {
+  clearModalError("relatedArticlesFormError");
+  if (!relatedSelected.size) {
+    showModalError("relatedArticlesFormError", "Selecione ao menos um artigo para inserir o bloco.");
+    return;
+  }
+  const label = document.getElementById("relatedLabel").value || "Leia também";
+  const items = [...relatedSelected.values()]
+    .map((post) => `<li><a href="${escapeAttr(dynamicUrl(post.slug))}">${escapeText(post.title)}</a></li>`)
+    .join("");
+  const html = `<p><strong>${escapeText(label)}:</strong></p><ul>${items}</ul><p><br></p>`;
+  insertBlockAtSelection(html);
+  closeRelatedArticlesModal(false);
+  markDirty();
+  relatedSelected = new Map();
+  renderRelatedSelected();
+}
+
 function payload() {
   return {
     title: title.value.trim(),
@@ -1037,6 +1392,10 @@ function handleKeyboardShortcuts(event) {
     if (editorState.openModal === linkModal) closeLinkModal(true);
     if (editorState.openModal === imageModal) closeImageModal(true);
     if (editorState.openModal === tableModal) closeTableModal(true);
+    if (editorState.openModal === animeFactsModal) closeAnimeFactsModal(true);
+    if (editorState.openModal === whereToWatchModal) closeWhereToWatchModal(true);
+    if (editorState.openModal === noticeModal) closeNoticeModal(true);
+    if (editorState.openModal === relatedArticlesModal) closeRelatedArticlesModal(true);
     if (editorState.openModal === previewModal) closePreview(true);
     return;
   }

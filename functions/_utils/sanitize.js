@@ -9,6 +9,12 @@ const ALLOWED_TAGS = new Set([
 const BLOCKED_TAGS = new Set(["script", "style", "iframe", "object", "embed", "svg", "math", "template"]);
 const VOID_TAGS = new Set(["img", "hr", "br"]);
 const ALIGN_CLASSES = new Set(["align-center", "align-right"]);
+const BLOCKQUOTE_CLASSES = new Set(["callout-notice"]);
+const SITE_HOSTNAME = "anime.ryuzen.ink";
+
+function isInternalHref(href) {
+  try { return new URL(href).hostname === SITE_HOSTNAME; } catch { return false; }
+}
 
 function normalizeTagName(original) {
   if (original === "h1") return "h2";
@@ -94,13 +100,19 @@ function serializeAllowedTag(tag, attrs) {
     let href = "";
     try { href = safeWebUrl(attrs.href || "", true); } catch { return ""; }
     const title = attrs.title ? ` title="${escapeAttribute(String(attrs.title).slice(0, 200))}"` : "";
-    return `<a href="${escapeAttribute(href)}"${title} target="_blank" rel="noopener noreferrer nofollow">`;
+    // Internal links keep normal same-tab navigation and follow behavior; only external links are hardened with nofollow/blank target.
+    const navAttrs = isInternalHref(href) ? "" : ' target="_blank" rel="noopener noreferrer nofollow"';
+    return `<a href="${escapeAttribute(href)}"${title}${navAttrs}>`;
   }
   if (tag === "img") {
     const src = safeWebUrl(attrs.src || "", true);
     const alt = String(attrs.alt || "").trim().slice(0, 240);
     if (!alt) throw new RequestError("Toda imagem interna precisa de URL e texto alternativo.", 400);
     return `<img src="${escapeAttribute(src)}" alt="${escapeAttribute(alt)}" loading="lazy" decoding="async">`;
+  }
+  if (tag === "blockquote") {
+    const cssClass = BLOCKQUOTE_CLASSES.has(attrs.class) ? ` class="${escapeAttribute(attrs.class)}"` : "";
+    return `<blockquote${cssClass}>`;
   }
   if (tag === "figure") return attrs.class === "article-figure" ? '<figure class="article-figure">' : "<figure>";
   if (tag === "figcaption") return attrs.class === "article-caption" ? '<figcaption class="article-caption">' : "<figcaption>";
