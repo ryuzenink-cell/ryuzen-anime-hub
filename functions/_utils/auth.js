@@ -22,7 +22,8 @@ function randomToken(length = 32) {
 function parseCookie(request, name) {
   const input = request.headers.get("Cookie") || "";
   const pair = input.split(";").map((part) => part.trim()).find((part) => part.startsWith(`${name}=`));
-  return pair ? decodeURIComponent(pair.slice(name.length + 1)) : "";
+  if (!pair) return "";
+  try { return decodeURIComponent(pair.slice(name.length + 1)); } catch { return ""; }
 }
 function normalizedEmail(value = "") { return String(value).trim().toLowerCase().slice(0, 254); }
 function isLocalRequest(request) {
