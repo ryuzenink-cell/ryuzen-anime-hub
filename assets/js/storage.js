@@ -83,7 +83,10 @@ function clampNumber(value, min, max) {
 // espelhada no servidor em segundo plano (melhor esforço, nunca bloqueante),
 // e o merge local/servidor roda uma vez por login (ver syncAccountListOnLogin).
 const ACCOUNT_LIST_URL = "/api/account/list";
-const ryuzenAccountState = { authenticated: false, email: "", csrfToken: "", checked: false, dbUnavailable: false };
+const ryuzenAccountState = { authenticated: false, email: "", csrfToken: "", checked: false, dbUnavailable: false, avatarUrl: "", avatarFilename: "" };
+function defaultAvatarUrl() {
+  return typeof assetPath === "function" ? assetPath("icons/icon-192.png") : "/assets/icons/icon-192.png";
+}
 
 function accountFetch(url, { method = "GET", body, headers = {} } = {}) {
   const finalHeaders = { Accept: "application/json", ...(body !== undefined ? { "Content-Type": "application/json" } : {}), ...headers };
@@ -169,11 +172,21 @@ function applyAccountNavState() {
   document.querySelectorAll("[data-account-area]").forEach((area) => {
     if (ryuzenAccountState.authenticated) {
       const email = typeof escapeHtml === "function" ? escapeHtml(ryuzenAccountState.email) : ryuzenAccountState.email;
-      area.innerHTML = `<span class="account-email" data-account-email title="${email}">${email}</span><button type="button" class="btn ghost account-logout-btn" data-account-logout>Sair</button>`;
+      const avatarSrc = typeof escapeHtml === "function" ? escapeHtml(ryuzenAccountState.avatarUrl || defaultAvatarUrl()) : (ryuzenAccountState.avatarUrl || defaultAvatarUrl());
+      const profileRoute = typeof RYZEN_ROUTES !== "undefined" ? RYZEN_ROUTES.accountProfile : "/conta/perfil/";
+      area.innerHTML = `
+        <a class="account-profile-link" href="${profileRoute}" aria-label="Meu perfil" title="${email}">
+          <img class="account-avatar-thumb" src="${avatarSrc}" alt="" width="34" height="34">
+          <span class="account-email" data-account-email>${email}</span>
+        </a>
+        <button type="button" class="btn ghost account-logout-btn" data-account-logout><span>Sair</span></button>`;
     } else {
       const loginRoute = typeof RYZEN_ROUTES !== "undefined" ? RYZEN_ROUTES.accountLogin : "/conta/entrar/";
       const registerRoute = typeof RYZEN_ROUTES !== "undefined" ? RYZEN_ROUTES.accountRegister : "/conta/criar/";
-      area.innerHTML = `<a class="btn ghost" href="${loginRoute}">Entrar</a><a class="btn primary" href="${registerRoute}">Criar conta</a>`;
+      const userIcon = typeof publicIcon === "function" ? publicIcon("user") : "";
+      area.innerHTML = `
+        <a class="btn ghost account-login-btn" href="${loginRoute}" aria-label="Entrar">${userIcon}<span>Entrar</span></a>
+        <a class="btn primary account-register-btn" href="${registerRoute}"><span>Criar conta</span></a>`;
     }
   });
   document.querySelectorAll("[data-account-logout]").forEach((button) => {
@@ -181,12 +194,18 @@ function applyAccountNavState() {
   });
 }
 
-async function logoutRyuzenAccount() {
-  try { await accountFetch("/api/account/logout", { method: "POST" }); } catch { /* trata como deslogado no cliente mesmo se a rede falhar. */ }
+function resetAccountState() {
   sessionStorage.removeItem(`ryuzen_account_synced_${ryuzenAccountState.email}`);
   ryuzenAccountState.authenticated = false;
   ryuzenAccountState.email = "";
   ryuzenAccountState.csrfToken = "";
+  ryuzenAccountState.avatarUrl = "";
+  ryuzenAccountState.avatarFilename = "";
+}
+
+async function logoutRyuzenAccount() {
+  try { await accountFetch("/api/account/logout", { method: "POST" }); } catch { /* trata como deslogado no cliente mesmo se a rede falhar. */ }
+  resetAccountState();
   applyAccountNavState();
   document.dispatchEvent(new CustomEvent("ryuzen:account-state", { detail: { ...ryuzenAccountState } }));
 }
@@ -195,8 +214,8 @@ async function refreshAccountSession() {
   try {
     const response = await fetch("/api/account/session", { credentials: "same-origin", headers: { Accept: "application/json" } });
     if (response.status === 503) {
+      resetAccountState();
       ryuzenAccountState.dbUnavailable = true;
-      ryuzenAccountState.authenticated = false;
       ryuzenAccountState.checked = true;
       applyAccountNavState();
       return ryuzenAccountState;
@@ -207,6 +226,8 @@ async function refreshAccountSession() {
     ryuzenAccountState.authenticated = Boolean(data.authenticated);
     ryuzenAccountState.email = data.user?.email || "";
     ryuzenAccountState.csrfToken = data.csrfToken || "";
+    ryuzenAccountState.avatarUrl = data.user?.avatarUrl || "";
+    ryuzenAccountState.avatarFilename = data.user?.avatarFilename || "";
     ryuzenAccountState.checked = true;
     applyAccountNavState();
     document.dispatchEvent(new CustomEvent("ryuzen:account-state", { detail: { ...ryuzenAccountState } }));

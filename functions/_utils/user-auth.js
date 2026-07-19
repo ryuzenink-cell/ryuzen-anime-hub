@@ -184,10 +184,36 @@ export async function getUserSession(request, env, { touch = true } = {}) {
 export async function getAuthenticatedUser(request, env, options) {
   const session = await getUserSession(request, env, options);
   if (!session) return null;
-  const user = await env.USERS_DB.prepare("SELECT id, email, display_name, status, created_at FROM users WHERE id = ? AND status = 'active' LIMIT 1")
+  const user = await env.USERS_DB.prepare("SELECT id, email, display_name, avatar_filename, status, created_at FROM users WHERE id = ? AND status = 'active' LIMIT 1")
     .bind(session.user_id).first();
   if (!user) return null;
   return { session, user };
+}
+
+// Galeria de avatares é uma lista curada (arquivos em assets/images/avatars/,
+// publicada em /data/avatars.json pelo build). Nenhum upload de usuário é aceito.
+const AVATAR_FILENAME_PATTERN = /^[a-z0-9][a-z0-9._-]*$/;
+export function isSafeAvatarFilename(value) {
+  return typeof value === "string" && value.length > 0 && value.length <= 200 && AVATAR_FILENAME_PATTERN.test(value);
+}
+export function buildAvatarUrl(filename) {
+  return filename ? `/assets/images/avatars/${encodeURIComponent(filename)}` : null;
+}
+export async function fetchAllowedAvatarFilenames(request) {
+  try {
+    const response = await fetch(new URL("/data/avatars.json", request.url));
+    if (!response.ok) return [];
+    const data = await response.json();
+    return Array.isArray(data?.avatars) ? data.avatars : [];
+  } catch { return []; }
+}
+export function publicUserFields(user) {
+  return {
+    email: user.email,
+    displayName: user.display_name || null,
+    avatarFilename: user.avatar_filename || null,
+    avatarUrl: buildAvatarUrl(user.avatar_filename),
+  };
 }
 
 // Usado pelas rotas protegidas de /api/account/**: garante binding disponível

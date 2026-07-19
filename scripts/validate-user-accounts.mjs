@@ -7,6 +7,7 @@ import { onRequestPost as logoutAccount } from "../functions/api/account/logout.
 import { onRequestGet as accountSession } from "../functions/api/account/session.js";
 import { onRequestGet as listItems, onRequestPost as upsertListItem } from "../functions/api/account/list/index.js";
 import { onRequestPatch as patchListItem, onRequestDelete as deleteListItem } from "../functions/api/account/list/[animeId].js";
+import { onRequestPatch as patchAvatar } from "../functions/api/account/avatar.js";
 import { mergeAnimeListItems } from "../assets/js/storage.js";
 
 const root = resolve(import.meta.dirname, "..");
@@ -33,6 +34,7 @@ class TestD1 {
 function buildDatabase() {
   const db = new TestD1();
   db.exec(read("migrations/0007_user_accounts_and_lists.sql"));
+  db.exec(read("migrations/0008_user_avatars.sql"));
   return db;
 }
 const SECRET = "integration-test-user-session-secret";
@@ -301,6 +303,50 @@ async function registerUser(env, email, password = "SenhaForte123", ip = "203.0.
 
   response = await listItems({ request: request("/api/account/list"), env });
   expect(response.status === 401, "Listar sem sessão deve exigir autenticação (401).");
+}
+
+// ---------------------------------------------------------------------------
+// Avatar (galeria curada, sem upload)
+// ---------------------------------------------------------------------------
+{
+  const db = buildDatabase();
+  const env = envFor(db);
+  const { cookie, data: registerData } = await registerUser(env, "avatar@example.com", "SenhaForte123", "192.0.2.80");
+  const csrfToken = registerData.csrfToken;
+  expect(registerData.user?.avatarUrl === null, "Usuário recém-criado não deve ter avatar por padrão.");
+
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (input) => {
+    const url = String(input);
+    if (url.endsWith("/data/avatars.json")) {
+      return new Response(JSON.stringify({ avatars: ["mio.webp", "yui.webp"] }), { status: 200, headers: { "Content-Type": "application/json" } });
+    }
+    return originalFetch(input);
+  };
+  try {
+    let response = await patchAvatar({ request: request("/api/account/avatar", { method: "POST", body: { avatarFilename: "mio.webp" }, cookie, headers: { "X-CSRF-Token": csrfToken } }), env });
+    let data = await bodyOf(response);
+    expect(response.status === 200 && data.user?.avatarFilename === "mio.webp", "Deve aceitar avatar presente na galeria.");
+    expect(data.user?.avatarUrl === "/assets/images/avatars/mio.webp", "Deve construir a URL pública do avatar a partir do filename.");
+
+    response = await patchAvatar({ request: request("/api/account/avatar", { method: "POST", body: { avatarFilename: "nao-existe.webp" }, cookie, headers: { "X-CSRF-Token": csrfToken } }), env });
+    expect(response.status === 400, "Deve rejeitar avatar fora da galeria disponível.");
+
+    response = await patchAvatar({ request: request("/api/account/avatar", { method: "POST", body: { avatarFilename: "../../etc/passwd" }, cookie, headers: { "X-CSRF-Token": csrfToken } }), env });
+    expect(response.status === 400, "Deve rejeitar nome de arquivo com caracteres não seguros (path traversal).");
+
+    response = await patchAvatar({ request: request("/api/account/avatar", { method: "POST", body: { avatarFilename: "mio.webp" }, cookie }), env });
+    expect(response.status === 403, "Definir avatar sem CSRF deve ser rejeitado.");
+
+    response = await patchAvatar({ request: request("/api/account/avatar", { method: "POST", body: { avatarFilename: null }, cookie, headers: { "X-CSRF-Token": csrfToken } }), env });
+    data = await bodyOf(response);
+    expect(response.status === 200 && data.user?.avatarFilename === null, "Deve permitir remover o avatar (voltar ao padrão) enviando null.");
+
+    const row = await db.prepare("SELECT avatar_filename FROM users WHERE email = 'avatar@example.com'").first();
+    expect(row.avatar_filename === null, "O avatar removido deve refletir no banco.");
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
 }
 
 // ---------------------------------------------------------------------------

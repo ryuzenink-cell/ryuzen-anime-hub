@@ -1,7 +1,7 @@
 import { json, handleError, readJson, apiError } from "../../_utils/http.js";
 import {
   createUserSession, currentLock, hashPassword, isValidEmailFormat, normalizeEmail,
-  purposeHash, recordAttempt, applyFailureLockIfNeeded, requestIp,
+  publicUserFields, purposeHash, recordAttempt, applyFailureLockIfNeeded, requestIp,
   requireAccountsConfiguration, requireUsersDatabase, validatePasswordShape,
   MAX_DISPLAY_NAME_LENGTH,
 } from "../../_utils/user-auth.js";
@@ -53,7 +53,7 @@ export async function onRequestPost({ request, env }) {
     const session = await createUserSession(request, env, userId);
     return json({
       authenticated: true,
-      user: { email, displayName },
+      user: publicUserFields({ email, display_name: displayName, avatar_filename: null }),
       csrfToken: session.csrfToken,
       expiresAt: session.expiresAt,
     }, 201, { "Set-Cookie": session.cookie });

@@ -1,5 +1,5 @@
 import { json, handleError } from "../../_utils/http.js";
-import { getAuthenticatedUser, requireAccountsConfiguration, rotateCsrfToken } from "../../_utils/user-auth.js";
+import { getAuthenticatedUser, publicUserFields, requireAccountsConfiguration, rotateCsrfToken } from "../../_utils/user-auth.js";
 
 export async function onRequestGet({ request, env }) {
   try {
@@ -9,7 +9,7 @@ export async function onRequestGet({ request, env }) {
     const csrfToken = await rotateCsrfToken(auth.session, env);
     return json({
       authenticated: true,
-      user: { email: auth.user.email, displayName: auth.user.display_name || null },
+      user: publicUserFields(auth.user),
       csrfToken,
     }, 200);
   } catch (error) { return handleError(error); }

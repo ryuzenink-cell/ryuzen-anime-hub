@@ -1,6 +1,6 @@
 import { json, handleError, readJson, apiError } from "../../_utils/http.js";
 import {
-  createUserSession, currentLock, normalizeEmail, purposeHash, recordAttempt,
+  createUserSession, currentLock, normalizeEmail, publicUserFields, purposeHash, recordAttempt,
   applyFailureLockIfNeeded, clearLocks, requestIp, requireAccountsConfiguration,
   requireUsersDatabase, verifyPassword, DUMMY_PASSWORD_HASH, DUMMY_PASSWORD_SALT,
 } from "../../_utils/user-auth.js";
@@ -22,7 +22,7 @@ export async function onRequestPost({ request, env }) {
       return apiError(GENERIC_LOGIN_ERROR, 429, { code: "RATE_LIMITED" });
     }
 
-    const user = email ? await db.prepare("SELECT id, email, password_hash, password_salt, display_name FROM users WHERE email = ? AND status = 'active' LIMIT 1").bind(email).first() : null;
+    const user = email ? await db.prepare("SELECT id, email, password_hash, password_salt, display_name, avatar_filename FROM users WHERE email = ? AND status = 'active' LIMIT 1").bind(email).first() : null;
     const passwordValid = user
       ? await verifyPassword(password, user.password_hash, user.password_salt)
       : await verifyPassword(password, DUMMY_PASSWORD_HASH, DUMMY_PASSWORD_SALT);
@@ -38,7 +38,7 @@ export async function onRequestPost({ request, env }) {
     const session = await createUserSession(request, env, user.id);
     return json({
       authenticated: true,
-      user: { email: user.email, displayName: user.display_name || null },
+      user: publicUserFields(user),
       csrfToken: session.csrfToken,
       expiresAt: session.expiresAt,
     }, 200, { "Set-Cookie": session.cookie });

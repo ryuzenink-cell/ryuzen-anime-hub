@@ -6,7 +6,7 @@
   const productSection = document.getElementById("produtos");
   if (!content || !filters) return;
 
-  const placeholder = "/assets/images/logo-placeholder.webp?v=20260719-user-accounts-v1";
+  const placeholder = "/assets/images/logo-placeholder.webp?v=20260719-user-accounts-v2";
   const categories = {
     manga: "Mangás", light_novel: "Light novels", collectible: "Colecionáveis",
     digital_reading: "Leitura digital", geek_gift: "Presentes", apparel: "Roupas e acessórios",

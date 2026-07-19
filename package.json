@@ -1,8 +1,9 @@
 {
   "scripts": {
     "blog:index": "node scripts/build-blog-index.js",
-    "precommit": "node scripts/build-blog-index.js && node scripts/build-sitemap.js && node scripts/validate-public-layout.mjs && node scripts/validate-public-discovery.mjs && node scripts/validate-store.mjs && npm run validate:admin && npm run validate:user-accounts",
-    "build": "node scripts/build-blog-index.js && node scripts/build-sitemap.js && node scripts/validate-public-layout.mjs && node scripts/validate-public-discovery.mjs && node scripts/validate-store.mjs && npm run validate:admin && npm run validate:user-accounts",
+    "precommit": "node scripts/build-avatars-manifest.js && node scripts/build-blog-index.js && node scripts/build-sitemap.js && node scripts/validate-public-layout.mjs && node scripts/validate-public-discovery.mjs && node scripts/validate-store.mjs && npm run validate:admin && npm run validate:user-accounts",
+    "build": "node scripts/build-avatars-manifest.js && node scripts/build-blog-index.js && node scripts/build-sitemap.js && node scripts/validate-public-layout.mjs && node scripts/validate-public-discovery.mjs && node scripts/validate-store.mjs && npm run validate:admin && npm run validate:user-accounts",
+    "avatars:build": "node scripts/build-avatars-manifest.js",
     "sitemap:build": "node scripts/build-sitemap.js",
     "functions:build": "wrangler pages functions build --outdir .functions-dist",
     "auth:generate-secrets": "node scripts/generate-admin-secrets.mjs",

@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Criar conta | Ryuzen Anime Hub</title>
-  <meta name="description" content="Crie sua conta Ryuzen Anime Hub e salve sua lista de animes na nuvem, disponível em qualquer dispositivo.">
+  <title>Meu perfil | Ryuzen Anime Hub</title>
+  <meta name="description" content="Personalize seu avatar e gerencie sua conta Ryuzen Anime Hub.">
   <meta name="robots" content="noindex,follow">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://cloudflareinsights.com https://www.google-analytics.com https://region1.google-analytics.com https://analytics.google.com; img-src 'self' https: data:; script-src 'self' https://www.googletagmanager.com https://static.cloudflareinsights.com; style-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
   <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -24,26 +24,25 @@
 <body class="public-site">
   <div data-header></div>
   <main id="main-content" class="container account-page">
-    <section class="account-card panel" aria-labelledby="accountTitle">
+    <section class="account-card panel profile-card" aria-labelledby="profileTitle">
       <p class="eyebrow">Sua conta</p>
-      <h1 id="accountTitle">Criar conta</h1>
-      <p class="account-subtitle">Crie uma conta gratuita para salvar sua lista de animes na nuvem e acessá-la em qualquer dispositivo.</p>
-      <form id="accountRegisterForm" class="account-form" autocomplete="on" novalidate>
-        <label>E-mail
-          <input class="field" type="email" name="email" autocomplete="username" required maxlength="254">
-        </label>
-        <label>Senha
-          <input class="field" type="password" name="password" autocomplete="new-password" required minlength="10" maxlength="128">
-        </label>
-        <label>Confirmar senha
-          <input class="field" type="password" name="passwordConfirm" autocomplete="new-password" required minlength="10" maxlength="128">
-        </label>
-        <p class="account-hint">A senha deve ter pelo menos 10 caracteres.</p>
-        <p id="accountFeedback" class="account-alert hidden" role="alert"></p>
-        <button id="accountSubmit" class="btn primary" type="submit">Criar conta</button>
-      </form>
-      <p class="account-switch">Já tem conta? <a href="/conta/entrar/">Entrar</a></p>
-      <p class="account-guest-note">Prefere não criar conta? Sua lista continua funcionando normalmente <a href="/my-list/">salva neste dispositivo</a>.</p>
+      <h1 id="profileTitle">Meu perfil</h1>
+      <p id="profileState" class="account-alert hidden" role="status"></p>
+
+      <div id="profileContent" class="profile-content hidden">
+        <div class="profile-summary">
+          <img id="avatarPreview" class="profile-avatar-preview" src="/assets/icons/icon-192.png?v=20260719-user-accounts-v2" alt="Seu avatar atual">
+          <div>
+            <p class="profile-email" id="profileEmail"></p>
+            <button type="button" id="profileLogout" class="btn ghost">Sair da conta</button>
+          </div>
+        </div>
+
+        <h2 class="profile-section-title">Escolher avatar</h2>
+        <p class="account-hint">Selecione uma das imagens disponíveis. Novas opções aparecem aqui automaticamente quando adicionadas pelo time.</p>
+        <p id="profileFeedback" class="account-alert hidden" role="alert"></p>
+        <div id="avatarGrid" class="avatar-grid" aria-label="Avatares disponíveis"></div>
+      </div>
     </section>
   </main>
   <div data-footer></div>
@@ -51,7 +50,7 @@
   <script src="/assets/js/analytics.js?v=20260719-user-accounts-v2"></script>
   <script src="/assets/js/storage.js?v=20260719-user-accounts-v2"></script>
   <script src="/assets/js/ui.js?v=20260719-user-accounts-v2"></script>
-  <script src="/assets/js/account-register.js?v=20260719-user-accounts-v2"></script>
+  <script src="/assets/js/account-profile.js?v=20260719-user-accounts-v2"></script>
   <script src="/assets/js/public-ui.js?v=20260719-user-accounts-v2"></script>
 </body>
 </html>
