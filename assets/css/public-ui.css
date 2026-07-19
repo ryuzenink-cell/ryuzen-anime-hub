@@ -154,6 +154,19 @@ body:not(.admin-page):has([data-header]) .container {
 }
 .menu-toggle { display: none; }
 
+.account-area { display: flex; align-items: center; gap: 8px; }
+.account-area .btn { min-height: 40px; padding: 0 14px; font-size: .86rem; }
+.account-email {
+  display: inline-flex; align-items: center; max-width: 160px;
+  padding: 0 14px; min-height: 40px; border-radius: 999px;
+  border: 1px solid var(--public-border); background: rgba(255,255,255,.04);
+  color: var(--public-text); font-weight: 700; font-size: .84rem;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.account-logout-btn { min-height: 40px; padding: 0 14px; font-size: .84rem; cursor: pointer; }
+.drawer-group.account-area { flex-direction: column; align-items: stretch; gap: 10px; }
+.drawer-group.account-area .account-email { max-width: none; justify-content: center; }
+
 /* Faixa de navegação editorial por seções */
 .nav-strip {
   border-top: 1px solid rgba(255,255,255,.05);
@@ -514,6 +527,21 @@ body:not(.admin-page):has([data-header]) .container {
 /* My list */
 .device-note { display:flex; align-items:start; gap:12px; margin:8px 0 24px; padding:16px; border:1px solid rgba(255,209,102,.25); border-radius:16px; background:rgba(255,209,102,.06); }
 .device-note svg { width:22px; color:var(--public-warning); flex:none; }
+.device-note.account-note { border-color: rgba(56,214,162,.3); background: rgba(56,214,162,.07); }
+.device-note.account-note svg { color: var(--public-success); }
+.device-note.hidden { display: none; }
+
+.account-page { display: flex; justify-content: center; padding: clamp(38px, 7vw, 78px) 0; }
+.account-card { width: min(440px, 100%); padding: clamp(26px, 4vw, 38px); }
+.account-card h1 { margin: 4px 0 10px; font-size: clamp(1.7rem, 4vw, 2.2rem); }
+.account-subtitle { margin-bottom: 24px; }
+.account-form { display: grid; gap: 16px; }
+.account-form .btn { width: 100%; margin-top: 4px; }
+.account-alert { padding: 12px 14px; border-radius: 12px; background: rgba(255,117,125,.12); border: 1px solid rgba(255,117,125,.3); color: #ffd1d4; font-size: .9rem; }
+.account-alert.hidden { display: none; }
+.account-hint { margin-top: -8px; font-size: .82rem; color: var(--public-muted); }
+.account-switch, .account-guest-note { margin-top: 18px; font-size: .92rem; }
+.account-guest-note { color: var(--public-muted); font-size: .84rem; }
 .list-controls { display:flex; flex-wrap:wrap; gap:12px; align-items:end; margin: 20px 0; }
 .list-controls .search-box { flex: 1; min-width: 230px; }
 .public-site .list-item { border-radius: 20px; background: var(--public-surface); }

@@ -25,7 +25,8 @@
   <div data-header></div>
   <main id="main-content" class="container my-list-page">
     <section class="page-hero"><p class="eyebrow">Minha lista</p><h1>Sua jornada anime, organizada.</h1><p>Acompanhe o que deseja assistir, o que já concluiu e seus favoritos.</p></section>
-    <aside class="device-note" aria-label="Aviso de armazenamento local"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 4.2L2.7 17.4A2 2 0 004.4 20h15.2a2 2 0 001.7-2.6L13.7 4.2a2 2 0 00-3.4 0z"/></svg><p><strong>Salvo neste dispositivo.</strong> Sua lista fica armazenada apenas neste navegador. Evite limpar os dados do site para não perder seu progresso.</p></aside>
+    <aside class="device-note" id="deviceNote" aria-label="Aviso de armazenamento local"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 4.2L2.7 17.4A2 2 0 004.4 20h15.2a2 2 0 001.7-2.6L13.7 4.2a2 2 0 00-3.4 0z"/></svg><p><strong>Salvo neste dispositivo.</strong> Sua lista fica armazenada apenas neste navegador. <a href="../conta/criar/">Crie uma conta</a> para levá-la para qualquer dispositivo.</p></aside>
+    <aside class="device-note account-note hidden" id="accountSyncNote" aria-live="polite"></aside>
     <section id="listCounters" class="counter-grid"></section>
     <div class="list-controls">
       <div class="search-box"><label class="sr-only" for="myListSearch">Pesquisar na minha lista</label><input id="myListSearch" type="search" placeholder="Pesquisar na minha lista..."></div>

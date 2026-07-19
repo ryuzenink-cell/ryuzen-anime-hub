@@ -81,4 +81,34 @@ function bindListActions() {
   });
 }
 
+document.addEventListener("ryuzen:list-updated", renderMyList);
+
+const deviceNote = document.getElementById("deviceNote");
+const accountSyncNote = document.getElementById("accountSyncNote");
+function setAccountNote(message) {
+  if (!accountSyncNote) return;
+  if (!message) { accountSyncNote.classList.add("hidden"); accountSyncNote.innerHTML = ""; return; }
+  accountSyncNote.classList.remove("hidden");
+  accountSyncNote.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 4.2L2.7 17.4A2 2 0 004.4 20h15.2a2 2 0 001.7-2.6L13.7 4.2a2 2 0 00-3.4 0z"/></svg><p>${message}</p>`;
+}
+function reflectAccountState(state) {
+  if (!state) return;
+  if (state.dbUnavailable) {
+    setAccountNote("O sistema de contas está temporariamente indisponível. Sua lista continua funcionando normalmente neste dispositivo.");
+    if (deviceNote) deviceNote.classList.remove("hidden");
+    return;
+  }
+  if (state.authenticated) {
+    setAccountNote(`Sua lista está sincronizada com a conta <strong>${escapeHtml(state.email)}</strong>.`);
+    if (deviceNote) deviceNote.classList.add("hidden");
+  } else if (state.checked) {
+    setAccountNote("");
+    if (deviceNote) deviceNote.classList.remove("hidden");
+  }
+}
+document.addEventListener("ryuzen:account-state", (event) => reflectAccountState(event.detail));
+document.addEventListener("ryuzen:account-sync-start", () => setAccountNote("Sincronizando sua lista com sua conta..."));
+document.addEventListener("ryuzen:account-sync-end", () => reflectAccountState(window.ryuzenAccountState));
+if (window.ryuzenAccountState?.checked) reflectAccountState(window.ryuzenAccountState);
+
 renderMyList();

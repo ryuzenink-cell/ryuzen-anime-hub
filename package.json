@@ -1,18 +1,20 @@
 {
   "scripts": {
     "blog:index": "node scripts/build-blog-index.js",
-    "precommit": "node scripts/build-blog-index.js && node scripts/build-sitemap.js && node scripts/validate-public-layout.mjs && node scripts/validate-public-discovery.mjs && node scripts/validate-store.mjs && npm run validate:admin",
-    "build": "node scripts/build-blog-index.js && node scripts/build-sitemap.js && node scripts/validate-public-layout.mjs && node scripts/validate-public-discovery.mjs && node scripts/validate-store.mjs && npm run validate:admin",
+    "precommit": "node scripts/build-blog-index.js && node scripts/build-sitemap.js && node scripts/validate-public-layout.mjs && node scripts/validate-public-discovery.mjs && node scripts/validate-store.mjs && npm run validate:admin && npm run validate:user-accounts",
+    "build": "node scripts/build-blog-index.js && node scripts/build-sitemap.js && node scripts/validate-public-layout.mjs && node scripts/validate-public-discovery.mjs && node scripts/validate-store.mjs && npm run validate:admin && npm run validate:user-accounts",
     "sitemap:build": "node scripts/build-sitemap.js",
     "functions:build": "wrangler pages functions build --outdir .functions-dist",
     "auth:generate-secrets": "node scripts/generate-admin-secrets.mjs",
     "test:public-layout": "node scripts/validate-public-layout.mjs",
     "test:store": "node scripts/validate-store.mjs",
     "validate:admin": "node scripts/validate-admin-shell.mjs && node scripts/validate-admin-security.mjs && node scripts/validate-admin-backend.mjs && node scripts/validate-post-autosave.mjs",
+    "validate:user-accounts": "node scripts/validate-user-accounts.mjs",
     "package:clean": "node scripts/package-clean.mjs",
     "test:admin-backend": "node scripts/validate-admin-backend.mjs",
     "test:post-autosave": "node scripts/validate-post-autosave.mjs",
-    "test:public-discovery": "node scripts/validate-public-discovery.mjs"
+    "test:public-discovery": "node scripts/validate-public-discovery.mjs",
+    "test:user-accounts": "node scripts/validate-user-accounts.mjs"
   },
   "dependencies": {
     "htmlparser2": "^10.0.0"

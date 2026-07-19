@@ -3,6 +3,8 @@ const RYZEN_ROUTE_SEGMENTS = [
   "vendas-mangas",
   "loja",
   "my-list",
+  "conta/entrar",
+  "conta/criar",
   "anime",
   "search",
   "season",
@@ -33,6 +35,8 @@ const RYZEN_ROUTES = {
   myList: sitePath("my-list/"),
   guides: sitePath("guides/"),
   store: sitePath("loja/"),
+  accountLogin: sitePath("conta/entrar/"),
+  accountRegister: sitePath("conta/criar/"),
 };
 
 function sitePath(path = "") {
@@ -131,6 +135,7 @@ function renderHeader() {
               <button class="header-search-submit" type="submit">Buscar</button>
             </form>
             <a class="header-icon-link list-header-link" href="${RYZEN_ROUTES.myList}" aria-label="Abrir minha lista">${publicIcon("heart")}<span>Minha lista</span><span class="list-count" data-list-count hidden>0</span></a>
+            <div class="account-area" data-account-area></div>
             <button class="menu-toggle" data-menu-toggle type="button" aria-expanded="false" aria-controls="mobile-public-nav" aria-label="Abrir menu">${publicIcon("menu")}</button>
           </div>
         </div>
@@ -170,6 +175,8 @@ function renderHeader() {
           <a data-route="store" href="${RYZEN_ROUTES.store}">Loja Ryuzen</a>
           <a data-route="mangaSales" href="${RYZEN_ROUTES.mangaSales}">Market Intel</a>
         </div>
+        <p class="drawer-group-label" id="drawer-group-conta">Conta</p>
+        <div class="drawer-group account-area" role="group" aria-labelledby="drawer-group-conta" data-account-area></div>
         <p class="drawer-group-label" id="drawer-group-ryuzen">Ecossistema</p>
         <div class="drawer-group" role="group" aria-labelledby="drawer-group-ryuzen">
           <a class="nav-external" href="https://www.yorokobistudio.com/" target="_blank" rel="noopener noreferrer">Yorokobi Studio<span aria-hidden="true"> ↗</span></a>

@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "pages-dev",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "wrangler", "pages", "dev", ".",
+        "--d1", "USERS_DB",
+        "-b", "USER_SESSION_SECRET=local-dev-secret-not-real",
+        "--compatibility-date", "2026-05-28",
+        "--port", "8788"
+      ],
+      "port": 8788
+    }
+  ]
+}

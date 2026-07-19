@@ -26,5 +26,7 @@
 /blog/:year/:month/:slug.md /blog/:year/:month/:slug.md 200
 /blog/:year/:month/:slug /blog/:year/:month/:slug/ 301
 /vendas-mangas /vendas-mangas/ 301
+/conta/entrar /conta/entrar/ 301
+/conta/criar /conta/criar/ 301
 
 /loja /loja/ 301
