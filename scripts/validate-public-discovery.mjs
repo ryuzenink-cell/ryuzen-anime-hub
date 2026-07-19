@@ -7,7 +7,7 @@ const root = resolve(import.meta.dirname, "..");
 const failures = [];
 const expect = (condition, message) => { if (!condition) failures.push(message); };
 const read = (file) => readFileSync(resolve(root, file), "utf8");
-const PUBLIC_VERSION = "20260528-public-discovery-v2";
+const PUBLIC_VERSION = "20260719-user-accounts-v1";
 
 const clientApi = read("assets/js/api.js");
 const serviceWorker = read("service-worker.js");
@@ -19,12 +19,12 @@ const publicPages = [
 expect(clientApi.includes('const API_BASE_URL = "/api/discovery"'), "O cliente público deve tentar a API same-origin /api/discovery.");
 expect(clientApi.includes('const DIRECT_JIKAN_BASE_URL = "https://api.jikan.moe/v4"'), "O cliente deve possuir fallback direto controlado para a Jikan quando o proxy edge falhar.");
 expect(clientApi.includes("RETRYABLE_PROXY_STATUSES") && clientApi.includes("enqueueDirectJikanRequest"), "O fallback direto deve ocorrer apenas em falhas transitórias do proxy e respeitar fila/rate-limit.");
-expect(serviceWorker.includes('v1.9.0-public-discovery-resilient'), "O service worker deve invalidar caches após a correção resiliente da descoberta pública.");
-expect(serviceWorker.includes('/assets/js/api.js?v=20260528-public-discovery-v2'), "O service worker deve pré-cachear a versão nova do cliente da API.");
+expect(serviceWorker.includes('v2.0.0-user-accounts'), "O service worker deve invalidar caches após a correção resiliente da descoberta pública.");
+expect(serviceWorker.includes('/assets/js/api.js?v=20260719-user-accounts-v1'), "O service worker deve pré-cachear a versão nova do cliente da API.");
 expect(serviceWorker.includes('url.pathname.startsWith("/api/")'), "Respostas de API não devem ser servidas pelo cache offline do service worker.");
 expect(ui.includes("images/banners/banner-left.webp") && ui.includes("images/banners/banner-right.webp"), "Banners laterais devem utilizar imagens WebP otimizadas.");
 expect(!ui.includes("images/banners/banner-left.png") && !ui.includes("images/banners/banner-right.png"), "Banners PNG pesados não devem retornar ao layout público.");
-expect(ui.includes("icons/icon-192.png?v=20260528-public-discovery-v2"), "A marca no cabeçalho deve reutilizar ícone otimizado e versionado.");
+expect(ui.includes("icons/icon-192.png?v=20260719-user-accounts-v1"), "A marca no cabeçalho deve reutilizar ícone otimizado e versionado.");
 expect(existsSync(resolve(root, "assets/images/banners/banner-left.webp")) && statSync(resolve(root, "assets/images/banners/banner-left.webp")).size < 400000, "Banner esquerdo deve permanecer otimizado abaixo de 400 KB.");
 expect(existsSync(resolve(root, "assets/images/banners/banner-right.webp")) && statSync(resolve(root, "assets/images/banners/banner-right.webp")).size < 400000, "Banner direito deve permanecer otimizado abaixo de 400 KB.");
 expect(!existsSync(resolve(root, "assets/images/banners/banner-left.png")) && !existsSync(resolve(root, "assets/images/banners/banner-right.png")), "Banners PNG redundantes não devem permanecer no pacote.");

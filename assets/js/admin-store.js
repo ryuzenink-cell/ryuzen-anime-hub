@@ -23,7 +23,7 @@
     badge: { none: "Nenhum", ryuzen_choice: "Escolha Ryuzen", getting_started: "Para começar", highlight: "Destaque", recommended: "Recomendado", geek_gift: "Presente geek" },
   };
   const AMAZON_HOST_RE = /(?:^|\.)amazon\.(?:com\.br|com|ca|co\.uk|de|es|fr|it|co\.jp|in|com\.mx|com\.au)$/;
-  const placeholder = "/assets/images/logo-placeholder.webp?v=20260528-public-discovery-v2";
+  const placeholder = "/assets/images/logo-placeholder.webp?v=20260719-user-accounts-v1";
   let products = [];
   let metrics = null;
   let capabilities = { linkReview: false };
