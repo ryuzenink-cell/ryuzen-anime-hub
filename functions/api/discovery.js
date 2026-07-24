@@ -1,7 +1,7 @@
 const JIKAN_BASE_URL = "https://api.jikan.moe/v4";
 const FRESH_CACHE_SECONDS = 300;
 const STALE_CACHE_SECONDS = 86400;
-const UPSTREAM_TIMEOUT_MS = 4500;
+const UPSTREAM_TIMEOUT_MS = 13000;
 const UPSTREAM_RETRY_DELAY_MS = 650;
 const PUBLIC_HEADERS = {
   "Content-Type": "application/json; charset=utf-8",
