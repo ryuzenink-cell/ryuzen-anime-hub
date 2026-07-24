@@ -20,11 +20,12 @@ class DiscoveryRequestError extends Error {
 }
 
 class UpstreamError extends Error {
-  constructor(message, status = 503, code = "DISCOVERY_UPSTREAM_UNAVAILABLE") {
+  constructor(message, status = 503, code = "DISCOVERY_UPSTREAM_UNAVAILABLE", { retryable = true } = {}) {
     super(message);
     this.name = "UpstreamError";
     this.status = status;
     this.code = code;
+    this.retryable = retryable;
   }
 }
 
@@ -67,6 +68,9 @@ export async function onRequestGet(context) {
         }
       }
       if (error instanceof UpstreamError) {
+        if (error.retryable === false) {
+          return errorResponse(error.message, error.status, error.code);
+        }
         // Some third-party providers may reject or throttle requests originating at edge runtimes.
         // Redirecting only to the already validated provider URL lets the browser reuse the public
         // CORS-enabled API instead of leaving discovery unusable with a permanent 503.
@@ -184,9 +188,25 @@ async function fetchFromJikan(url, attempt = 0) {
       }
       throw new UpstreamError("A pesquisa está temporariamente ocupada. Tente novamente em instantes.", 503, "DISCOVERY_RATE_LIMITED");
     }
-    if (response.status >= 500 && attempt < 1) {
-      await delay(UPSTREAM_RETRY_DELAY_MS);
-      return fetchFromJikan(url, attempt + 1);
+    if (response.status >= 500) {
+      const detail = await response.clone().json().catch(() => null);
+      const providerDown =
+        detail?.type === "BadResponseException" && /MyAnimeList/i.test(String(detail?.message || ""));
+      if (providerDown) {
+        // Jikan already confirmed MyAnimeList itself is unreachable: retrying or redirecting the
+        // browser to the same URL cannot succeed, so fail fast with an accurate message instead of
+        // wasting the retry delay and an extra round trip on a guaranteed repeat failure.
+        throw new UpstreamError(
+          "O provedor de dados de animes (MyAnimeList) está indisponível no momento. Tente novamente em alguns minutos.",
+          503,
+          "DISCOVERY_PROVIDER_DOWN",
+          { retryable: false },
+        );
+      }
+      if (attempt < 1) {
+        await delay(UPSTREAM_RETRY_DELAY_MS);
+        return fetchFromJikan(url, attempt + 1);
+      }
     }
     if (response.status === 404) throw new UpstreamError("Anime não encontrado.", 404, "DISCOVERY_NOT_FOUND");
     throw new UpstreamError("A fonte de animes está temporariamente indisponível.");
