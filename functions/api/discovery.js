@@ -1,7 +1,7 @@
 const JIKAN_BASE_URL = "https://api.jikan.moe/v4";
 const FRESH_CACHE_SECONDS = 300;
 const STALE_CACHE_SECONDS = 86400;
-const UPSTREAM_TIMEOUT_MS = 6000;
+const UPSTREAM_TIMEOUT_MS = 4500;
 const UPSTREAM_RETRY_DELAY_MS = 650;
 const PUBLIC_HEADERS = {
   "Content-Type": "application/json; charset=utf-8",
@@ -212,7 +212,11 @@ async function fetchFromJikan(url, attempt = 0) {
     throw new UpstreamError("A fonte de animes está temporariamente indisponível.");
   } catch (error) {
     if (error instanceof UpstreamError) throw error;
-    if ((error?.name === "AbortError" || error?.name === "TypeError") && attempt < 1) {
+    // A TypeError (falha de conexão) costuma ser instantânea, então vale tentar de novo.
+    // Já um AbortError já consumiu o orçamento inteiro de UPSTREAM_TIMEOUT_MS; tentar de novo
+    // dobraria essa espera e arrisca estourar o timeout do fetch no cliente antes mesmo de
+    // chegarmos ao fallback de redirect para o navegador — por isso falha direto nesse caso.
+    if (error?.name === "TypeError" && attempt < 1) {
       await delay(UPSTREAM_RETRY_DELAY_MS);
       return fetchFromJikan(url, attempt + 1);
     }
