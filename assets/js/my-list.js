@@ -41,7 +41,7 @@ function createListItem(item) {
   const total = Number(item.totalEpisodes) || 0;
   const watched = Number(item.episodesWatched) || 0;
   const progress = total ? Math.min(100, Math.round((watched / total) * 100)) : 0;
-  const image = escapeHtml(safeUrl(item.image, assetPath("images/logo-placeholder.webp?v=20260724-status-banner-v1")));
+  const image = escapeHtml(safeUrl(item.image, assetPath("images/logo-placeholder.webp?v=20260724-status-banner-v2")));
   const title = escapeHtml(item.title);
   return `
     <article class="list-item" data-id="${item.id}">
