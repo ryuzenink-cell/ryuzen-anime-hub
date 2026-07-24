@@ -51,7 +51,7 @@ function escapeAttr(value = "") {
 
 function updateSummary() {
   const state = window.ryuzenAccountState || {};
-  avatarPreview.src = state.avatarUrl || "/assets/icons/icon-192.png?v=20260719-user-accounts-v2";
+  avatarPreview.src = state.avatarUrl || "/assets/icons/icon-192.png?v=20260724-discovery-fix-v1";
   profileEmail.textContent = state.email || "";
 }
 

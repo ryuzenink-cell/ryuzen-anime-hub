@@ -2,7 +2,7 @@
   "use strict";
   const mount = document.getElementById("homeStoreBanner");
   if (!mount) return;
-  const placeholder = "/assets/images/logo-placeholder.webp?v=20260719-user-accounts-v2";
+  const placeholder = "/assets/images/logo-placeholder.webp?v=20260724-discovery-fix-v1";
 
   function element(tag, className, text) {
     const node = document.createElement(tag);
