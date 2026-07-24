@@ -29,20 +29,35 @@ class UpstreamError extends Error {
   }
 }
 
+// Log estruturado temporário para localizar exatamente onde a requisição falha em produção
+// (consultar via `wrangler pages deployment tail` ou o dashboard da Cloudflare). Nunca inclui
+// headers, tokens ou corpo além de um trecho curto usado só para diagnosticar payload inesperado.
+function log(requestId, stage, data = {}) {
+  console.log(JSON.stringify({ requestId, stage, timestamp: new Date().toISOString(), ...data }));
+}
+
 export async function onRequestGet(context) {
+  const requestId = crypto.randomUUID();
+  const startedAt = Date.now();
   try {
     const requestUrl = new URL(context.request.url);
+    const operationParam = String(requestUrl.searchParams.get("operation") || "");
+    log(requestId, "request_started", { operation: operationParam, page: requestUrl.searchParams.get("page") || "" });
+
     const operation = buildOperation(requestUrl.searchParams);
     const cache = globalThis.caches?.default;
     const cacheKeys = makeCacheKeys(requestUrl.origin, operation.cacheToken);
 
     if (cache) {
       const fresh = await cache.match(cacheKeys.fresh);
-      if (fresh) return copyPublicResponse(fresh, { cacheStatus: "HIT" });
+      if (fresh) {
+        log(requestId, "response_sent", { source: "edge_cache_fresh", status: 200, totalMs: Date.now() - startedAt });
+        return copyPublicResponse(fresh, { cacheStatus: "HIT" });
+      }
     }
 
     try {
-      const payload = await fetchFromJikan(operation.url);
+      const payload = await fetchFromJikan(operation.url, requestId);
       const response = jsonResponse(payload, 200, { "X-Discovery-Cache": "MISS" });
 
       if (cache) {
@@ -56,11 +71,13 @@ export async function onRequestGet(context) {
         if (typeof context.waitUntil === "function") context.waitUntil(store);
         else await store;
       }
+      log(requestId, "response_sent", { source: "jikan", status: 200, totalMs: Date.now() - startedAt });
       return response;
     } catch (error) {
       if (cache) {
         const stale = await cache.match(cacheKeys.stale);
         if (stale) {
+          log(requestId, "response_sent", { source: "edge_cache_stale", status: stale.status, totalMs: Date.now() - startedAt, reason: error?.code });
           return copyPublicResponse(stale, {
             cacheStatus: "STALE",
             warning: "110 - Response is stale because the anime provider is temporarily unavailable",
@@ -69,19 +86,24 @@ export async function onRequestGet(context) {
       }
       if (error instanceof UpstreamError) {
         if (error.retryable === false) {
-          return errorResponse(error.message, error.status, error.code);
+          log(requestId, "response_sent", { source: "fail_fast", status: error.status, code: error.code, totalMs: Date.now() - startedAt });
+          return errorResponse(error.message, error.status, error.code, requestId);
         }
         // Some third-party providers may reject or throttle requests originating at edge runtimes.
         // Redirecting only to the already validated provider URL lets the browser reuse the public
         // CORS-enabled API instead of leaving discovery unusable with a permanent 503.
-        return browserProviderFallback(operation.url, error);
+        log(requestId, "response_sent", { source: "browser_fallback_redirect", status: 307, code: error.code, totalMs: Date.now() - startedAt });
+        return browserProviderFallback(operation.url, error, requestId);
       }
       throw error;
     }
   } catch (error) {
-    if (error instanceof DiscoveryRequestError) return errorResponse(error.message, error.status, error.code);
-    console.error("Falha na API pública de descoberta:", error?.message || "erro desconhecido");
-    return errorResponse("Não foi possível carregar animes agora. Tente novamente em instantes.", 503, "DISCOVERY_UNAVAILABLE");
+    if (error instanceof DiscoveryRequestError) {
+      log(requestId, "response_sent", { source: "bad_request", status: error.status, code: error.code, totalMs: Date.now() - startedAt });
+      return errorResponse(error.message, error.status, error.code, requestId);
+    }
+    log(requestId, "error_unhandled", { message: error?.message || "erro desconhecido", stack: error?.stack, totalMs: Date.now() - startedAt });
+    return errorResponse("Não foi possível carregar animes agora. Tente novamente em instantes.", 503, "DISCOVERY_UNAVAILABLE", requestId);
   }
 }
 
@@ -160,10 +182,12 @@ function buildOperation(params) {
   return { url, cacheToken: `${operation}?${query.toString()}${operation === "details" ? path : ""}` };
 }
 
-async function fetchFromJikan(url, attempt = 0) {
+async function fetchFromJikan(url, requestId, attempt = 0) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), UPSTREAM_TIMEOUT_MS);
+  const fetchStartedAt = Date.now();
   try {
+    log(requestId, "jikan_fetch_started", { path: url.pathname, attempt });
     const response = await fetch(url.toString(), {
       method: "GET",
       headers: {
@@ -173,18 +197,44 @@ async function fetchFromJikan(url, attempt = 0) {
       },
       signal: controller.signal,
     });
+    log(requestId, "jikan_fetch_finished", {
+      path: url.pathname,
+      attempt,
+      status: response.status,
+      ok: response.ok,
+      contentType: response.headers.get("content-type") || "",
+      durationMs: Date.now() - fetchStartedAt,
+    });
     if (response.ok) {
-      const payload = await response.json().catch(() => null);
-      if (!payload || typeof payload !== "object" || !Array.isArray(payload.data) && !payload.data) {
-        throw new UpstreamError("A fonte de animes retornou uma resposta inválida.");
+      // Lemos como texto primeiro (em vez de response.json() direto) para conseguir logar uma
+      // amostra do corpo quando o parse falhar ou o formato não bater — sem isso, uma resposta
+      // 200 "inesperada" (ex.: página de bloqueio/challenge servida com status 200) vira um erro
+      // genérico sem nenhuma pista de causa.
+      const rawText = await response.text().catch(() => "");
+      let payload = null;
+      try {
+        payload = JSON.parse(rawText);
+      } catch {
+        payload = null;
+      }
+      const hasData = payload && typeof payload === "object" && (Array.isArray(payload.data) || payload.data !== undefined);
+      if (!hasData) {
+        log(requestId, "jikan_payload_invalid", {
+          path: url.pathname,
+          status: response.status,
+          contentType: response.headers.get("content-type") || "",
+          bodyPreview: rawText.slice(0, 300),
+        });
+        throw new UpstreamError("A fonte de animes retornou uma resposta inválida.", 502, "DISCOVERY_INVALID_PAYLOAD");
       }
       return payload;
     }
     if (response.status === 429) {
       const retryDelay = readRetryAfter(response);
       if (attempt < 1 && retryDelay > 0 && retryDelay <= 2000) {
+        log(requestId, "jikan_retry", { reason: "rate_limited", waitMs: retryDelay });
         await delay(retryDelay);
-        return fetchFromJikan(url, attempt + 1);
+        return fetchFromJikan(url, requestId, attempt + 1);
       }
       throw new UpstreamError("A pesquisa está temporariamente ocupada. Tente novamente em instantes.", 503, "DISCOVERY_RATE_LIMITED");
     }
@@ -204,24 +254,32 @@ async function fetchFromJikan(url, attempt = 0) {
         );
       }
       if (attempt < 1) {
+        log(requestId, "jikan_retry", { reason: "upstream_5xx", status: response.status, waitMs: UPSTREAM_RETRY_DELAY_MS });
         await delay(UPSTREAM_RETRY_DELAY_MS);
-        return fetchFromJikan(url, attempt + 1);
+        return fetchFromJikan(url, requestId, attempt + 1);
       }
     }
     if (response.status === 404) throw new UpstreamError("Anime não encontrado.", 404, "DISCOVERY_NOT_FOUND");
     throw new UpstreamError("A fonte de animes está temporariamente indisponível.");
   } catch (error) {
     if (error instanceof UpstreamError) throw error;
+    log(requestId, "jikan_fetch_error", {
+      path: url.pathname,
+      attempt,
+      errorName: error?.name || "Unknown",
+      errorMessage: error?.message || "",
+      durationMs: Date.now() - fetchStartedAt,
+    });
     // A TypeError (falha de conexão) costuma ser instantânea, então vale tentar de novo.
     // Já um AbortError já consumiu o orçamento inteiro de UPSTREAM_TIMEOUT_MS; tentar de novo
     // dobraria essa espera e arrisca estourar o timeout do fetch no cliente antes mesmo de
     // chegarmos ao fallback de redirect para o navegador — por isso falha direto nesse caso.
     if (error?.name === "TypeError" && attempt < 1) {
       await delay(UPSTREAM_RETRY_DELAY_MS);
-      return fetchFromJikan(url, attempt + 1);
+      return fetchFromJikan(url, requestId, attempt + 1);
     }
     if (error?.name === "AbortError") throw new UpstreamError("A fonte de animes demorou demais para responder.", 504, "DISCOVERY_TIMEOUT");
-    throw new UpstreamError("A fonte de animes está temporariamente indisponível.");
+    throw new UpstreamError("A fonte de animes está temporariamente indisponível.", 503, "DISCOVERY_NETWORK_ERROR");
   } finally {
     clearTimeout(timeout);
   }
@@ -243,7 +301,7 @@ function copyPublicResponse(source, { cacheStatus, warning = "" } = {}) {
 }
 
 
-function browserProviderFallback(providerUrl, error) {
+function browserProviderFallback(providerUrl, error, requestId) {
   const headers = new Headers({
     Location: providerUrl.toString(),
     "Cache-Control": "no-store",
@@ -251,6 +309,7 @@ function browserProviderFallback(providerUrl, error) {
     "Referrer-Policy": "strict-origin-when-cross-origin",
     "X-Discovery-Cache": "BROWSER-FALLBACK",
     "X-Discovery-Fallback-Reason": error.code || "DISCOVERY_UPSTREAM_UNAVAILABLE",
+    ...(requestId ? { "X-Request-Id": requestId } : {}),
   });
   return new Response(null, { status: 307, headers });
 }
@@ -259,8 +318,8 @@ function jsonResponse(data, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(data), { status, headers: { ...PUBLIC_HEADERS, ...extraHeaders } });
 }
 
-function errorResponse(message, status, code) {
-  return new Response(JSON.stringify({ error: message, code }), {
+function errorResponse(message, status, code, requestId) {
+  return new Response(JSON.stringify({ error: message, code, ...(requestId ? { requestId } : {}) }), {
     status,
     headers: {
       ...PUBLIC_HEADERS,
