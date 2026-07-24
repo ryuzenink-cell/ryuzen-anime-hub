@@ -170,6 +170,36 @@ body:not(.admin-page):has([data-header]) .container {
 .drawer-group.account-area .account-profile-link { max-width: none; justify-content: center; padding: 8px 14px; }
 .drawer-group.account-area .account-avatar-thumb { width: 34px; height: 34px; }
 
+/* Aviso de instabilidade do provedor de dados (Jikan/MyAnimeList) — aparece e some
+   sozinho conforme assets/js/api.js reporta sucesso/falha das chamadas de descoberta. */
+.service-status-banner {
+  border-bottom: 1px solid var(--public-border-bright);
+  background: linear-gradient(90deg, rgba(255, 209, 102, .14), rgba(255, 209, 102, .05));
+}
+.service-status-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  font-size: .86rem;
+  line-height: 1.4;
+}
+.service-status-icon {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: rgba(255, 209, 102, .18);
+  color: var(--public-warning);
+  font-weight: 800;
+}
+.service-status-inner p { margin: 0; color: var(--public-text); }
+@media (max-width: 620px) {
+  .service-status-inner { padding: 9px 0; font-size: .8rem; }
+}
+
 /* Faixa de navegação editorial por seções */
 .nav-strip {
   border-top: 1px solid rgba(255,255,255,.05);

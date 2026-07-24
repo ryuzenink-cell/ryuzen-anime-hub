@@ -5,6 +5,7 @@ const API_REQUEST_TIMEOUT_MS = 30000;
 const DIRECT_REQUEST_TIMEOUT_MS = 30000;
 const DIRECT_MIN_INTERVAL_MS = 450;
 const RETRYABLE_PROXY_STATUSES = new Set([429, 500, 502, 503, 504]);
+const SERVICE_STATUS_STORAGE_KEY = "ryuzen:discoveryStatus";
 
 const apiCache = new Map();
 let directQueue = Promise.resolve();
@@ -19,6 +20,34 @@ class DiscoveryClientError extends Error {
   }
 }
 
+// Alimenta o aviso de instabilidade em ui.js. Erros de validação do próprio usuário
+// (400, ex.: termo de busca curto demais) não indicam problema no provedor e não
+// devem acender o aviso.
+function reportDiscoveryHealth(healthy) {
+  try {
+    sessionStorage.setItem(SERVICE_STATUS_STORAGE_KEY, JSON.stringify({ healthy, updatedAt: Date.now() }));
+  } catch {
+    // sessionStorage indisponível (modo privado, quota etc.) — o evento abaixo ainda
+    // atualiza o aviso na aba atual, só não persiste entre páginas.
+  }
+  // window/CustomEvent podem não existir em ambientes de teste/sandbox que executam
+  // este arquivo sem um DOM real; o reporte de saúde é só um "nice to have" ali.
+  if (typeof window !== "undefined" && typeof window.dispatchEvent === "function" && typeof CustomEvent === "function") {
+    window.dispatchEvent(new CustomEvent("ryuzen:discovery-status", { detail: { healthy } }));
+  }
+}
+
+// Verificação sob demanda usada pelo aviso em ui.js para detectar recuperação
+// automaticamente, sem depender do cache de resultados (que reteria uma falha antiga).
+async function checkDiscoveryHealthNow() {
+  try {
+    await requestWithProviderFallback("search", normalizeDiscoveryParams("search", { q: "anime", page: 1 }));
+    reportDiscoveryHealth(true);
+  } catch (error) {
+    if (error?.status !== 400) reportDiscoveryHealth(false);
+  }
+}
+
 async function requestDiscovery(operation, params = {}) {
   const normalizedParams = normalizeDiscoveryParams(operation, params);
   const cacheKey = `${operation}:${new URLSearchParams(normalizedParams).toString()}`;
@@ -30,9 +59,11 @@ async function requestDiscovery(operation, params = {}) {
   try {
     const value = await promise;
     apiCache.set(cacheKey, { value, expiresAt: Date.now() + API_CACHE_TTL_MS });
+    reportDiscoveryHealth(true);
     return value;
   } catch (error) {
     apiCache.delete(cacheKey);
+    if (error?.status !== 400) reportDiscoveryHealth(false);
     throw error;
   }
 }

@@ -71,7 +71,7 @@ function imageOf(anime, size = "card") {
   const imageUrl = size === "large"
     ? (imageSet.large_image_url || imageSet.image_url || anime?.image)
     : (imageSet.image_url || imageSet.small_image_url || imageSet.large_image_url || anime?.image);
-  return safeUrl(imageUrl, assetPath("images/logo-placeholder.webp?v=20260724-discovery-fix-v1"));
+  return safeUrl(imageUrl, assetPath("images/logo-placeholder.webp?v=20260724-status-banner-v1"));
 }
 
 function yearOf(anime) {
@@ -127,7 +127,7 @@ function renderHeader() {
       <div class="masthead">
         <div class="container masthead-wrap">
           <a class="brand" href="${RYZEN_ROUTES.home}" aria-label="Ryuzen Anime Hub — Início">
-            <img src="${assetPath("icons/icon-192.png?v=20260724-discovery-fix-v1")}" alt="" width="42" height="42">
+            <img src="${assetPath("icons/icon-192.png?v=20260724-status-banner-v1")}" alt="" width="42" height="42">
             <span class="brand-copy"><strong>Ryuzen <span>Anime Hub</span></strong><small>Anime database · Rankings · Editorial</small></span>
           </a>
           <div class="masthead-actions">
@@ -195,6 +195,70 @@ function renderHeader() {
   setActiveNav();
 }
 
+// Aviso de instabilidade do provedor de dados (Jikan/MyAnimeList): aparece e some
+// sozinho conforme assets/js/api.js reporta sucesso/falha das chamadas de descoberta
+// via sessionStorage + CustomEvent("ryuzen:discovery-status"). Persiste entre páginas
+// dentro da mesma aba/sessão porque o site é multi-página (sem estado de SPA).
+// Mesma chave de sessionStorage usada em assets/js/api.js (SERVICE_STATUS_STORAGE_KEY) —
+// nome diferente aqui de propósito: api.js e ui.js são scripts globais (não-módulo) na
+// mesma página, e declarar o mesmo identificador `const` duas vezes quebraria o script inteiro.
+const UI_SERVICE_STATUS_KEY = "ryuzen:discoveryStatus";
+const SERVICE_STATUS_POLL_MS = 60000;
+let serviceStatusPollTimer = null;
+
+function renderServiceStatusBanner() {
+  const header = document.querySelector("[data-header]");
+  if (!header || document.getElementById("ryuzen-status-banner")) return;
+  const banner = document.createElement("div");
+  banner.id = "ryuzen-status-banner";
+  banner.className = "service-status-banner";
+  banner.setAttribute("role", "status");
+  banner.setAttribute("aria-live", "polite");
+  banner.hidden = true;
+  banner.innerHTML = `<div class="container service-status-inner"><span class="service-status-icon" aria-hidden="true">!</span><p>A busca de animes está instável porque o provedor de dados (Jikan/MyAnimeList) não está respondendo a algumas consultas no momento. Isso não depende do Ryuzen Anime Hub — o aviso some sozinho assim que o provedor normalizar.</p></div>`;
+  header.insertAdjacentElement("afterend", banner);
+}
+
+function setServiceStatusVisible(healthy) {
+  const banner = document.getElementById("ryuzen-status-banner");
+  if (!banner) return;
+  banner.hidden = healthy;
+  if (healthy) stopServiceStatusPolling();
+  else startServiceStatusPolling();
+}
+
+function startServiceStatusPolling() {
+  if (serviceStatusPollTimer) return;
+  serviceStatusPollTimer = window.setInterval(() => {
+    if (document.visibilityState === "visible" && typeof checkDiscoveryHealthNow === "function") checkDiscoveryHealthNow();
+  }, SERVICE_STATUS_POLL_MS);
+}
+
+function stopServiceStatusPolling() {
+  if (!serviceStatusPollTimer) return;
+  window.clearInterval(serviceStatusPollTimer);
+  serviceStatusPollTimer = null;
+}
+
+function initServiceStatusBanner() {
+  renderServiceStatusBanner();
+  let initialHealthy = true;
+  try {
+    const stored = sessionStorage.getItem(UI_SERVICE_STATUS_KEY);
+    if (stored) initialHealthy = Boolean(JSON.parse(stored).healthy);
+  } catch {
+    // sessionStorage indisponível — assume saudável até a primeira checagem desta aba.
+  }
+  setServiceStatusVisible(initialHealthy);
+  window.addEventListener("ryuzen:discovery-status", (event) => setServiceStatusVisible(Boolean(event.detail?.healthy)));
+  document.addEventListener("visibilitychange", () => {
+    const banner = document.getElementById("ryuzen-status-banner");
+    if (document.visibilityState === "visible" && banner && !banner.hidden && typeof checkDiscoveryHealthNow === "function") {
+      checkDiscoveryHealthNow();
+    }
+  });
+}
+
 // Mantém --ryuzen-header-h sincronizado com a altura real do header em camadas.
 // Os banners laterais fixos usam essa variável para nunca invadir a navbar.
 function syncHeaderHeight() {
@@ -217,7 +281,7 @@ function renderFooter() {
       <div class="container">
         <div class="footer-premium-grid">
           <div class="footer-brand">
-            <a class="brand" href="${RYZEN_ROUTES.home}"><img src="${assetPath("icons/icon-192.png?v=20260724-discovery-fix-v1")}" alt="" width="42" height="42"><span class="brand-copy"><strong>Ryuzen <span>Anime Hub</span></strong><small>Discovery</small></span></a>
+            <a class="brand" href="${RYZEN_ROUTES.home}"><img src="${assetPath("icons/icon-192.png?v=20260724-status-banner-v1")}" alt="" width="42" height="42"><span class="brand-copy"><strong>Ryuzen <span>Anime Hub</span></strong><small>Discovery</small></span></a>
             <p>Descubra, acompanhe e organize seus animes favoritos em português.</p>
           </div>
           <nav class="footer-links" aria-label="Descobrir">
@@ -478,11 +542,11 @@ function renderPromoSidebars() {
 
   wrapper.innerHTML = `
   <a class="promo-rail promo-rail-image promo-rail-left" data-banner-placement="blog_sidebar_left" href="${RYZEN_ROUTES.blog}">
-    <img src="${assetPath("images/banners/banner-left.webp?v=20260724-discovery-fix-v1")}" alt="Leia o blog do Ryuzen Anime Hub">
+    <img src="${assetPath("images/banners/banner-left.webp?v=20260724-status-banner-v1")}" alt="Leia o blog do Ryuzen Anime Hub">
   </a>
 
   <a class="promo-rail promo-rail-image promo-rail-right" data-banner-placement="blog_sidebar_right" href="${RYZEN_ROUTES.guides}">
-    <img src="${assetPath("images/banners/banner-right.webp?v=20260724-discovery-fix-v1")}" alt="Guias do Ryuzen Anime Hub">
+    <img src="${assetPath("images/banners/banner-right.webp?v=20260724-status-banner-v1")}" alt="Guias do Ryuzen Anime Hub">
   </a>
 `;
 
@@ -556,6 +620,7 @@ function setupInstallAppButton() {
 
 registerRyuzenServiceWorker();
 renderHeader();
+initServiceStatusBanner();
 syncHeaderHeight();
 setupInstallAppButton();
 renderFooter();
