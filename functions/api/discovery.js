@@ -240,8 +240,15 @@ async function fetchFromJikan(url, requestId, attempt = 0) {
     }
     if (response.status >= 500) {
       const detail = await response.clone().json().catch(() => null);
+      // Jikan uses 504 specifically for "connected to Jikan, but Jikan couldn't reach MyAnimeList"
+      // (confirmed by direct probing: this status shows up only for that exact condition, never for
+      // Jikan's own transient hiccups). The body-shape check catches the same condition when Jikan
+      // reports it under a different status, but reading response.clone().json() inside a Worker has
+      // proven unreliable on its own — relying on it exclusively let real MAL outages fall through to
+      // the slow retry+redirect path instead of failing fast.
       const providerDown =
-        detail?.type === "BadResponseException" && /MyAnimeList/i.test(String(detail?.message || ""));
+        response.status === 504 ||
+        (detail?.type === "BadResponseException" && /MyAnimeList/i.test(String(detail?.message || "")));
       if (providerDown) {
         // Jikan already confirmed MyAnimeList itself is unreachable: retrying or redirecting the
         // browser to the same URL cannot succeed, so fail fast with an accurate message instead of
